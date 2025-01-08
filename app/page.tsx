@@ -5,6 +5,7 @@ import styles from "./page.module.scss";
 import React, { useRef,useState } from 'react'
 import { Button, Image, NoticeBar, Space, Swiper,ProgressBar,Toast } from 'antd-mobile'
 import { CloseCircleOutline, CompassOutline } from 'antd-mobile-icons'
+import CountUp from "react-countup";
 export default function Home() {
   const [percent, setPercent] = useState(30);
    const demoSrc =['https://images.unsplash.com/photo-1567945716310-4745a6b7844b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=60']
@@ -72,7 +73,7 @@ export default function Home() {
         <div className={styles.funItem}>
           <div className={styles.Item_title}>全网POS算力</div>
           <div className={styles.content}>
-            <div className={styles.num}>3,414</div>
+            <div className={styles.num}> <CountUp start={0} end={3414} duration={3} /></div>
             <div className={styles.icon}>
               <Image className={styles.iconimg} src='/home/POS.png'   fit='fill' />
             </div>
@@ -81,7 +82,7 @@ export default function Home() {
          <div className={styles.funItem}>
           <div className={styles.Item_title}>全网POP算力</div>
           <div className={styles.content}>
-            <div className={styles.num}>71,228</div>
+            <div className={styles.num}> <CountUp start={0} end={71228} duration={3} /></div>
             <div className={styles.icon}>
               <Image className={styles.iconimg} src='/home/POP.png'   fit='fill' />
             </div>
