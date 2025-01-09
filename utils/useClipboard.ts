@@ -1,5 +1,5 @@
 
-'use client'; 
+'use client';
 import { useState } from 'react';
 import ClipboardJS from 'clipboard';
 
@@ -24,9 +24,9 @@ const useClipboard = (): UseClipboardReturn => {
 
       // 监听复制成功的事件
       clipboard.on('success', () => {
-        setCopied(true); 
+        setCopied(true);
         setError(null);
-        clipboard.destroy(); 
+        clipboard.destroy();
       });
 
       // 监听复制失败的事件
@@ -38,7 +38,7 @@ const useClipboard = (): UseClipboardReturn => {
       button.click();
     } catch (err: any) {
       setCopied(false);
-      setError(err.message); 
+      setError(err.message);
     }
   };
 

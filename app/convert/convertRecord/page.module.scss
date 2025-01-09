@@ -1,0 +1,100 @@
+.page{
+    width: 100%;
+    padding: 52px 12px 100px 12px;
+    min-height: 100vh;
+    background-color: #17161B;
+    .listbox{
+        .item{
+            .item_time{
+                font-family: PingFang SC, PingFang SC;
+                    font-weight: 400;
+                    font-size: 14px;
+                    color: #86909C;
+                    line-height: 16px;
+            }
+            .itemMap{
+                margin: 12px 0;
+                .subItem{
+                    background-color: #242426;
+                    padding: 16px 12px;
+                    margin: 12px 0;
+                    border-radius: 8px 8px 8px 8px;
+                    position: relative;
+                    .content1,.content2{
+                        margin-bottom: 8px;
+                        
+                        .top{
+                            display: flex;
+                                align-items: center;
+                            .dui,.zhi {
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    width: 16px;
+                                    height: 16px;
+                                    background: #FF6E91;
+                                    border-radius: 50%;
+                                    font-family: PingFang SC, PingFang SC;
+                                    font-weight: 400;
+                                    font-size: 10px;
+                                    color: #FFFFFF;
+                                    line-height: 12px;
+                                }
+                                .zhi{
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    background-color: #B940E3;
+                                }
+                            
+                                .txt {
+                                    font-family: PingFang SC, PingFang SC;
+                                    font-weight: 500;
+                                    font-size: 14px;
+                                    color: #FFFFFF;
+                                    line-height: 16px;
+                                    margin: 0 4px;
+                                }
+                            
+                                .name {
+                                    font-family: PingFang SC, PingFang SC;
+                                    font-weight: 500;
+                                    font-size: 14px;
+                                    color: #FFFFFF;
+                                    line-height: 16px;
+                                }
+                        }
+                        .time{
+                            font-family: PingFang SC, PingFang SC;
+                                font-weight: 400;
+                                font-size: 12px;
+                                color: #C9CDD4;
+                                line-height: 14px;
+                                margin-top: 2px;
+                        }
+                       
+                        
+                    }
+                    .content2{
+                        margin-bottom: 0;
+                    }
+                                       
+                    .rightArrow{
+                        width: 16px;
+                        height: 16px;
+                        position: absolute;
+                        right: 12px;
+                        top: 0;
+                        bottom: 0;
+                        margin:  auto;
+                        .rightArrowImg{
+                            width: 100%;
+                            height: 100%;
+                        }
+                    }
+                    
+                }
+            }
+        }
+    }
+}
