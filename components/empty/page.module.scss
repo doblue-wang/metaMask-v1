@@ -1,0 +1,22 @@
+.empty {
+    background: #242426;
+    border-radius: 12px 12px 12px 12px;
+    padding: 16px 12px 36px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    .img {
+        width: 140px;
+        height: 140px;
+    }
+    .emptytext {
+        font-family:
+            PingFang SC,
+            PingFang SC;
+        font-weight: 400;
+        font-size: 12px;
+        color: #4e5969;
+        line-height: 14px;
+    }
+}

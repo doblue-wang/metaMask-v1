@@ -146,7 +146,7 @@ export default function Pool() {
             <div className={styles.listbox}>
               {miningList.map((item, index) => {
                 return (
-                  <div className={styles.item} onClick={() => handleClick(item, index)}>
+                  <div key={index} className={styles.item} onClick={() => handleClick(item, index)}>
                     <div className={`${styles.topbox} ${selectedItemIndex == index ? styles.selected : ''}`}>
                       <div className={styles.imgbox}>
                         <Image className={styles.img} src={item.img} />
@@ -169,7 +169,7 @@ export default function Pool() {
                   <div className={styles.nummin}>POS：20</div>
                 </div>
               </div>
-              <div className={styles.select}>
+              <div className={styles.select} onClick={() => setVisible(true)}>
                 <Image className={styles.img} src='/pool/select.png' />
               </div>
             </div>
@@ -212,7 +212,7 @@ export default function Pool() {
           {btnList.map((item, index) => {
             return (
               // disabled={selectedType==index ? true : false}
-              <Button className={styles.btn} onClick={() => handleNavTo(index)}>
+              <Button key={index} className={styles.btn} onClick={() => handleNavTo(index)}>
                 <div className={styles.btnlist}>
                   <span className={styles.btnText}>{item}</span>
                   <Image className={styles.img} src='/pool/casting.png' />
@@ -235,7 +235,7 @@ export default function Pool() {
               <div className={styles.num}>1000</div>
             </div>
           </div>
-          <div className={styles.bonusbtn}>领取</div>
+          <div className={styles.bonusbtn} onClick={() => { router.push('/pool/receive') }}>领取</div>
 
         </div>
         <div className={styles.bonusList}>
@@ -249,7 +249,7 @@ export default function Pool() {
               <div className={styles.num}>1000</div>
             </div>
           </div>
-          <div className={styles.bonusbtn1}>兑换</div>
+          <div className={styles.bonusbtn1} onClick={() => { router.push('/pool/exchange') }}>兑换</div>
 
         </div>
 
@@ -263,12 +263,53 @@ export default function Pool() {
           setVisible(false)
         }}
         forceRender={true}
-        bodyStyle={{ height: '575px', borderTopLeftRadius: '8px', borderTopRightRadius: '8px', backgroundColor: '#17161b', padding: '38px 14px' }}
+        bodyStyle={{ height: '575px', borderTopLeftRadius: '8px', borderTopRightRadius: '8px', backgroundColor: '#17161b', padding: '38px 14px', overflow: 'hidden' }}
         bodyClassName={styles.popbox}
       >
-        <div style={{ fontFamily: 'PingFang SC, PingFang SC', fontWeight: '600', fontSize: '18px', color: '#FFFFFF', lineHeight: '28px' }} className={styles.popitem}>选择DTV
+        <div className={styles.poptitle}>选择DTV
         </div>
-        <div></div>
+        <div className={styles.poplistbox}>
+          <div className={`${styles.list} ${styles.listSelect}`}>
+            <div className={styles.name}>2,000,000 DTV</div>
+            <div className={styles.price}>POS: 20,000 </div>
+          </div>
+          <div className={styles.list}>
+            <div className={styles.name}>2,000,000 DTV</div>
+            <div className={styles.price}>POS: 20,000 </div>
+          </div>
+          <div className={styles.list}>
+            <div className={styles.name}>2,000,000 DTV</div>
+            <div className={styles.price}>POS: 20,000 </div>
+          </div>
+          <div className={styles.list}>
+            <div className={styles.name}>2,000,000 DTV</div>
+            <div className={styles.price}>POS: 20,000 </div>
+          </div>
+          <div className={styles.list}>
+            <div className={styles.name}>2,000,000 DTV</div>
+            <div className={styles.price}>POS: 20,000 </div>
+          </div>
+          <div className={styles.list}>
+            <div className={styles.name}>2,000,000 DTV</div>
+            <div className={styles.price}>POS: 20,000 </div>
+          </div>
+          <div className={styles.list}>
+            <div className={styles.name}>2,000,000 DTV</div>
+            <div className={styles.price}>POS: 20,000 </div>
+          </div>
+          <div className={styles.list}>
+            <div className={styles.name}>2,000,000 DTV</div>
+            <div className={styles.price}>POS: 20,000 </div>
+          </div>
+          <div className={styles.list}>
+            <div className={styles.name}>2,000,000 DTV</div>
+            <div className={styles.price}>POS: 20,000 </div>
+          </div>
+          <div className={styles.list}>
+            <div className={styles.name}>2,000,000 DTV</div>
+            <div className={styles.price}>POS: 20,000 </div>
+          </div>
+        </div>
       </Popup>
     </div>
   );

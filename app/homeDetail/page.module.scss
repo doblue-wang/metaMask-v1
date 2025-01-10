@@ -1,0 +1,60 @@
+.page {
+    width: 100%;
+    padding: 52px 12px 100px 12px;
+    min-height: 100vh;
+    background-color: #17161b;
+    .titbox {
+        display: flex;
+        align-items: center;
+        .head {
+            width: 38px;
+            height: 38px;
+        }
+        .namebox {
+            margin-left: 6px;
+            .name {
+                font-family:
+                    PingFang SC,
+                    PingFang SC;
+                font-weight: 500;
+                font-size: 14px;
+                color: #ffffff;
+                line-height: 16px;
+            }
+            .time {
+                font-family:
+                    PingFang SC,
+                    PingFang SC;
+                font-weight: 400;
+                font-size: 12px;
+                color: #4e5969;
+                line-height: 14px;
+                margin-top: 2px;
+            }
+        }
+    }
+    .detailTitle {
+        font-family:
+            PingFang SC,
+            PingFang SC;
+        font-weight: 500;
+        font-size: 18px;
+        color: #ffffff;
+        line-height: 22px;
+        margin: 20px 0;
+    }
+    .txt {
+        font-family:
+            PingFang SC,
+            PingFang SC;
+        font-weight: 400;
+        font-size: 14px;
+        color: #c9cdd4;
+        line-height: 20px;
+        //首行缩进
+        text-indent: 2em;
+    }
+    .img {
+        margin: 20px 0;
+    }
+}

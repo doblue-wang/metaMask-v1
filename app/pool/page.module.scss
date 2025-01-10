@@ -425,11 +425,41 @@
             }
         }
     }
-
 }
 
-
-.title {
+.poptitle {
+    padding: 0 10px;
+    font-family:
+        PingFang SC,
+        PingFang SC;
     font-weight: 600;
-    font-size: 28px;
+    font-size: 18px;
+    color: #ffffff;
+    line-height: 28px;
+}
+.poplistbox {
+    height: 357px;
+    margin-top: 24px;
+    overflow-y: auto;
+    //隐藏滚动条
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    .list {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: D-DIN-DIN, D-DIN-DIN;
+        font-weight: bold;
+        font-size: 16px;
+        color: #ffffff;
+        line-height: 19px;
+        background: #242426;
+        border-radius: 8px 8px 8px 8px;
+        padding: 16px 12px;
+        margin: 12px 0;
+    }
+    .listSelect {
+        background-color: #ff6e91;
+    }
 }
