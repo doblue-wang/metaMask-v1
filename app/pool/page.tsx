@@ -81,9 +81,6 @@ export default function Pool() {
     const initialOffset = getTabOffset(selectedTab);
     setColorBarPosition(initialOffset + (48 - 36) / 2);  // Color bar width is 36px, center it under the tab
   }, [selectedTab]);
-
-
-
   const [selectedItemIndex, setSelectedItemIndex] = useState<number | null>(null);//选中的矿机index
   const btnList = ['质押', '赎回', '铸造']
   const [selectedType, setSelectedType] = useState<any>(1);//0质押1赎回,

@@ -7,7 +7,6 @@ import useLocale from "@/utils/useLocale";
 import enUS from 'antd-mobile/es/locales/en-US'
 import zhCN from 'antd-mobile/es/locales/zh-CN';
 import BottomNav from "@/components/Tabbar";
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -26,17 +25,17 @@ const geistMono = Geist_Mono({
 //   userScalable: false,
 // };
 
- const metadata: Metadata = {    
+const metadata: Metadata = {
   title: "首页",
   description: "首页精选",
 };
 
-export default function RootLayout({
+export default function RootLayout ({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { locale} = useLocale();  
+  const { locale } = useLocale();
   const locales = {
     'zh-CN': zhCN,
     'en-US': enUS,
@@ -48,9 +47,9 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-       <ConfigProvider locale={enUS}>
+        <ConfigProvider locale={enUS}>
           {children}
-          <BottomNav/>
+          <BottomNav />
         </ConfigProvider>
       </body>
     </html>
