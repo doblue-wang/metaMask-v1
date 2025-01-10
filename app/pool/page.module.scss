@@ -3,14 +3,17 @@
     padding: 12px 12px 100px 12px;
     min-height: 100vh;
     background-color: #17161b;
+
     .funbox {
         background: #242426;
         border-radius: 10px 10px 10px 10px;
         padding: 16px 12px;
+
         &.bg {
             background-image: url("/pool/bg.png");
             background-size: 100% 100%;
         }
+
         .tabbox {
             position: relative;
             display: flex;
@@ -40,8 +43,10 @@
                     left 0.3s ease;
             }
         }
+
         .miningbox {
             margin-top: 20px;
+
             .listbox {
                 display: flex;
                 align-items: center;
@@ -98,17 +103,21 @@
                     }
                 }
             }
+
             .selectedbox {
                 margin-top: 10px;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
+
                 .fivebox {
                     flex: 1;
+
                     .top {
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
+
                         .label {
                             font-family:
                                 PingFang SC,
@@ -118,6 +127,7 @@
                             color: #c9cdd4;
                             line-height: 14px;
                         }
+
                         .nummin {
                             font-family: D-DIN-DIN, D-DIN-DIN;
                             font-weight: bold;
@@ -126,11 +136,13 @@
                             line-height: 23px;
                         }
                     }
+
                     .bottom {
                         margin-top: 4px;
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
+
                         .label {
                             font-family:
                                 PingFang SC,
@@ -140,6 +152,7 @@
                             color: #ffffff;
                             line-height: 19px;
                         }
+
                         .nummin {
                             font-family:
                                 PingFang SC,
@@ -151,10 +164,12 @@
                         }
                     }
                 }
+
                 .select {
                     margin-left: 4px;
                     width: 16px;
                     height: 16px;
+
                     .img {
                         width: 100%;
                         height: 100%;
@@ -162,6 +177,7 @@
                 }
             }
         }
+
         .onminingbox {
             display: flex;
             align-items: center;
@@ -173,6 +189,7 @@
                 width: 100px;
                 border-radius: 7.2px;
                 overflow: hidden;
+
                 .topbox {
                     background-color: #c9cdd4;
                     padding: 2px 2px 0 2px;
@@ -208,6 +225,7 @@
                     padding: 4px 0;
                 }
             }
+
             .nummin {
                 font-family: D-DIN-DIN, D-DIN-DIN;
                 font-weight: bold;
@@ -216,6 +234,7 @@
                 line-height: 23px;
                 margin-top: 20px;
             }
+
             .pos {
                 margin-top: 4px;
                 font-family:
@@ -227,20 +246,24 @@
                 line-height: 16px;
             }
         }
+
         .nftbox {
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
             padding-top: 20px;
+
             .imagebox {
                 width: 80px;
                 height: 87px;
+
                 .img {
                     width: 100%;
                     height: 100%;
                 }
             }
+
             .price {
                 margin-top: 6px;
                 font-family: D-DIN-DIN, D-DIN-DIN;
@@ -249,14 +272,17 @@
                 color: #ffffff;
                 line-height: 23px;
             }
+
             .mark_up {
                 display: flex;
                 align-items: center;
                 margin-top: 20px;
+
                 .pos {
                     display: flex;
                     align-items: center;
                     margin: 0 8px;
+
                     .label {
                         font-family:
                             PingFang SC,
@@ -266,6 +292,7 @@
                         color: #c9cdd4;
                         line-height: 14px;
                     }
+
                     .num {
                         font-family: D-DIN, D-DIN;
                         font-weight: 400;
@@ -282,6 +309,7 @@
             display: flex;
             align-items: center;
             justify-content: space-around;
+
             .btn {
                 width: 139px;
                 padding: 9px 0;
@@ -295,10 +323,12 @@
                 font-size: 16px;
                 color: #ffffff;
                 line-height: 19px;
+
                 .btnlist {
                     display: flex;
                     align-items: center;
                     justify-content: center;
+
                     .img {
                         width: 14px;
                         height: 14px;
@@ -308,11 +338,13 @@
             }
         }
     }
+
     .bonusBox {
         margin-top: 12px;
         padding: 16px 12px;
         background: #242426;
         border-radius: 10px 10px 10px 10px;
+
         .bonusTitle {
             font-family:
                 PingFang SC,
@@ -322,17 +354,21 @@
             color: #ffffff;
             line-height: 22px;
         }
+
         .bonusList {
             margin-top: 20px;
+
             .sublist {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
+
                 .subitem {
                     width: 159px;
                     padding: 12px 8px;
                     background-color: #343438;
                     border-radius: 8px;
+
                     .label,
                     .label1 {
                         font-family:
@@ -342,6 +378,7 @@
                         font-size: 11px;
                         color: #86909c;
                         line-height: 13px;
+
                         &::before {
                             content: "";
                             display: inline-block;
@@ -352,6 +389,7 @@
                             margin-right: 4px;
                         }
                     }
+
                     .label1 {
                         &::before {
                             content: "";
@@ -365,6 +403,7 @@
                     }
                 }
             }
+
             .bonusbtn,
             .bonusbtn1 {
                 background: linear-gradient(90deg, #ef5a80 0%, #e5154c 100%);
@@ -380,23 +419,17 @@
                 padding: 10px 0;
                 margin-top: 10px;
             }
+
             .bonusbtn1 {
                 background: linear-gradient(90deg, #d57af5 0%, #b940e3 100%);
             }
         }
     }
-    // .popbox {
-    //     padding: 38px 14px !important;
-    //     background-color: #17161b !important;
 
-    // }
-    .title {
-        font-family:
-            PingFang SC,
-            PingFang SC;
-        font-weight: 600;
-        font-size: 18px;
-        color: #ffffff !important;
-        line-height: 28px;
-    }
+}
+
+
+.title {
+    font-weight: 600;
+    font-size: 28px;
 }
