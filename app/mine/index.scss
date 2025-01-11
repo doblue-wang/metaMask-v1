@@ -1,12 +1,13 @@
 .mine {
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     background: url('/tabbar/bgc.png') no-repeat;
     background-size: 100%;
     background-color: rgba(23, 22, 27, 1);
     padding-top: 16px;
     padding-left: 20px;
     padding-right: 20px;
+    padding-bottom: 160px;
 
     .userInfo {
         width: 100%;
@@ -121,7 +122,7 @@
 
             .namerow {
                 p {
-                    font-weight: bold;      
+                    font-weight: bold;
                     font-size: 20px;
                     color: #FFFFFF;
                     margin: 0;
@@ -131,7 +132,7 @@
                     font-weight: 400;
                     font-size: 12px;
                     color: #86909C;
-                    margin-top: 4px;        
+                    margin-top: 4px;
                 }
             }
         }
@@ -201,5 +202,83 @@
                 }
             }
         }
+    }
+
+    .container {
+        margin-top: 12px;
+        background: #242426;
+        border-radius: 10px 10px 10px 10px;
+        padding: 0 9px;
+
+        .mypool {
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+
+            .optionLeft {
+                display: flex;
+                align-items: center;
+
+                .icon {
+                    width: 16px;
+                    height: 16px;
+                    margin-right: 8px;
+                }
+
+                .optionname {
+                    font-weight: 400;
+                    font-size: 14px;
+                    color: #FFFFFF;
+                }
+            }
+
+            .arroww {
+                width: 16px;
+                height: 16px;
+            }
+        }
+    }
+}
+
+.language {
+    background-color: rgba(23, 22, 27, 1);
+    height: 260px;
+    border-radius: 8px 8px 0 0;
+    padding: 18px 14px;
+
+    .tips {
+        height: 28px;
+        font-weight: 600;
+        font-size: 18px;
+        color: #FFFFFF;
+        margin-bottom: 20px;
+    }
+
+    .lunItem {
+        height: 52px;
+        background: rgba(36, 36, 38, 1);
+        border-radius: 8px 8px 8px 8px;
+        padding-left: 12px;
+        display: flex;
+        align-items: center;
+        font-weight: 400;
+        font-size: 14px;
+        color: #FFFFFF;
+        margin-bottom: 12px;
+    }
+
+    .lunItemActive {
+        height: 52px;
+        background: rgba(255, 110, 145, 1);
+        border-radius: 8px 8px 8px 8px;
+        padding-left: 12px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        font-weight: 400;
+        font-size: 14px;
+        color: #FFFFFF;
     }
 }

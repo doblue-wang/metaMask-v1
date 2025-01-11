@@ -7,6 +7,7 @@ import { Button, Image, NoticeBar, Space, Swiper, ProgressBar, Toast } from 'ant
 import { CloseCircleOutline, CompassOutline } from 'antd-mobile-icons'
 import { useRouter, useSearchParams } from "next/navigation";
 import CountUp from "react-countup";
+import BottomNav from "@/components/Tabbar";
 export default function Home () {
   const router = useRouter();
   const [percent, setPercent] = useState(30);
@@ -172,6 +173,7 @@ export default function Home () {
           <div className={styles.title}>外链地址</div>
         </div>
       </div>
+      <BottomNav initialTab='/' />
     </div>
   );
 }

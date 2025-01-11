@@ -6,7 +6,7 @@ import { ConfigProvider } from "antd-mobile";
 import useLocale from "@/utils/useLocale";
 import enUS from 'antd-mobile/es/locales/en-US'
 import zhCN from 'antd-mobile/es/locales/zh-CN';
-import BottomNav from "@/components/Tabbar";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -49,7 +49,6 @@ export default function RootLayout ({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <ConfigProvider locale={enUS}>
           {children}
-          <BottomNav />
         </ConfigProvider>
       </body>
     </html>

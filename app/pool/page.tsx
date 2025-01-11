@@ -3,7 +3,8 @@ import styles from "./page.module.scss";
 import { Tabs, Image, Button, Popup } from 'antd-mobile'
 import React, { useRef, useState, useEffect, } from 'react'
 import { useRouter, useSearchParams } from "next/navigation";
-export default function Pool() {
+import BottomNav from "@/components/Tabbar";
+export default function Pool () {
   const [selectedTab, setSelectedTab] = useState(0);
   const [visible, setVisible] = useState(false);
   const tabs = [
@@ -311,6 +312,7 @@ export default function Pool() {
           </div>
         </div>
       </Popup>
+      <BottomNav initialTab='/pool' />
     </div>
   );
 }

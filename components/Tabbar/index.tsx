@@ -11,7 +11,9 @@ interface NavItem {
   icon: string;
   selectedIcon: string;
 }
-
+interface BottomNavProps {
+  initialTab: string; // 初始激活的 Tab，默认为 '/'
+}
 const navItems: NavItem[] = [
   { path: '/', label: '首页', icon: '/tabbar/home.png', selectedIcon: '/tabbar/homeSelect.png' },
   { path: '/convert', label: '兑换', icon: '/tabbar/convert.png', selectedIcon: '/tabbar/convertSelect.png' },
@@ -19,23 +21,24 @@ const navItems: NavItem[] = [
   { path: '/mine', label: '我的', icon: '/tabbar/mine.png', selectedIcon: '/tabbar/mineSelect.png' },
 ];
 
-const BottomNav: React.FC = () => {
+const BottomNav: React.FC<BottomNavProps> = ({ initialTab = '/' }) => {
   const [activeTab, setActiveTab] = useState<string>('/');
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    setActiveTab(initialTab)
     setIsClient(true);
   }, []);
 
   // 如果当前不是客户端环境，直接不渲染组件
   if (!isClient) {
-    return null; 
+    return null;
   }
 
   const handleTabClick = (path: string) => {
-    setActiveTab(path); 
-    router.push(path); 
+    setActiveTab(path);
+    router.push(path);
   };
 
   return (

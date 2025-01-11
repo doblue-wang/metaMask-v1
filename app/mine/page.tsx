@@ -1,8 +1,26 @@
 'use client';
 import CountUp from 'react-countup';
 import './index.scss';
-import { Image } from 'antd-mobile'
-export default function Mine() {
+import { Image, Popup } from 'antd-mobile'
+import BottomNav from '@/components/Tabbar';
+import { useState } from 'react';
+export default function Mine () {
+  const [show, setShow] = useState(false)
+  const [type, setType] = useState('en')
+  const list = [
+    {
+      key: "English",
+      value: 'en'
+    },
+    {
+      key: "中文",
+      value: 'zh'
+    }
+  ]
+  const changeLanguage = (val: any) => {
+    console.log(val);
+    setType(val.value)
+  }
   return (
     <div className='mine'>
       <div className="userInfo">
@@ -57,17 +75,17 @@ export default function Mine() {
           <div className="dtv">
             <div className="pop">
               <div className="pointb"></div>
-               POS
+              POS
             </div>
             <div className="num">
-              <CountUp start={0} end={138.23} duration={1 } decimals={2} />
+              <CountUp start={0} end={138.23} duration={1} decimals={2} />
             </div>
 
           </div>
           <div className="dtv">
             <div className="pop">
               <div className="pointy"></div>
-               POP
+              POP
             </div>
             <div className="num">
               <CountUp start={0} end={345342} duration={1} />
@@ -81,12 +99,63 @@ export default function Mine() {
         <div className="title">NFT资产</div>
         <div className="nftRow">
           <img className='nft' src="/mine/NFT.png" alt="" />
-           <div className="namerow">
+          <div className="namerow">
             <p>NFT</p>
             <span>铸造：2025-01-03</span>
-           </div>
+          </div>
         </div>
       </div>
+      {/* options */}
+      <div className="container">
+        <div className="mypool">
+          <div className="optionLeft">
+            <img className='icon' src="/mine/receives.png" alt="" />
+            <div className="optionname">我的矿池</div>
+          </div>
+          <img className='arroww' src="/mine/arrow.png" alt="" />
+        </div>
+
+        <div className="mypool">
+          <div className="optionLeft">
+            <img className='icon' src="/mine/receives.png" alt="" />
+            <div className="optionname">DETV账户绑定</div>
+          </div>
+          <img className='arroww' src="/mine/arrow.png" alt="" />
+        </div>
+        <div onClick={() => setShow(true)} className="mypool">
+          <div className="optionLeft">
+            <img className='icon' src="/mine/receives.png" alt="" />
+            <div className="optionname">语言</div>
+          </div>
+          <img className='arroww' src="/mine/arrow.png" alt="" />
+        </div>
+        <div className="mypool">
+          <div className="optionLeft">
+            <img className='icon' src="/mine/receives.png" alt="" />
+            <div className="optionname">分享</div>
+          </div>
+          <img className='arroww' src="/mine/arrow.png" alt="" />
+        </div>
+
+
+      </div>
+      <BottomNav initialTab='/mine' />
+      <Popup
+        visible={show}
+        onMaskClick={() => setShow(false)}
+        bodyStyle={{
+          background: "transparent"
+        }}
+      >
+        <div className="language">
+          <div className="tips">语言</div>
+          {
+            list.map((item) => <div onClick={() => changeLanguage(item)} key={item.value} className={
+              item.value === type ? 'lunItemActive' : 'lunItem'
+            }>{item.key}</div>)
+          }
+        </div>
+      </Popup>
     </div>
   );
 }
