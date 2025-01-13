@@ -4,9 +4,12 @@ import './index.scss';
 import { Image, Popup } from 'antd-mobile'
 import BottomNav from '@/components/Tabbar';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 export default function Mine () {
   const [show, setShow] = useState(false)
   const [type, setType] = useState('en')
+  const { i18n } = useTranslation();
+  const { t } = useTranslation();
   const list = [
     {
       key: "English",
@@ -18,8 +21,9 @@ export default function Mine () {
     }
   ]
   const changeLanguage = (val: any) => {
-    console.log(val);
+    i18n.changeLanguage(val.value); 
     setType(val.value)
+    setShow(false)
   }
   return (
     <div className='mine'>
@@ -28,7 +32,7 @@ export default function Mine () {
           <Image className='avatr' src='/mine/idcard.png' fit='fill' />
           <div className="nameRow">
             <div className="top">
-              <div className="name">张三</div>
+              <div className="name">{t('greeting')}</div>
               <div className="status">已认证</div>
               <div className="statusNomal">
                 <img className='idcard' src="/mine/idcard.png" alt="" />
@@ -70,7 +74,7 @@ export default function Mine () {
       </div>
       {/* 算力 */}
       <div className="assets">
-        <div className="title">我的资产 </div>
+        <div className="title">我的算力 </div>
         <div className="dtvrow">
           <div className="dtv">
             <div className="pop">
@@ -125,7 +129,7 @@ export default function Mine () {
         <div onClick={() => setShow(true)} className="mypool">
           <div className="optionLeft">
             <img className='icon' src="/mine/receives.png" alt="" />
-            <div className="optionname">语言</div>
+            <div className="optionname">{t('aa')}</div>
           </div>
           <img className='arroww' src="/mine/arrow.png" alt="" />
         </div>

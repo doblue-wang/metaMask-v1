@@ -6,7 +6,7 @@ import { ConfigProvider } from "antd-mobile";
 import useLocale from "@/utils/useLocale";
 import enUS from 'antd-mobile/es/locales/en-US'
 import zhCN from 'antd-mobile/es/locales/zh-CN';
-
+import '../i18n';
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -17,13 +17,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// export const viewport: Viewport = {
-//   width: 'device-width',
-//   initialScale: 1,
-//   maximumScale: 1,
-//   minimumScale: 1,
-//   userScalable: false,
-// };
 
 const metadata: Metadata = {
   title: "首页",
