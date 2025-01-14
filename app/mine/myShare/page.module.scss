@@ -1,0 +1,137 @@
+.page {
+    width: 100%;
+    padding: 12px 16px 16px 16px;
+    min-height: 100vh;
+    background-color: #e72754;
+    .navbar {
+        padding: 10px 0px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .navbar__logo {
+            width: 22px;
+            height: 22px;
+            .navbar__logo_img {
+                width: 100%;
+                height: 100%;
+                //旋转180度
+                transform: rotate(180deg);
+            }
+        }
+        .navbar__title {
+            font-family:
+                PingFang SC,
+                PingFang SC;
+            font-weight: 500;
+            font-size: 16px;
+            color: #ffffff;
+            line-height: 19px;
+        }
+    }
+    .contentbox {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, #ffffff 47%);
+        border-radius: 12px 12px 12px 12px;
+        border: 1px solid #ffffff;
+        padding: 12px;
+        .top {
+            display: flex;
+            align-items: center;
+            .userimg {
+                width: 48px;
+                height: 48px;
+            }
+            .titlebox {
+                margin-left: 7px;
+                .title {
+                    font-family:
+                        PingFang SC,
+                        PingFang SC;
+                    font-weight: 500;
+                    font-size: 16px;
+                    color: #1d2129;
+                    line-height: 19px;
+                }
+                .text {
+                    font-family:
+                        PingFang SC,
+                        PingFang SC;
+                    font-weight: 400;
+                    font-size: 12px;
+                    color: #4e5969;
+                    line-height: 14px;
+                    margin-top: 4px;
+                }
+            }
+        }
+        .ewmbox {
+            padding: 21px 0;
+            .ewm {
+                width: 167px;
+                height: 167px;
+                background-color: #fff;
+                margin: 0 auto;
+            }
+        }
+        .or {
+            display: flex; /* 使用 flexbox 布局 */
+            align-items: center; /* 垂直方向居中对齐 */
+            justify-content: center; /* 水平方向居中对齐 */
+            width: 100%; /* 容器占满宽度 */
+            &::before,
+            &::after {
+                content: ""; /* 创建伪元素 */
+                flex: 1; /* 横线部分占据剩余空间 */
+                border-top: 1px solid #dfe2e4; /* 横线的样式 */
+                margin: 0 5px; /* 横线与文字之间的间距 */
+                font-family:
+                    Circular Std,
+                    Circular Std;
+                font-weight: normal;
+                font-size: 12px;
+                color: #6c757d;
+                line-height: 14px;
+            }
+        }
+        .promotion {
+            font-family:
+                PingFang SC,
+                PingFang SC;
+            font-weight: 400;
+            font-size: 16px;
+            color: #343a40;
+            line-height: 19px;
+            text-align: center;
+            margin: 19px 0;
+        }
+        .promotioncode {
+            background: #ffffff;
+            border-radius: 4px 4px 4px 4px;
+            border: 1px solid #dfe2e4;
+            font-family:
+                Circular Std,
+                Circular Std;
+            font-weight: normal;
+            font-size: 14px;
+            color: #212529;
+            line-height: 16px;
+            padding: 12px 8px;
+            text-align: center;
+        }
+        .joinbtn {
+            width: 151px;
+            padding: 10px 0;
+            background: #ffe3ea;
+            border-radius: 4px 4px 4px 4px;
+            border: 1px solid #ff6e91;
+            font-family:
+                PingFang SC,
+                PingFang SC;
+            font-weight: 400;
+            font-size: 14px;
+            color: #ff6e91;
+            line-height: 16px;
+            text-align: center;
+            margin: 19px auto;
+        }
+    }
+}
