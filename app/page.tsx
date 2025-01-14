@@ -2,12 +2,13 @@
 'use client';
 
 import styles from "./page.module.scss";
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button, Image, NoticeBar, Space, Swiper, ProgressBar, Toast } from 'antd-mobile'
 import { CloseCircleOutline, CompassOutline } from 'antd-mobile-icons'
 import { useRouter, useSearchParams } from "next/navigation";
 import CountUp from "react-countup";
 import BottomNav from "@/components/Tabbar";
+import { fetchLogin } from "@/api/home";
 export default function Home () {
   const router = useRouter();
   const [percent, setPercent] = useState(30);
@@ -21,8 +22,21 @@ export default function Home () {
       </div>
     </Swiper.Item>
   ))
+  
 
+  useEffect(()=>{
+    getGoodsNineTrans()
+  },[])
 
+  const getGoodsNineTrans = async() => {
+    fetchLogin({ WalletAddress: 12312 })
+    .then(({ data }) => {
+      console.log(data);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+  };
   return (
     <div className={styles.page}>
       <div className={styles.swiperbox}>

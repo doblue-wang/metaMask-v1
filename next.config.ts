@@ -5,6 +5,14 @@ const nextConfig: NextConfig = {
   sassOptions: {
     implementation: 'sass-embedded',
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://154.19.85.158:85/api/:path*',
+      },
+    ]
+  },
   i18n
 }
  

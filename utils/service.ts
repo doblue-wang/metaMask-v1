@@ -76,7 +76,7 @@ export default function request(url: string, option: any) {
   const newOptions = {
     ...defaultOptions,
     ...options,
-    headers: {Authorization: getCookie("token")},
+    headers: {Authorization:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiIzNDkwNTc0MDcyMDk1NDEiLCJBY2NvdW50IjoiYWRtaW4iLCJVc2VyTmFtZSI6IueuoeeQhuWRmCIsIkFkbWluaXN0cmF0b3IiOjEsIlRlbmFudElkIjoiZGVmYXVsdCIsIk9ubGluZVRpY2tldCI6bnVsbCwiaWF0IjoxNzM2ODYzNTA5LCJuYmYiOjE3MzY4NjM1MDksImV4cCI6MTczNjkxNzUwOSwiaXNzIjoieWlubWFpc29mdCIsImF1ZCI6Inlpbm1haXNvZnQifQ.6-9tf6_CPXT3vBkfXetPN0xJ89E42c_x_d2mdEoQpo4'},
   };
 
   if (["POST", "PUT", "DELETE"].includes(newOptions.method)) {
@@ -139,7 +139,6 @@ export default function request(url: string, option: any) {
         } else if (status >= 404 && status < 422) {
           Toast.show({icon: "fail", content: codeMessage["404"]});
         }
-
         return response.json();
       })
   );
