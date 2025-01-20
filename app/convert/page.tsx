@@ -1,16 +1,43 @@
 'use client';
 import styles from "./page.module.scss";
-import React, { useRef, useState, } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { Button, Image, Input, NoticeBar, Space, Swiper, ProgressBar, Toast } from 'antd-mobile'
 import BottomNav from "@/components/Tabbar";
-export default function Convert () {
-  const [USDTValue, setUSDTValue] = useState('');
+
+export default function Convert() {
+  const [USDTValue, setUSDTValue] = useState(''); // USDT 输入框的值
+  const [DTVValue, setDTVValue] = useState('');   // DTV 输入框的值
   const router = useRouter();
+
   const handleRecord = () => {
-    // 处理记录按钮点击事件
     router.push('/convert/convertRecord');
   }
+
+  // 处理 USDT 输入框的变化
+  const handleUSDTChange = (val: string) => {
+    setUSDTValue(val);
+    // 如果输入的是有效数字，则转换为 DTV
+    const usdtAmount = parseFloat(val);
+    if (!isNaN(usdtAmount)) {
+      setDTVValue((usdtAmount * 100).toString());
+    } else {
+      setDTVValue('');
+    }
+  }
+
+  // 处理 DTV 输入框的变化
+  const handleDTVChange = (val: string) => {
+    setDTVValue(val);
+    // 如果输入的是有效数字，则转换为 USDT
+    const dtvAmount = parseFloat(val);
+    if (!isNaN(dtvAmount)) {
+      setUSDTValue((dtvAmount / 100).toString());
+    } else {
+      setUSDTValue('');
+    }
+  }
+
   return (
     <div className={styles.page}>
       <div className={styles.nav}>
@@ -39,9 +66,7 @@ export default function Convert () {
               placeholder=''
               type="decimal"
               value={USDTValue}
-              onChange={val => {
-                setUSDTValue(val)
-              }}
+              onChange={e => handleUSDTChange(e)}
               style={{
                 '--text-align': 'right',         // 文本右对齐
                 '--color': '#86909C',             // 输入文字颜色为黑色
@@ -49,7 +74,6 @@ export default function Convert () {
               }}
             />
           </div>
-
         </div>
         <div className={styles.exchange}>
           <div className={styles.left}>
@@ -63,10 +87,8 @@ export default function Convert () {
               className={styles.price}
               placeholder=''
               type="decimal"
-              value={USDTValue}
-              onChange={val => {
-                setUSDTValue(val)
-              }}
+              value={DTVValue}
+              onChange={e => handleDTVChange(e)}
               style={{
                 '--text-align': 'right',         // 文本右对齐
                 '--color': '#86909C',             // 输入文字颜色为黑色
@@ -74,13 +96,12 @@ export default function Convert () {
               }}
             />
           </div>
-
         </div>
         <div className={styles.arrow}>
           <Image className={styles.arrowImg} src="/convert/exchangeArrow.png" />
         </div>
       </div>
-      <div className={styles.subscription}>100DTV - 1USTD</div>
+      <div className={styles.subscription}>100DTV - 1USDT</div>
       <div className={styles.button}>
         <div className={styles.buttonText}>兑换</div>
       </div>
