@@ -4,7 +4,7 @@ import styles from './page.module.scss'
 import React, { useRef, useState, useEffect, } from 'react'
 // import NavBar from '@/components/NavBar/page';
 import { useRouter } from 'next/navigation';
-export default function MyPool() {
+export default function MyPool () {
     const [selectedTab, setSelectedTab] = useState(0);
     const tabs = [
         { id: 0, label: '矿池汇总' },
@@ -58,7 +58,7 @@ export default function MyPool() {
                     {tabs.map((tab, index) => (
                         <div
                             key={tab.id}  // 使用 tab.id 作为唯一的 key
-                            ref={(el) => (tabRefs.current[index] = el)}  // 使用 ref 数组存储每个 tab 的引用
+                            ref={(el: any) => (tabRefs.current[index] = el)}  // 使用 ref 数组存储每个 tab 的引用
                             className={`${styles.tab} ${selectedTab === index ? styles.active : ''}`}
                             onClick={() => handleTabClick(index)}  // 点击时切换选中的 tab
                         >

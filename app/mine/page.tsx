@@ -3,12 +3,15 @@ import CountUp from 'react-countup';
 import './index.scss';
 import { Image, Popup } from 'antd-mobile'
 import BottomNav from '@/components/Tabbar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
-export default function Mine() {
+import { fetchGetMine } from '@/api/home';
+import { log } from 'console';
+export default function Mine () {
   const router = useRouter();
   const [show, setShow] = useState(false)
+  const [source, setSource] = useState({} as any)
   const [type, setType] = useState('en')
   const { i18n } = useTranslation();
   const { t } = useTranslation();
@@ -27,6 +30,24 @@ export default function Mine() {
     setType(val.value)
     setShow(false)
   }
+
+  useEffect(() => {
+    fetchGetMineSource()
+  }, [])
+
+
+  //接口授权
+  const fetchGetMineSource = async () => {
+    fetchGetMine({ AccountId: 123 })
+      .then(({ data }) => {
+        console.log(data);
+        setSource(data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   return (
     <div className='mine'>
       <div className="userInfo">
@@ -34,13 +55,13 @@ export default function Mine() {
           <Image className='avatr' src='/mine/idcard.png' fit='fill' />
           <div className="nameRow">
             <div className="top">
-              <div className="name">{t('greeting')}</div>
+              <div className="name">{source?.AccountName || '--'}</div>
               <div className="status">已认证</div>
               <div className="statusNomal">
                 <img className='idcard' src="/mine/idcard.png" alt="" />
                 未认证</div>
             </div>
-            <div className="share">上级分享人0x4838***AD5f97</div>
+            <div className="share">上级分享人{source?.SuperiorSharer || '--'}</div>
           </div>
         </div>
 
@@ -57,7 +78,7 @@ export default function Mine() {
               <img className='arrow' src="/mine/arrow.png" alt="" />
             </div>
             <div className="num">
-              <CountUp start={0} end={138.23} duration={3} decimals={2} />
+              <CountUp start={0} end={source?.PendingRewardsDTV || 0} duration={3} decimals={2} />
             </div>
 
           </div>
@@ -68,7 +89,7 @@ export default function Mine() {
               <img className='arrow' src="/mine/arrow.png" alt="" />
             </div>
             <div className="num">
-              <CountUp start={0} end={345342} duration={3} />
+              <CountUp start={0} end={source?.PendingRewardsDTV || 0} duration={3} />
             </div>
 
           </div>
@@ -84,7 +105,7 @@ export default function Mine() {
               POS
             </div>
             <div className="num">
-              <CountUp start={0} end={138.23} duration={1} decimals={2} />
+              <CountUp start={0} end={source?.MyHashrate || 0} duration={1} decimals={2} />
             </div>
 
           </div>
@@ -94,7 +115,7 @@ export default function Mine() {
               POP
             </div>
             <div className="num">
-              <CountUp start={0} end={345342} duration={1} />
+              <CountUp start={0} end={source?.MyPop || 0} duration={1} />
             </div>
 
           </div>
@@ -107,7 +128,10 @@ export default function Mine() {
           <img className='nft' src="/mine/NFT.png" alt="" />
           <div className="namerow">
             <p>NFT</p>
-            <span>铸造：2025-01-03</span>
+            {
+              source?.IsCastingNFT > 0 ? <span>铸造：{source?.CastingDateTime}</span> : null
+            }
+
           </div>
         </div>
       </div>

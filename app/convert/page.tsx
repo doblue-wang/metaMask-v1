@@ -1,15 +1,15 @@
 'use client';
 import styles from "./page.module.scss";
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { Button, Image, Input, NoticeBar, Space, Swiper, ProgressBar, Toast } from 'antd-mobile'
 import BottomNav from "@/components/Tabbar";
+import { fetchGetDiva } from "@/api/home";
 
-export default function Convert() {
+export default function Convert () {
   const [USDTValue, setUSDTValue] = useState(''); // USDT 输入框的值
   const [DTVValue, setDTVValue] = useState('');   // DTV 输入框的值
   const router = useRouter();
-
   const handleRecord = () => {
     router.push('/convert/convertRecord');
   }
@@ -37,6 +37,20 @@ export default function Convert() {
       setUSDTValue('');
     }
   }
+
+  const fetchGetDivaSource = () => {
+    fetchGetDiva({})
+      .then(({ data }) => {
+        console.log(data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+  useEffect(() => {
+    fetchGetDivaSource()
+  }, [])
+
 
   return (
     <div className={styles.page}>
