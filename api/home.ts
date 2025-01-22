@@ -42,7 +42,7 @@ export async function fetchGetDiva (params: object) {
 
 //矿池汇总
 export async function fetchGetMyMineralPoolSummary (params: object) {
-  return request("/DeclarationForm/myinformation/GetMyMineralPoolSummary", {
+  return request("/api/DeclarationForm/myinformation/GetMyMineralPoolSummary", {
     method: "GET",
     params,
   });

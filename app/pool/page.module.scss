@@ -369,6 +369,12 @@
                     background-color: #343438;
                     border-radius: 8px;
 
+                    .num {
+                        font-weight: bold;
+                        font-size: 20px;
+                        color: #FFFFFF;
+                    }
+
                     .label,
                     .label1 {
                         font-family:
@@ -437,14 +443,17 @@
     color: #ffffff;
     line-height: 28px;
 }
+
 .poplistbox {
     height: 357px;
     margin-top: 24px;
     overflow-y: auto;
+
     //隐藏滚动条
     &::-webkit-scrollbar {
         display: none;
     }
+
     .list {
         display: flex;
         align-items: center;
@@ -459,6 +468,7 @@
         padding: 16px 12px;
         margin: 12px 0;
     }
+
     .listSelect {
         background-color: #ff6e91;
     }

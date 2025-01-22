@@ -4,72 +4,36 @@ import { Tabs, Image, Button, Popup } from 'antd-mobile'
 import React, { useRef, useState, useEffect, } from 'react'
 import { useRouter, useSearchParams } from "next/navigation";
 import BottomNav from "@/components/Tabbar";
+import { fetchGetMiningPool } from "@/api/home";
+import CountUp from "react-countup";
 export default function Pool () {
   const [selectedTab, setSelectedTab] = useState(0);
   const [visible, setVisible] = useState(false);
+  const [source, setSource] = useState({} as any)
+  const [itemSource,setItemSource]= useState({} as any)
   const tabs = [
     { id: 0, label: '矿机' },
     { id: 1, label: 'NFT' },
     // 你可以继续添加更多 tab 项
   ];
-  const miningList = [
-    {
-      name: '微型矿机',
-      img: '/pool/leave.png',
-      type: '微型矿机',
-      price: '0.1USDT',
-      time: '1小时',
-      profit: '0.01USDT',
-      status: '运行中',
-    },
-    {
-      name: '小型矿机',
-      img: '/pool/leave.png',
-      type: '小型矿机',
-      price: '0.1USDT',
-      time: '1小时',
-      profit: '0.01USDT',
-      status: '运行中',
-    },
-    {
-      name: '中型矿机',
-      img: '/pool/leave.png',
-      type: '中型矿机',
-      price: '0.1USDT',
-      time: '1小时',
-      profit: '0.01USDT',
-      status: '运行中',
-    },
-    {
-      name: '大型矿机',
-      img: '/pool/leave.png',
-      type: '大型矿机',
-      price: '0.1USDT',
-      time: '1小时',
-      profit: '0.01USDT',
-      status: '运行中',
-    },
-    {
-      name: '超级矿机',
-      img: '/pool/leave.png',
-      type: '超级矿机',
-      price: '0.1USDT',
-      time: '1小时',
-      profit: '0.01USDT',
-      status: '运行中',
-    },
-    {
-      name: '量子矿机',
-      img: '/pool/quantum.png',
-      type: '量子矿机',
-      price: '0.1USDT',
-      time: '1小时',
-      profit: '0.01USDT',
-      status: '运行中',
-    },
-  ]
-  // 使用 useRef 创建对每个 tab 的引用，显式指定类型为 HTMLDivElement
 
+  
+
+    const getSource = () => {
+      fetchGetMiningPool({
+        AccountId: 123
+      }).then(({ code, data }) => {
+        console.log(data);
+        setSource(data)
+      })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+    useEffect(()=>{
+      getSource()
+    },[])
+  // 使用 useRef 创建对每个 tab 的引用，显式指定类型为 HTMLDivElement
   const handleTabClick = (index: number) => {
     setSelectedTab(index);
   };
@@ -83,11 +47,11 @@ export default function Pool () {
     setColorBarPosition(initialOffset + (48 - 36) / 2);  // Color bar width is 36px, center it under the tab
   }, [selectedTab]);
   const [selectedItemIndex, setSelectedItemIndex] = useState<number | null>(null);//选中的矿机index
-  const btnList = ['质押', '赎回', '铸造']
+  const btnList = ['质押', '赎回']
   const [selectedType, setSelectedType] = useState<any>(1);//0质押1赎回,
   const handleClick = (item: any, index: number) => {
-    console.log(item, index)
     setSelectedItemIndex(index); // 设置选中的项
+    setItemSource(item)
   }
   const router = useRouter();
   const handleNavTo = (index: number) => {
@@ -111,16 +75,6 @@ export default function Pool () {
     }
   }
 
-
-
-
-
-
-
-
-
-
-
   return (
     <div className={styles.page}>
       <div className={`${styles.funbox} ${selectedTab == 1 ? styles.bg : ''}`}>
@@ -128,7 +82,7 @@ export default function Pool () {
           {tabs.map((tab, index) => (
             <div
               key={tab.id}  // 使用 tab.id 作为唯一的 key
-              ref={(el) => (tabRefs.current[index] = el)}  // 使用 ref 数组存储每个 tab 的引用
+              ref={(el:any) => (tabRefs.current[index] = el)}  // 使用 ref 数组存储每个 tab 的引用
               className={`${styles.tab} ${selectedTab === index ? styles.active : ''}`}
               onClick={() => handleTabClick(index)}  // 点击时切换选中的 tab
             >
@@ -141,33 +95,32 @@ export default function Pool () {
           }}></div>
 
         </div>
-        {/* 如果是矿机赎回页面 */}
-        {selectedTab == 0 && selectedType == 1 ? (
+        {/* 未质押 */}
+        {selectedTab == 0 && Object.keys(source?.HavingMiningMachineInformation||{}).length == 0 ? (
           <div className={styles.miningbox}>
             <div className={styles.listbox}>
-              {miningList.map((item, index) => {
+              { (source?.MinerTypeList||[]).map((item:any, index:number) => {
                 return (
                   <div key={index} className={styles.item} onClick={() => handleClick(item, index)}>
                     <div className={`${styles.topbox} ${selectedItemIndex == index ? styles.selected : ''}`}>
                       <div className={styles.imgbox}>
-                        <Image className={styles.img} src={item.img} />
+                        <Image className={styles.img} src='/pool/quantum.png  ' />
                       </div>
                     </div>
-                    <div className={`${styles.itemTitle} ${selectedItemIndex == index ? styles.selected : ''}`}>{item.name}</div>
+                    <div className={`${styles.itemTitle} ${selectedItemIndex == index ? styles.selected : ''}`}>{item.Name}</div>
                   </div>
                 )
               })}
-
             </div>
             <div className={styles.selectedbox}>
               <div className={styles.fivebox}>
                 <div className={styles.top}>
                   <div className={styles.label}>当前选择：</div>
-                  <div className={styles.nummin}>20,000 DTV</div>
+                  <div className={styles.nummin}>{itemSource?.Staking||0} DTV</div>
                 </div>
                 <div className={styles.bottom}>
-                  <div className={styles.label}>矿机名称</div>
-                  <div className={styles.nummin}>POS：20</div>
+                  <div className={styles.label}>{itemSource?.Name}</div>
+                  <div className={styles.nummin}>POS：{itemSource?.Hashrate||0}</div>
                 </div>
               </div>
               <div className={styles.select} onClick={() => setVisible(true)}>
@@ -175,9 +128,8 @@ export default function Pool () {
               </div>
             </div>
           </div>
-
-          // 如果是矿机质押页面
-        ) : selectedTab == 0 && selectedType == 0 ? (
+          // 已质押
+        ) : selectedTab == 0 && Object.keys(source?.HavingMiningMachineInformation||{}).length > 0 ? (
           <div className={styles.onminingbox}>
             <div className={styles.item}>
               <div className={styles.topbox}>
@@ -209,6 +161,21 @@ export default function Pool () {
             </div>
           </div>
         ) : null}
+
+
+<div className={styles.onminingbox}>
+            <div className={styles.item}>
+              <div className={styles.topbox}>
+                <div className={styles.imgbox}>
+                  <Image className={styles.img} src='/pool/leave.png' />
+                </div>
+              </div>
+              <div className={styles.itemTitle}>尾矿</div>
+            </div>
+            <div className={styles.nummin}>20,000 DTV</div>
+            <div className={styles.pos}>POS：20</div>
+          </div>
+
         <div className={styles.btnbox}>
           {btnList.map((item, index) => {
             return (
@@ -216,7 +183,7 @@ export default function Pool () {
               <Button key={index} className={styles.btn} onClick={() => handleNavTo(index)}>
                 <div className={styles.btnlist}>
                   <span className={styles.btnText}>{item}</span>
-                  <Image className={styles.img} src='/pool/casting.png' />
+                  {/* <Image className={styles.img} src='/pool/casting.png' /> */}
                 </div>
               </Button>
             )
@@ -229,11 +196,11 @@ export default function Pool () {
           <div className={styles.sublist}>
             <div className={styles.subitem}>
               <div className={styles.label}>昨日收益(DTV)</div>
-              <div className={styles.num}>1000</div>
+              <div className={styles.num}><CountUp start={0}  end={source?.YesterdaysEarningsDTV||0} duration={3} /></div>
             </div>
             <div className={styles.subitem}>
               <div className={styles.label}>待领取/累计收益（DTV）</div>
-              <div className={styles.num}>1000</div>
+              <div className={styles.num}><CountUp start={0}  end={source?.AccumulatedIncomeDTV||0} duration={3} /></div>
             </div>
           </div>
           <div className={styles.bonusbtn} onClick={() => { router.push('/pool/receive') }}>领取</div>
@@ -243,11 +210,11 @@ export default function Pool () {
           <div className={styles.sublist}>
             <div className={styles.subitem}>
               <div className={styles.label1}>昨日奖励(DTVC)</div>
-              <div className={styles.num}>1000</div>
+              <div className={styles.num}><CountUp start={0}  end={source?.YesterdaysEarningsDTVC||0} duration={3} /></div>
             </div>
             <div className={styles.subitem}>
-              <div className={styles.label1}>待兑换/累计奖励（DTVC）</div>
-              <div className={styles.num}>1000</div>
+              <div className={styles.label1}>待兑换/累计奖励(DTVC)</div>
+              <div className={styles.num}><CountUp start={0}  end={source?.AccumulatedIncomeDTVC||0} duration={3} /></div>
             </div>
           </div>
           <div className={styles.bonusbtn1} onClick={() => { router.push('/pool/exchange') }}>兑换</div>
