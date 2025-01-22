@@ -44,6 +44,9 @@ export default function MyPool () {
     useEffect(() => {
         setSortOrder("desc");
     }, [sort])
+
+
+
     return (
         <div className={styles.page}>
             <div className={`${styles.top} ${selectedTab === 0 ? styles.active : ''}`}>
