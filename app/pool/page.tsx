@@ -74,7 +74,6 @@ export default function Pool () {
       }
     }
   }
-
   return (
     <div className={styles.page}>
       <div className={`${styles.funbox} ${selectedTab == 1 ? styles.bg : ''}`}>

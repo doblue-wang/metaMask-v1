@@ -10,12 +10,13 @@ import CountUp from "react-countup";
 import BottomNav from "@/components/Tabbar";
 import { fetchGetHome, fetchGetSpeedOfProgress, fetchLogin } from "@/api/home";
 import { getCookie, setCookie } from "@/utils/utils";
+import { ethers } from "ethers";
 export default function Home() {
   const router = useRouter();
   const [percent, setPercent] = useState(30);
   const [source, setSource] = useState({} as any);
   const [progress, setProgress] = useState({} as any);
-  const demoSrc = ['https://images.unsplash.com/photo-1567945716310-4745a6b7844b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=60']
+  const [WalletAddress,setWalletAddress]= useState(123123);
   const items = source?.RotationData?.[0]?.pic?.map((item: any, index: any) => (
     <Swiper.Item className={styles.item} key={index}>
       <div
@@ -39,14 +40,15 @@ export default function Home() {
       getProgress()
     } else {
       //唤起metamask 授权
-      getGoodsNineTrans()
+      connectMetaMask()
+      
     }
   }
 
 
   //接口授权
-  const getGoodsNineTrans = async () => {
-    fetchLogin({ WalletAddress: 12312 })
+  const getGoodsNineTrans = async ({WalletAddress}:{WalletAddress:Number}) => {
+    fetchLogin({ WalletAddress:WalletAddress})
       .then(({ data }) => {
         setCookie("token", data.token, 7);
         getHome()
@@ -56,6 +58,27 @@ export default function Home() {
       });
   };
 
+
+//metamask 授权
+const connectMetaMask = async () => {
+  if (typeof window !== 'undefined' && window.ethereum) {
+    try {
+      // 请求用户连接 MetaMask
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+      setWalletAddress(accounts[0])
+     getGoodsNineTrans({WalletAddress:accounts[0]})
+    } catch (error) {
+      console.error('Error connecting to MetaMask:', error);
+    }
+  } else {
+    alert('MetaMask is not installed');
+  }
+};
+
+
+
   // 首页数据
   const getHome = () => {
     fetchGetHome({
@@ -64,7 +87,7 @@ export default function Home() {
       console.log(code);
       if (code === 600) {
         //重新登录
-        getGoodsNineTrans()
+        connectMetaMask()
       }
       setSource(data);
     })
