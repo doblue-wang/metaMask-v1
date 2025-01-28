@@ -10,12 +10,13 @@ import { getCookie } from "@/utils/utils";
 import CustomAlert from "@/components/Toast";
 import { t } from "i18next";
 import { ClaimIncome } from "@/api/home";
+import NewLoading from "@/components/Loading";
 export default function Receive () {
     const [visible, setVisble] = useState(false)
     const [message, setMessage] = useState('')
     const Contract_address = '0xCBA1eE61f79006A5A02aB32425c57e750A86DB4B';//测试合约地址
     const [list, setList] = useState<any>([])
-
+    const [show, setShow] = useState(false)
     useEffect(() => {
         getComingList(getCookie('accounts'))
     }, [])
@@ -37,7 +38,9 @@ export default function Receive () {
                 // 调用合约的 withdrawcoming 方法提取收益
                 const tx = await stakingContract.withdrawcoming(_address, options);
                 // 等待交易确认
+                setShow(true)
                 await tx.wait();
+                setShow(false)
                 setVisble(true)
                 setMessage('成功提取收益')
                 await getComingList(_address)
@@ -153,6 +156,7 @@ export default function Receive () {
                 {/*  */}
 
             </div>
+            <NewLoading show={show} />
             <CustomAlert visible={visible} message={message} setVisible={setVisble} />
         </div>
     )

@@ -13,6 +13,7 @@ const CustomAlert: React.FC<CustomAlertProps> = ({ visible, message, setVisible 
   useEffect(() => {
     if (visible) {
       const timer = setTimeout(() => {
+        setVisible(false)
       }, 1000);
 
       return () => clearTimeout(timer);

@@ -44,8 +44,6 @@ export default function KJredeem () {
         }
     };
 
-    // const searchParams = useSearchParams();
-    // const type = searchParams.get('type');
     const [visible, setVisible] = useState(false);
     const [show, setShow] = useState(false)
     const [alart, setAlart] = useState(false)

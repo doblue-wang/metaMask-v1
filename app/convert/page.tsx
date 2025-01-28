@@ -10,12 +10,14 @@ import { ethers, parseUnits } from "ethers";
 import { ERC20_ABI } from "../../ERC20ABI";
 import { StakingABI } from "../../StakingABI";
 import { t } from "i18next";
+import NewLoading from "@/components/Loading";
 export default function Convert () {
   const [USDTValue, setUSDTValue] = useState(''); // USDT 输入框的值
   const [DTVValue, setDTVValue] = useState('');   // DTV 输入框的值
   const [scale, setScale] = useState(0);
   const [visible, setVisble] = useState(false)
   const [message, setMessage] = useState('')
+  const [show, setShow] = useState(false)
   const router = useRouter();
   const handleRecord = () => {
     router.push('/convert/convertRecord');
@@ -127,8 +129,11 @@ export default function Convert () {
       // 调用合约的 exchange 方法兑换 DTV
       const tx = await exchangeContract.exchange(BigInt(9999999999999999999), options);
       // 等待交易确认
+      setShow(true)
       await tx.wait();
-
+      setShow(false)
+      setVisble(true)
+      setMessage('兑换成功')
     } else {
       alert('MetaMask is not installed');
     }
@@ -209,6 +214,7 @@ export default function Convert () {
         }</div>
       </div>
       <BottomNav initialTab='/convert' />
+      <NewLoading show={show} />
       <CustomAlert visible={visible} message={message} setVisible={setVisble} />
     </div>
   );
