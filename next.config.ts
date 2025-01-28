@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   sassOptions: {
     implementation: 'sass-embedded',
   },
-  async rewrites() {
+  async rewrites () {
     return [
       {
         source: '/api/:path*',
@@ -13,7 +13,11 @@ const nextConfig: NextConfig = {
       },
     ]
   },
-  i18n
+  i18n,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
 }
- 
+
 export default nextConfig

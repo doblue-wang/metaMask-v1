@@ -1,4 +1,100 @@
 {
-    "greeting": "Hello",
-    "aa":"lunge"
- }
+    "Home": "Home",
+    "Pools": "Pools",
+    "Mine": "Mine",
+    "Miner": "Miner",
+    "IncomeCollection": "IncomeCollection",
+    "burning": "10% deduction from income is used for token burning",
+    "MY_Assets": "My Assets",
+    "DTV_Mining": "DTV mining Progress",
+    "DTV_Burning_Progress": "DTV burning Progress",
+    "Total_Network_POS_Hashrate": "Total network POS hashrate",
+    "Total_Network_POP_Hashrate": "Total network POP hashrate",
+    "Yesterday_Mining_Quantity": "Yesterday's mining quantity",
+    "Yesterday_Burned_Quantity": "Yesterday's burned quantity",
+    "Popular_Drama": "Popular drama",
+    "External_Link_Address": "External link address",
+    "Mining_Machines": {
+        "Micro_Mining_Machine": "Micro mining machine",
+        "Small_Mining_Machine": "Small mining machine",
+        "Medium_Mining_Machine": "Medium mining machine",
+        "Large_Mining_Machine": "Large mining machine",
+        "Super_Mining_Machine": "Super mining machine",
+        "Quantum_Mining_Machine": "Quantum mining machine"
+    },
+    "Current_Selection": "Current selection:",
+    "Earnings": {
+        "Yesterday_Earnings": "Yesterday's earnings (dtv)",
+        "Pending_Collection": "Pending collection / Total earnings",
+        "Collect": "Collect",
+        "Yesterday_Rewards": "Yesterday's rewards (DTVc)",
+        "Pending_Collection_Reward": "Pending collection / Accumulated rewards",
+        "Exchange": "Exchange",
+        "Exchange_Record": "Exchange record"
+    },
+    "Network_Gas_Fees": "Network gas fees",
+    "Staking_Redemption_Minting": {
+        "Staking": "Staking",
+        "Redemption": "Redemption",
+        "Minting": "Minting",
+        "Stake_Record": "Stake Record",
+        "Redemption_Record": "Redemption Record",
+        "Exchange_Record": "Exchange Record"
+    },
+    "NFT_Staking": {
+        "NFT_Staking_Success": "NFT staking successful",
+        "Exchange_Quantity": "Exchange quantity",
+        "NFT_Staking_Failed": "NFT staking failed",
+        "Reason": "Reason"
+    },
+    "Miner_Redemption": {
+        "Miner_Redemption": "Miner redemption",
+        "Miner_Redemption_Record": "Miner redemption record"
+    },
+    "Income_Collection": {
+        "Available_for_Collection": "Available for collection",
+        "Deduction": "10% deduction from income is used for token burning",
+        "Income_Withdrawal_Record": "Income withdrawal record",
+        "Handling_Fees": "Handling fees"
+    },
+    "Face_Authentication": {
+        "Face_Not_Authenticated": "Face not authenticated",
+        "Face_Authenticated": "Face authenticated"
+    },
+    "My_Assets": {
+        "Redeemable": "Redeemable",
+        "Exchangeable": "Exchangeable"
+    },
+    "My_Hashrate": "My hashrate",
+    "NFT_Assets": "NFT assets",
+    "My_Mining_Pool": "My mining pool",
+    "Language": "Language",
+    "Share": "Share",
+    "Clear_Cache": "Clear cache",
+    "Personal_Information": {
+        "Nickname": "Nickname",
+        "Avatar": "Avatar",
+        "Change_Avatar": "Change avatar",
+        "Take_Photo": "Take a photo",
+        "Select_From_Album": "Select from album"
+    },
+    "Mining_Pool_Summary": {
+        "My_Min_ers": "My miners",
+        "Qualified_Mining_Pools": "Qualified mining pools",
+        "Mining_Pool_Name": "Mining pool name",
+        "Completion_Time": "Completion time",
+        "Reserve_Mining_Pools": "Reserve mining pools",
+        "Mining_Pool_Time": "Mining pool time",
+        "Completion_Rate": "Completion rate"
+    },
+    "Mining_Pool_List": {
+        "Registration_Time": "Registration time",
+        "Remarks": "Remarks"
+    },
+    "DETV_Account_Binding": "DETV account binding",
+    "ID": "ID",
+    "Password": "Password",
+    "Confirm_Password": "Confirm password",
+    "POS_Bonus": "POS bonus",
+    "POP_Bonus": "POP bonus"
+}

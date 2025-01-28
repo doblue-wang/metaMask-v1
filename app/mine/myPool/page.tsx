@@ -1,14 +1,14 @@
 'use client';
-import { Image, Popup, NavBar, ProgressCircle } from 'antd-mobile'
+import { Image, ProgressCircle } from 'antd-mobile'
 import styles from './page.module.scss'
 import React, { useRef, useState, useEffect, } from 'react'
 // import NavBar from '@/components/NavBar/page';
 import { useRouter } from 'next/navigation';
 import { fetchGetMyMineralPoolSummary } from '@/api/home';
-import Empty from "@/components/empty/page";
+// import Empty from "@/components/empty/page";
 export default function MyPool () {
     const [selectedTab, setSelectedTab] = useState(0);
-    const [source,setSource]= useState({} as any);
+    const [source, setSource] = useState({} as any);
     const tabs = [
         { id: 0, label: '矿池汇总' },
         { id: 1, label: '矿池列表' },
@@ -25,20 +25,19 @@ export default function MyPool () {
     const handleBack = () => {
         router.back()
     }
-    const getSource=()=>{
-        fetchGetMyMineralPoolSummary({AccountId:643253273452609477}) .then(({ data }) => {
-            console.log(data);
+    const getSource = () => {
+        fetchGetMyMineralPoolSummary({ AccountId: 643253273452609477 }).then(({ data }) => {
             setSource(data);
-          })
-          .catch((e) => {
-            console.log(e);
-          });
+        })
+            .catch((e) => {
+                console.log(e);
+            });
     }
 
 
-  useEffect(()=>{
-    getSource()
-  },[])
+    useEffect(() => {
+        getSource()
+    }, [])
 
     const tabRefs = useRef<(HTMLDivElement | null)[]>([]);
     const [colorBarPosition, setColorBarPosition] = useState(0);
@@ -106,12 +105,12 @@ export default function MyPool () {
                         </div>
                         <div className={styles.machinedetail}>
                             <div className={styles.detail_left}>
-                                <div className={styles.detail_left_title}>{source?.Staking||0} DTV</div>
-                                <div className={styles.detail_left_content}>POS：{source?.Hashrate||0}</div>
+                                <div className={styles.detail_left_title}>{source?.Staking || 0} DTV</div>
+                                <div className={styles.detail_left_content}>POS：{source?.Hashrate || 0}</div>
                             </div>
                             <div className={styles.detail_right}>
                                 <Image className={styles.detail_right_img} src="/pool/leave.png" />
-                                <div className={styles.detail_right_title}>{source?.Name||'--'}</div>
+                                <div className={styles.detail_right_title}>{source?.Name || '--'}</div>
                             </div>
                         </div>
                     </div>
@@ -119,7 +118,7 @@ export default function MyPool () {
                         <div className={styles.titlebox}>
                             <div className={styles.title}>
                                 合格矿池
-                                <div className={styles.txt}>POP：{source?.POPSummary||0}</div>
+                                <div className={styles.txt}>POP：{source?.POPSummary || 0}</div>
                             </div>
                             <Image className={styles.titleimg} src="/mine/share.png" />
                         </div>
@@ -129,17 +128,17 @@ export default function MyPool () {
                                 <div className={styles.txt}>完成时间</div>
                             </div>
                             {
-                                (source?.QualifiedMiningPoolList||[]).length>0?<>
-                                {
-                                   source?.QualifiedMiningPoolList.map((item:any,index:number)=> <div key={index} className={styles.listitem}>
-                                   <div className={styles.name}>{item?.MiningPoolName||'--'}</div>
-                                   <div className={styles.time}>{item?.CompletionTime||'--'}</div>
-                               </div>) 
-                                }
-                                </>:null
+                                (source?.QualifiedMiningPoolList || []).length > 0 ? <>
+                                    {
+                                        source?.QualifiedMiningPoolList.map((item: any, index: number) => <div key={index} className={styles.listitem}>
+                                            <div className={styles.name}>{item?.MiningPoolName || '--'}</div>
+                                            <div className={styles.time}>{item?.CompletionTime || '--'}</div>
+                                        </div>)
+                                    }
+                                </> : null
                             }
-                           
-                            
+
+
                         </div>
 
                     </div>
@@ -157,19 +156,19 @@ export default function MyPool () {
                                 <div className={styles.txt}>完成度</div>
                             </div>
                             {
-                               ( source?.PreparationMiningPoolList||[]).map((item:any,index:number)=>
-                               <div key={index} className={styles.listitem}>
-                               <div className={styles.name}>{item?.MiningPoolName||'--'}</div>
-                               <div className={styles.Circlebox}>
-                                   <div >{item?.MiningPoolSpeedOfProgress||0}%</div>
-                                   <div className={styles.Circle}>
-                                       <ProgressCircle percent={item?.MiningPoolSpeedOfProgress||0} style={{ '--track-width': '4px', '--track-color': 'rgba(255,110,145,0.1)', '--fill-color': '#FF6E91', '--size': '18px' }} />
-                                   </div>
-                               </div>
-                           </div>
-                               )
+                                (source?.PreparationMiningPoolList || []).map((item: any, index: number) =>
+                                    <div key={index} className={styles.listitem}>
+                                        <div className={styles.name}>{item?.MiningPoolName || '--'}</div>
+                                        <div className={styles.Circlebox}>
+                                            <div >{item?.MiningPoolSpeedOfProgress || 0}%</div>
+                                            <div className={styles.Circle}>
+                                                <ProgressCircle percent={item?.MiningPoolSpeedOfProgress || 0} style={{ '--track-width': '4px', '--track-color': 'rgba(255,110,145,0.1)', '--fill-color': '#FF6E91', '--size': '18px' }} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
                             }
-                       
+
                         </div>
 
                     </div>

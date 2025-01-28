@@ -6,8 +6,8 @@ import BottomNav from '@/components/Tabbar';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
-import { fetchGetMine } from '@/api/home';
-import { log } from 'console';
+import { MyInformationUploadImage, fetchGetMine } from '@/api/home';
+import { getCookie } from '@/utils/utils';
 export default function Mine () {
   const router = useRouter();
   const [show, setShow] = useState(false)
@@ -26,6 +26,7 @@ export default function Mine () {
     }
   ]
   const changeLanguage = (val: any) => {
+    fetchLanguage(val.value)
     i18n.changeLanguage(val.value);
     setType(val.value)
     setShow(false)
@@ -38,28 +39,39 @@ export default function Mine () {
 
   //接口授权
   const fetchGetMineSource = async () => {
-    fetchGetMine({ AccountId: 123 })
+    fetchGetMine({ AccountId: getCookie('AccountId') })
       .then(({ data }) => {
-        console.log(data);
         setSource(data);
       })
       .catch((e) => {
         console.log(e);
       });
   };
+  //语言
+  const fetchLanguage = async (val: any) => {
+    MyInformationUploadImage({ AccountId: getCookie('AccountId'), Languages: val })
+      .then(({ data }) => {
+        (data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+
 
   return (
     <div className='mine'>
       <div className="userInfo">
         <div className="left">
-          <Image className='avatr' src='/mine/idcard.png' fit='fill' />
+          <Image className='avatr' alt='' src='/mine/idcard.png' fit='fill' />
           <div className="nameRow">
             <div className="top">
               <div className="name">{source?.AccountName || '--'}</div>
-              <div className="status">已认证</div>
+              <div className="status">{t('Face_Authentication.Face_Authenticated')}</div>
               <div className="statusNomal">
-                <img className='idcard' src="/mine/idcard.png" alt="" />
-                未认证</div>
+                <Image className='idcard' src="/mine/idcard.png" alt="" />
+                {t('Face_Authentication.Face_Not_Authenticated')}</div>
             </div>
             <div className="share">上级分享人{source?.SuperiorSharer || '--'}</div>
           </div>
@@ -69,24 +81,24 @@ export default function Mine () {
       </div>
       {/* 资产  */}
       <div className="assets">
-        <div className="title">我的资产 </div>
+        <div className="title">{t('MY_Assets')}</div>
         <div className="dtvrow">
-          <div className="dtv">
+          <div onClick={() => { router.push('/pool/receive') }} className="dtv">
             <div className="dtvimg">
-              <img src="/mine/receives.png" alt="" />
-              可领取DTV
-              <img className='arrow' src="/mine/arrow.png" alt="" />
+              <Image src="/mine/receives.png" alt="" />
+              {t('My_Assets.Redeemable')}DTV
+              <Image className='arrow' src="/mine/arrow.png" alt="" />
             </div>
             <div className="num">
               <CountUp start={0} end={source?.PendingRewardsDTV || 0} duration={3} decimals={2} />
             </div>
 
           </div>
-          <div className="dtv">
+          <div onClick={() => { router.push('/pool/exchange') }} className="dtv">
             <div className="dtvimg">
-              <img src="/mine/exchange.png" alt="" />
-              可兑换DTV
-              <img className='arrow' src="/mine/arrow.png" alt="" />
+              <Image src="/mine/exchange.png" alt="" />
+              {t('My_Assets.Exchangeable')}DTV
+              <Image className='arrow' src="/mine/arrow.png" alt="" />
             </div>
             <div className="num">
               <CountUp start={0} end={source?.PendingRewardsDTV || 0} duration={3} />
@@ -97,7 +109,7 @@ export default function Mine () {
       </div>
       {/* 算力 */}
       <div className="assets">
-        <div className="title">我的算力 </div>
+        <div className="title">{t('My_Hashrate')} </div>
         <div className="dtvrow">
           <div className="dtv">
             <div className="pop">
@@ -123,13 +135,13 @@ export default function Mine () {
       </div>
       {/* nft */}
       <div className="assets">
-        <div className="title">NFT资产</div>
+        <div className="title">{t('NFT_Assets')}</div>
         <div className="nftRow">
-          <img className='nft' src="/mine/NFT.png" alt="" />
+          <Image className='nft' src="/mine/NFT.png" alt="" />
           <div className="namerow">
             <p>NFT</p>
             {
-              source?.IsCastingNFT > 0 ? <span>铸造：{source?.CastingDateTime}</span> : null
+              source?.IsCastingNFT > 0 ? <span>{t('Staking_Redemption_Minting.Minting')}：{source?.CastingDateTime}</span> : null
             }
 
           </div>
@@ -139,32 +151,32 @@ export default function Mine () {
       <div className="container">
         <div className="mypool" onClick={() => router.push('/mine/myPool')}>
           <div className="optionLeft" >
-            <img className='icon' src="/mine/receives.png" alt="" />
-            <div className="optionname">我的矿池</div>
+            <Image className='icon' src="/mine/receives.png" alt="" />
+            <div className="optionname">{t('My_Mining_Pool')}</div>
           </div>
-          <img className='arroww' src="/mine/arrow.png" alt="" />
+          <Image className='arroww' src="/mine/arrow.png" alt="" />
         </div>
 
         <div className="mypool">
           <div className="optionLeft">
-            <img className='icon' src="/mine/receives.png" alt="" />
-            <div className="optionname">DETV账户绑定</div>
+            <Image className='icon' src="/mine/receives.png" alt="" />
+            <div className="optionname">{t('DETV_Account_Binding')}</div>
           </div>
-          <img className='arroww' src="/mine/arrow.png" alt="" />
+          <Image className='arroww' src="/mine/arrow.png" alt="" />
         </div>
         <div onClick={() => setShow(true)} className="mypool">
           <div className="optionLeft">
-            <img className='icon' src="/mine/receives.png" alt="" />
-            <div className="optionname">{t('aa')}</div>
+            <Image className='icon' src="/mine/receives.png" alt="" />
+            <div className="optionname">{t('Language')}</div>
           </div>
-          <img className='arroww' src="/mine/arrow.png" alt="" />
+          <Image className='arroww' src="/mine/arrow.png" alt="" />
         </div>
         <div className="mypool" onClick={() => router.push('/mine/myShare')}>
           <div className="optionLeft">
-            <img className='icon' src="/mine/receives.png" alt="" />
-            <div className="optionname">分享</div>
+            <Image className='icon' src="/mine/receives.png" alt="" />
+            <div className="optionname">{t('Share')}</div>
           </div>
-          <img className='arroww' src="/mine/arrow.png" alt="" />
+          <Image className='arroww' src="/mine/arrow.png" alt="" />
         </div>
 
 
@@ -178,7 +190,7 @@ export default function Mine () {
         }}
       >
         <div className="language">
-          <div className="tips">语言</div>
+          <div className="tips">{t('Language')}</div>
           {
             list.map((item) => <div onClick={() => changeLanguage(item)} key={item.value} className={
               item.value === type ? 'lunItemActive' : 'lunItem'

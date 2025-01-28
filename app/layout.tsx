@@ -1,11 +1,9 @@
 'use client';
-import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.scss";
 import { ConfigProvider } from "antd-mobile";
 import useLocale from "@/utils/useLocale";
 import enUS from 'antd-mobile/es/locales/en-US'
-import zhCN from 'antd-mobile/es/locales/zh-CN';
 import '../i18n';
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,10 +16,6 @@ const geistMono = Geist_Mono({
 });
 
 
-const metadata: Metadata = {
-  title: "首页",
-  description: "首页精选",
-};
 
 export default function RootLayout ({
   children,
@@ -29,11 +23,6 @@ export default function RootLayout ({
   children: React.ReactNode;
 }>) {
   const { locale } = useLocale();
-  const locales = {
-    'zh-CN': zhCN,
-    'en-US': enUS,
-  } as any;
-  console.log('Current locale:', locale);
   return (
     <html lang={locale === 'zh-CN' ? 'zh' : 'en'}>
       <head>

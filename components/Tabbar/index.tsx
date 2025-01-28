@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './index.module.scss';
+import { t } from 'i18next';
 
 // 定义导航项类型
 interface NavItem {
@@ -15,10 +16,10 @@ interface BottomNavProps {
   initialTab: string; // 初始激活的 Tab，默认为 '/'
 }
 const navItems: NavItem[] = [
-  { path: '/', label: '首页', icon: '/tabbar/home.png', selectedIcon: '/tabbar/homeSelect.png' },
-  { path: '/convert', label: '兑换', icon: '/tabbar/convert.png', selectedIcon: '/tabbar/convertSelect.png' },
-  { path: '/pool', label: '矿池', icon: '/tabbar/pool.png', selectedIcon: '/tabbar/poolSelect.png' },
-  { path: '/mine', label: '我的', icon: '/tabbar/mine.png', selectedIcon: '/tabbar/mineSelect.png' },
+  { path: '/', label: `${t('Home')}`, icon: '/tabbar/home.png', selectedIcon: '/tabbar/homeSelect.png' },
+  { path: '/convert', label: `${t('Earnings.Exchange')}`, icon: '/tabbar/convert.png', selectedIcon: '/tabbar/convertSelect.png' },
+  { path: '/pool', label: `${t('Pools')}`, icon: '/tabbar/pool.png', selectedIcon: '/tabbar/poolSelect.png' },
+  { path: '/mine', label: `${t('Mine')}`, icon: '/tabbar/mine.png', selectedIcon: '/tabbar/mineSelect.png' },
 ];
 
 const BottomNav: React.FC<BottomNavProps> = ({ initialTab = '/' }) => {

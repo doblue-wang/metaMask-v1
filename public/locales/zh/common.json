@@ -1,4 +1,100 @@
 {
-    "greeting": "你好",
-    "aa":"语言"
-  }
+  "Home": "首页",
+  "Pools": "矿池",
+  "Mine": "我的",
+  "Miner": "矿机",
+  "IncomeCollection": "收益领取",
+  "MY_Assets": "我的资产",
+  "burning": "扣除10%收益用于token销毁",
+  "DTV_Mining": "DTV 挖矿进度",
+  "DTV_Burning_Progress": "DTV销毁进度",
+  "Total_Network_POS_Hashrate": "全网pos算力",
+  "Total_Network_POP_Hashrate": "全网pop算力",
+  "Yesterday_Mining_Quantity": "昨日挖矿数量",
+  "Yesterday_Burned_Quantity": "昨日销毁数量",
+  "Popular_Drama": "热播剧",
+  "External_Link_Address": "外链地址",
+  "Mining_Machines": {
+    "Micro_Mining_Machine": "微型矿机",
+    "Small_Mining_Machine": "小型矿机",
+    "Medium_Mining_Machine": "中型矿机",
+    "Large_Mining_Machine": "大型矿机",
+    "Super_Mining_Machine": "超级矿机",
+    "Quantum_Mining_Machine": "量子矿机"
+  },
+  "Current_Selection": "当前选择：",
+  "Earnings": {
+    "Yesterday_Earnings": "昨日收益（dtv）",
+    "Pending_Collection": "待领取/累计收益",
+    "Collect": "领取",
+    "Yesterday_Rewards": "昨日奖励（dtvc）",
+    "Pending_Collection_Reward": "待领取/累计奖励",
+    "Exchange": "兑换",
+    "Exchange_Record": "兑换记录"
+  },
+  "Network_Gas_Fees": "网络gas费用",
+  "Staking_Redemption_Minting": {
+    "Staking": "质押",
+    "Redemption": "赎回",
+    "Minting": "铸造",
+    "Stake_Record": "质押记录",
+    "Redemption_Record": "赎回记录",
+    "Exchange_Record": "兑换记录"
+  },
+  "NFT_Staking": {
+    "NFT_Staking_Success": "NFT质押成功",
+    "Exchange_Quantity": "兑换数量",
+    "NFT_Staking_Failed": "NFT质押失败",
+    "Reason": "原因"
+  },
+  "Miner_Redemption": {
+    "Miner_Redemption": "矿机赎回",
+    "Miner_Redemption_Record": "矿机赎回记录"
+  },
+  "Income_Collection": {
+    "Available_for_Collection": "待领取",
+    "Deduction": "扣除10%收益用于token销毁",
+    "Income_Withdrawal_Record": "收益领取记录",
+    "Handling_Fees": "手续费"
+  },
+  "Face_Authentication": {
+    "Face_Not_Authenticated": "未认证",
+    "Face_Authenticated": "已认证"
+  },
+  "My_Assets": {
+    "Redeemable": "可领取",
+    "Exchangeable": "可兑换"
+  },
+  "My_Hashrate": "我的算力",
+  "NFT_Assets": "NFT资产",
+  "My_Mining_Pool": "我的矿池",
+  "Language": "语言",
+  "Share": "分享",
+  "Clear_Cache": "清理缓存",
+  "Personal_Information": {
+    "Nickname": "昵称",
+    "Avatar": "头像",
+    "Change_Avatar": "更换头像",
+    "Take_Photo": "拍照",
+    "Select_From_Album": "相册选择"
+  },
+  "Mining_Pool_Summary": {
+    "My_Min_ers": "我的矿机",
+    "Qualified_Mining_Pools": "合格矿池",
+    "Mining_Pool_Name": "矿池名称",
+    "Completion_Time": "完成时间",
+    "Reserve_Mining_Pools": "预备矿池",
+    "Mining_Pool_Time": "矿池时间",
+    "Completion_Rate": "完成度"
+  },
+  "Mining_Pool_List": {
+    "Registration_Time": "注册时间",
+    "Remarks": "备注"
+  },
+  "DETV_Account_Binding": "DETV账户绑定",
+  "ID": "ID",
+  "Password": "密码",
+  "Confirm_Password": "确认密码",
+  "POS_Bonus": "pos加成",
+  "POP_Bonus": "pop加成"
+}

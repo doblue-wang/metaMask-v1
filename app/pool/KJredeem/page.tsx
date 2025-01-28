@@ -1,14 +1,13 @@
 'use client';
 import styles from "./page.module.scss";
-import React, { useRef, useState } from 'react'
-import { Button, Image, Popup, NoticeBar, ErrorBlock, Space, Swiper, ProgressBar, Toast } from 'antd-mobile'
-import { useRouter, useSearchParams } from "next/navigation";
+import React, { useState } from 'react'
+import { Image, Popup } from 'antd-mobile'
+// import { useSearchParams } from "next/navigation";
 import NavBar from "@/components/NavBar/page";
 import Empty from "@/components/empty/page";
-export default function KJredeem() {
-    const searchParams = useSearchParams();
-    const type = searchParams.get('type');
-    console.log(type)
+export default function KJredeem () {
+    // const searchParams = useSearchParams();
+    // const type = searchParams.get('type');
     const [visible, setVisible] = useState(false);
     return (
         <div className={styles.page}>

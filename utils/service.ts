@@ -1,9 +1,9 @@
-import {Toast} from "antd-mobile";
+import { Toast } from "antd-mobile";
 import hash from "hash.js";
-import {stringify} from "qs";
+import { stringify } from "qs";
 import router from "next/router";
 
-import {getCookie} from "./utils";
+import { getCookie } from "./utils";
 
 const codeMessage = {
   200: "服务器成功返回请求的数据。",
@@ -27,8 +27,8 @@ const codeMessage = {
 const copyResponse = (response: Response) => response.clone().json();
 
 const checkStatus = (response: Response, newOptions: any) => {
-  const {status} = response;
-  const {showMessage = true} = newOptions;
+  const { status } = response;
+  const { showMessage = true } = newOptions;
 
   // 正确status，判断code!==0 报错提示
   if (status >= 200 && status < 300) {
@@ -41,7 +41,7 @@ const checkStatus = (response: Response, newOptions: any) => {
   else if (status < 500 && status != 401 && status != 404) {
     copyResponse(response).then((res) => {
       if (res.msg && showMessage)
-        Toast.show({icon: "fail", content: res.msg});
+        Toast.show({ icon: "fail", content: res.msg });
     });
   }
 
@@ -60,9 +60,9 @@ const checkStatus = (response: Response, newOptions: any) => {
  * @param  {object} [option] The options we want to pass to "fetch"
  * @return {object}           An object containing either "data" or "err"
  */
-export default function request(url: string, option: any) {
+export default function request (url: string, option: any) {
   if (process.env.NODE_ENV === "production") {
-    url = "https://robot.leshan.red" + url;
+    url = "http://154.19.85.158:85/" + url;
   }
 
   const options = {
@@ -76,11 +76,11 @@ export default function request(url: string, option: any) {
   const newOptions = {
     ...defaultOptions,
     ...options,
-    headers: {Authorization:`${getCookie('token')}`  },
+    headers: { Authorization: `${getCookie('token')}` },
   };
 
   if (["POST", "PUT", "DELETE"].includes(newOptions.method)) {
-    const {body} = newOptions;
+    const { body } = newOptions;
     if (!(body instanceof FormData)) {
       newOptions.headers = {
         "Content-Type": "application/json; charset=utf-8",
@@ -127,7 +127,7 @@ export default function request(url: string, option: any) {
         return response.json();
       })
       .catch((response: any) => {
-        const {status} = response;
+        const { status } = response;
         // 无权限访问
         if (status === 401) {
           // router.push("/user/wx-login");
@@ -135,9 +135,9 @@ export default function request(url: string, option: any) {
         else if (status === 403) {
           router.push("/user/wx-login");
         } else if (status <= 504 && status >= 500) {
-          Toast.show({icon: "fail", content: codeMessage["500"]});
+          Toast.show({ icon: "fail", content: codeMessage["500"] });
         } else if (status >= 404 && status < 422) {
-          Toast.show({icon: "fail", content: codeMessage["404"]});
+          Toast.show({ icon: "fail", content: codeMessage["404"] });
         }
         return response.json();
       })

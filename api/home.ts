@@ -65,7 +65,7 @@ export async function fetchGetGetMyShare (params: object) {
 }
 //添加绑定关系
 export async function fetchBindingRelationship (body: object) {
-  return request("api/DeclarationForm/myinformation/BindingRelationship", {
+  return request("/api/DeclarationForm/myinformation/BindingRelationship", {
     method: "POST",
     body,
   });
@@ -83,5 +83,34 @@ export async function fetchGetGetQuantumTypeList (params: object) {
   return request("/api/DeclarationForm/DxMiningPool/GetQuantumTypeList", {
     method: "GET",
     params,
+  });
+}
+//DTVC兑换DTV
+export async function ExchangeDtv (body: object) {
+  return request("/api/DeclarationForm/DxMiningPool/ExchangeDtv", {
+    method: "POST",
+    body,
+  });
+}
+//DTVC兑换DTV记录
+export async function ExchangeDtvRecord (body: object) {
+  return request("/api/DeclarationForm/DxMiningPool/ExchangeDtvRecord", {
+    method: "POST",
+    body,
+  });
+}
+//领取收益
+export async function ClaimIncome (body: object) {
+  return request("/api/DeclarationForm/DxMiningPool/ClaimIncome", {
+    method: "POST",
+    body,
+  });
+}
+
+//更改用户信息
+export async function MyInformationUploadImage (body: object) {
+  return request("/api/DeclarationForm/myinformation/MyInformationUploadImage", {
+    method: "POST",
+    body,
   });
 }
