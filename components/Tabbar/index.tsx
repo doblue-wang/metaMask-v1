@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './index.module.scss';
-import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
+
 
 // 定义导航项类型
 interface NavItem {
@@ -15,22 +16,26 @@ interface NavItem {
 interface BottomNavProps {
   initialTab: string; // 初始激活的 Tab，默认为 '/'
 }
-const navItems: NavItem[] = [
-  { path: '/', label: `${t('Home')}`, icon: '/tabbar/home.png', selectedIcon: '/tabbar/homeSelect.png' },
-  { path: '/convert', label: `${t('Earnings.Exchange')}`, icon: '/tabbar/convert.png', selectedIcon: '/tabbar/convertSelect.png' },
-  { path: '/pool', label: `${t('Pools')}`, icon: '/tabbar/pool.png', selectedIcon: '/tabbar/poolSelect.png' },
-  { path: '/mine', label: `${t('Mine')}`, icon: '/tabbar/mine.png', selectedIcon: '/tabbar/mineSelect.png' },
-];
+
 
 const BottomNav: React.FC<BottomNavProps> = ({ initialTab = '/' }) => {
   const [activeTab, setActiveTab] = useState<string>('/');
   const [isClient, setIsClient] = useState(false);
+  const [currentLang, setCurrentLang] = useState<string>("en");
   const router = useRouter();
-
+  const { t } = useTranslation();
+  const navItems: NavItem[] = [
+    { path: '/', label: `${t('Home')}`, icon: '/tabbar/home.png', selectedIcon: '/tabbar/homeSelect.png' },
+    { path: '/convert', label: `${t('Earnings.Exchange')}`, icon: '/tabbar/convert.png', selectedIcon: '/tabbar/convertSelect.png' },
+    { path: '/pool', label: `${t('Pools')}`, icon: '/tabbar/pool.png', selectedIcon: '/tabbar/poolSelect.png' },
+    { path: '/mine', label: `${t('Mine')}`, icon: '/tabbar/mine.png', selectedIcon: '/tabbar/mineSelect.png' },
+  ];
   useEffect(() => {
     setActiveTab(initialTab)
     setIsClient(true);
   }, []);
+
+
 
   // 如果当前不是客户端环境，直接不渲染组件
   if (!isClient) {

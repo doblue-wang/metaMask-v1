@@ -135,9 +135,11 @@ export default function Home () {
       <div className={styles.DTV}>
         <div className={styles.title}>{t('DTV_Mining')}</div>
         <div className={styles.progress}>
-          <ProgressBar percent={(progress?.TotalReleaseQty / progress?.TotalQty) * 100} text={formatProgressQty(progress?.TotalQty)} style={{
-            '--fill-color': 'linear-gradient( 90deg, #EF5A80 0%, #E5154C 100%);', '--track-color': 'rgba(255,110,145,0.2)',
-          }} />
+          <ProgressBar percent={(progress?.TotalReleaseQty / progress?.TotalQty) * 100} text={formatProgressQty(progress?.TotalQty)}
+            style={{
+              '--fill-color': 'rgba(255, 110, 145, 0.20)', '--track-color': 'rgba(255,110,145,0.2)',
+            }}
+          />
           {
             progress?.TotalReleaseQty > 0 ? <div className={styles.progress_bubble} style={{ left: `${(progress?.TotalReleaseQty / progress?.TotalQty) * 100}%`, marginLeft: `-${12 / 2}px` }}>
               <div className={styles.bubble_content} >  {formatProgressQty(progress?.TotalReleaseQty || 0)}</div>
@@ -154,9 +156,10 @@ export default function Home () {
         </div>
         <div className={styles.title}>{t('DTV_Burning_Progress')}</div>
         <div className={styles.progress}>
-          <ProgressBar percent={(progress?.AlreadyDestructionQty / progress?.DestructionTotalQty) * 100} text={formatProgressQty(progress?.DestructionTotalQty) || 0} style={{
-            '--fill-color': 'linear-gradient( 90deg, #EF5A80 0%, #E5154C 100%);', '--track-color': 'rgba(255,110,145,0.2)',
-          }} />
+          <ProgressBar percent={(progress?.AlreadyDestructionQty / progress?.DestructionTotalQty) * 100} text={formatProgressQty(progress?.DestructionTotalQty) || 0}
+            style={{
+              '--fill-color': 'rgba(255, 110, 145, 0.20)', '--track-color': 'rgba(255,110,145,0.2)',
+            }} />
           {
             progress?.AlreadyDestructionQty > 0 ? <div className={styles.progress_bubble} style={{ left: `${(progress?.AlreadyDestructionQty / progress?.DestructionTotalQty) * 100}%`, marginLeft: `-${12 / 2}px` }}>
               <div className={styles.bubble_content} >{formatProgressQty(progress?.AlreadyDestructionQty || 0)}</div>

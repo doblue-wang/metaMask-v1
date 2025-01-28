@@ -117,30 +117,6 @@ export default function Pool () {
     }
   };
 
-  //赎回
-  const withdrawTokens = async (_address: string, _product: number, _amount: any) => {
-    try {
-      if (typeof window.ethereum === "undefined") {
-        console.error("MetaMask 未安装");
-        return;
-      }
-      const provider = new ethers.BrowserProvider(window.ethereum)
-      const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
-      // 你的质押合约地址，确认该地址是正确的
-      const stakingContract = new ethers.Contract(Contract_address, StakingABI, signer);
-      // 获取当前 Gas 费用数据
-      const gasPrice = Number((await provider.getFeeData()).gasPrice);
-      const options = {
-        gasPrice,
-      };
-      // 调用合约的 withdrawproducts 方法赎回 DTV
-      const tx = await stakingContract.withdrawproducts(_address, _product, BigInt(_amount), options);
-      // 等待交易确认
-      await tx.wait();
-    } catch (e) {
-      console.error("赎回失败", e);
-    }
-  };
 
   const handleNavTo = async (index: number) => {
     //自定义跳转页面type  1，矿池赎回，2，NFT质押，3，NFT赎回
@@ -152,9 +128,9 @@ export default function Pool () {
         await approveToken(amountInUnitsStr)
         //质押
       } else if (index == 1) {
-        await withdrawTokens(getCookie('accounts'), 1, 20000)
+        // await withdrawTokens(getCookie('accounts'), 1, 20000)
         //赎回 带参
-        // router.push('/pool/KJredeem?type=1')
+        router.push('/pool/KJredeem?type=1')
       }
     } else if (selectedTab == 1) {
       if (index == 0) {
@@ -285,7 +261,8 @@ export default function Pool () {
               {/* <Image className={styles.img} src='/pool/casting.png' /> */}
             </div>
           </Button>
-          <Button disabled={!source?.HavingMiningMachineInformation} className={styles.btn} onClick={() => handleNavTo(0)}>
+          {/* disabled={!source?.HavingMiningMachineInformation} */}
+          <Button className={styles.btn} onClick={() => handleNavTo(1)}>
             <div className={styles.btnlist}>
               <span className={styles.btnText}>{t('Staking_Redemption_Minting.Redemption')}</span>
               {/* <Image className={styles.img} src='/pool/casting.png' /> */}

@@ -85,9 +85,9 @@ export default function Mine () {
         <div className="dtvrow">
           <div onClick={() => { router.push('/pool/receive') }} className="dtv">
             <div className="dtvimg">
-              <Image src="/mine/receives.png" alt="" />
+              <img src="/mine/receives.png" alt="" />
               {t('My_Assets.Redeemable')}DTV
-              <Image className='arrow' src="/mine/arrow.png" alt="" />
+              <img className='arrow' src="/mine/arrow.png" alt="" />
             </div>
             <div className="num">
               <CountUp start={0} end={source?.PendingRewardsDTV || 0} duration={3} decimals={2} />
@@ -96,9 +96,9 @@ export default function Mine () {
           </div>
           <div onClick={() => { router.push('/pool/exchange') }} className="dtv">
             <div className="dtvimg">
-              <Image src="/mine/exchange.png" alt="" />
+              <img src="/mine/exchange.png" alt="" />
               {t('My_Assets.Exchangeable')}DTV
-              <Image className='arrow' src="/mine/arrow.png" alt="" />
+              <img className='arrow' src="/mine/arrow.png" alt="" />
             </div>
             <div className="num">
               <CountUp start={0} end={source?.PendingRewardsDTV || 0} duration={3} />
