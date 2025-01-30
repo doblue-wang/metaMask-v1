@@ -69,7 +69,7 @@ export default function Convert () {
   //授权
 
   const USDT_address = '0xa2d272B92Cd921C572698Db1b999c1fC4c8374CA';//usdt 合约
-  const Contract_address = '0xCBA1eE61f79006A5A02aB32425c57e750A86DB4B';//测试合约地址
+  const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
   //授权钱包
   const approveToken = async (appunmu: any) => {
 

@@ -12,7 +12,6 @@ import { StakingABI } from "../../StakingABI";
 import { getCookie } from "@/utils/utils";
 import { t } from "i18next";
 // import { utils } from "ethers"; // 显式导入utils模块
-
 export default function Pool () {
   const [selectedTab, setSelectedTab] = useState(0);
   const [visible, setVisible] = useState(false);
@@ -59,63 +58,78 @@ export default function Pool () {
   const router = useRouter();
 
   //正式
-  const Contract_address = '0xCBA1eE61f79006A5A02aB32425c57e750A86DB4B';//测试合约地址
+  const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
 
   const STAKING_CONTRACT_ADDRESS = '0xe8f59c86808F5DD44d7E92beD2f8405a6988BEeB'// dtv 合约
-
-
   //授权钱包
   const approveToken = async (appunmu: any) => {
     if (typeof window !== 'undefined' && window.ethereum) {
-      const provider = new ethers.BrowserProvider(window.ethereum)
+      const provider = new ethers.BrowserProvider(window.ethereum);
       try {
+        // 获取 Gas 费用数据
         const gasPrice = Number((await provider.getFeeData()).gasPrice);
         const options = {
           gasPrice
         };
         const signer = await provider.getSigner();
         const USDTcontract = new ethers.Contract(STAKING_CONTRACT_ADDRESS, ERC20_ABI, signer);
-        (USDTcontract);
 
+        // 执行 approve 操作
         const tx = await USDTcontract.approve(Contract_address, BigInt(appunmu), options);
+        console.log("授权成功", tx);
+
+        // 等待授权交易完成
         await tx.wait();
-        await stakeTokens(getCookie('accounts'), itemSource.MappingValue, appunmu)
+
+        // 授权完成后，执行质押操作
+        await stakeTokens(getCookie('accounts'), itemSource.MappingValue, appunmu);
+
       } catch (e) {
         console.error("授权失败", e);
       }
     } else {
       alert('MetaMask is not installed');
     }
-
   };
 
   const stakeTokens = async (_address: any, _product: any, _amount: any) => {
+    console.log(_address, _product, _amount);
+
     try {
       if (typeof window.ethereum === "undefined") {
         console.error("MetaMask 未安装");
         return;
       }
-      const provider = new ethers.BrowserProvider(window.ethereum)
+
+      const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
+
+      // 初始化质押合约
       const stakingContract = new ethers.Contract(Contract_address, StakingABI, signer);
-      // 获取当前 Gas 费用数据
+
+      // 获取 Gas 费用数据
       const gasPrice = Number((await provider.getFeeData()).gasPrice);
       const options = {
         gasPrice
       };
-      // 质押代币
+
+      // 执行质押操作
       const tx = await stakingContract.stakeproducts(
         _address,
         _product,
-        BigInt(20000), // 转换为最小单位
+        BigInt(_amount), // 转换为最小单位
         options
       );
-      // 等待交易确认
+      console.log("质押成功", tx);
+
+      // 等待质押交易完成
       await tx.wait();
+
     } catch (e) {
       console.error("质押失败", e);
     }
   };
+
 
 
   const handleNavTo = async (index: number) => {
@@ -318,17 +332,13 @@ export default function Pool () {
         </div>
         <div className={styles.poplistbox}>
           {
-            filterList.map((item: any, index: number) => <div onClick={() => {
-              (item);
-
+            (filterList || []).map((item: any, index: number) => <div onClick={() => {
               setDefult(item)
             }} key={index} className={item.Price === defults.Price ? `${styles.list} ${styles.listSelect}` : styles.list}>
               <div className={styles.name}>{item.Price} DTV</div>
               <div className={styles.price}>POS: {item.Hashrate} </div>
             </div>)
           }
-
-
         </div>
       </Popup >
       <BottomNav initialTab='/pool' />

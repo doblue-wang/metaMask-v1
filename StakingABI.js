@@ -1,4 +1,5 @@
 export const StakingABI = [
+
   {
     "inputs": [],
     "stateMutability": "payable",
@@ -280,6 +281,44 @@ export const StakingABI = [
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "NFTArray",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "NFTState",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "",
         "type": "address"
@@ -370,25 +409,6 @@ export const StakingABI = [
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "name": "StakeNFT",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
       },
       {
         "internalType": "uint256",
@@ -411,6 +431,25 @@ export const StakingABI = [
       {
         "internalType": "uint256",
         "name": "inout",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "StakeNFTpoint",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -650,6 +689,40 @@ export const StakingABI = [
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "exchangelist",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "extime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "usdtamount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "dtvamount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "_amount",
         "type": "uint256"
@@ -658,6 +731,40 @@ export const StakingABI = [
     "name": "exchangenft",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "exchangenftlist",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "extime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "usdtamount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "nfttokenid",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -723,6 +830,78 @@ export const StakingABI = [
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "getexchangelist",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "extime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "usdtamount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "dtvamount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DeTV.exchangerecord[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "getexchangenftlist",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "extime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "usdtamount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nfttokenid",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DeTV.exchangenftrecord[]",
+        "name": "",
+        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",

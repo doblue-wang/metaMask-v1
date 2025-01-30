@@ -12,9 +12,11 @@ import NewLoading from "@/components/Loading";
 import CustomAlert from "@/components/Toast";
 export default function KJredeem () {
 
-    const Contract_address = '0xCBA1eE61f79006A5A02aB32425c57e750A86DB4B';//测试合约地址
+    const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
     //赎回
     const withdrawTokens = async (_address: string, _product: number, _amount: any) => {
+        console.log(_address, _product, _amount);
+
         try {
             if (typeof window.ethereum === "undefined") {
                 console.error("MetaMask 未安装");
