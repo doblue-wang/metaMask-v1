@@ -12,10 +12,15 @@ import { getCookie, setCookie } from "@/utils/utils";
 import { useTranslation } from "react-i18next";
 export default function Home () {
   const router = useRouter();
-  const [percent, setPercent] = useState(30);
   const [source, setSource] = useState({} as any);
   const [progress, setProgress] = useState({} as any);
   const { t } = useTranslation();
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const savedToken = getCookie("token");
+    setToken(savedToken);
+  }, []);
   const items = source?.RotationData?.[0]?.pic?.map((item: any, index: any) => (
     <Swiper.Item className={styles.item} key={index}>
       <div
@@ -26,24 +31,16 @@ export default function Home () {
     </Swiper.Item>
   ))
 
-
   useEffect(() => {
-    isAuthorize()
-  }, [])
-
-  //是否授权
-  const isAuthorize = () => {
-    const token = getCookie('token')
     if (token) {
-      // connectMetaMask()
-      getHome()
-      getProgress()
+      console.log(token);
+      getHome();
+      getProgress();
     } else {
-      //唤起metamask 授权
-      connectMetaMask()
-
+      connectMetaMask();
     }
-  }
+  }, [token]); //
+
 
 
   //接口授权
@@ -62,17 +59,25 @@ export default function Home () {
 
   //metamask 授权
   const connectMetaMask = async () => {
+    console.log("-----");
+
     if (typeof window !== 'undefined' && window.ethereum) {
       try {
         // 请求用户连接 MetaMask
         const accounts = await window.ethereum.request({
           method: 'eth_requestAccounts',
         });
-        (accounts);
+        console.log(accounts);
+
         setCookie("accounts", accounts[0], 7);
         getGoodsNineTrans({ WalletAddress: accounts[0] })
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error connecting to MetaMask:', error);
+        if (error.code === 4001) {
+          alert("User rejected the request.");
+        } else {
+          alert("An error occurred while connecting to MetaMask.");
+        }
       }
     } else {
       alert('MetaMask is not installed');

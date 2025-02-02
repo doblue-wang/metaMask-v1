@@ -8,6 +8,7 @@ import { fetchGetGetQuantumTypeList, fetchGetMiningPool } from "@/api/home";
 import CountUp from "react-countup";
 import { ethers, parseUnits } from "ethers";
 import { ERC20_ABI } from "../../ERC20ABI";
+
 import { StakingABI } from "../../StakingABI";
 import { getCookie } from "@/utils/utils";
 import { t } from "i18next";
@@ -59,8 +60,9 @@ export default function Pool () {
 
   //正式
   const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
-
   const STAKING_CONTRACT_ADDRESS = '0xe8f59c86808F5DD44d7E92beD2f8405a6988BEeB'// dtv 合约
+  const USDT_address = '0xa2d272B92Cd921C572698Db1b999c1fC4c8374CA';//usdt 合约
+  const NFT_CONTRACT_ADDRESS = '0xb20bb150f744ca661FDf14c9E4f78FbB903200Fc';//nft测试合约地址
   //授权钱包
   const approveToken = async (appunmu: any) => {
     if (typeof window !== 'undefined' && window.ethereum) {
@@ -94,7 +96,6 @@ export default function Pool () {
 
   const stakeTokens = async (_address: any, _product: any, _amount: any) => {
     console.log(_address, _product, _amount);
-
     try {
       if (typeof window.ethereum === "undefined") {
         console.error("MetaMask 未安装");
@@ -133,6 +134,7 @@ export default function Pool () {
 
 
   const handleNavTo = async (index: number) => {
+    console.log(index);
     //自定义跳转页面type  1，矿池赎回，2，NFT质押，3，NFT赎回
     if (selectedTab == 0) {
       if (index == 0) {
@@ -147,18 +149,61 @@ export default function Pool () {
         router.push('/pool/KJredeem?type=1')
       }
     } else if (selectedTab == 1) {
+      console.log("81289891");
+
       if (index == 0) {
         //质押
         router.push('/pool/KJredeem?type=2')
       } else if (index == 1) {
         //赎回
         router.push('/pool/KJredeem?type=3')
+      } else if (index === 2) {
+        //铸造
+        router.push('/pool/KJredeem?type=4')
       }
     }
   }
   useEffect(() => {
     getfilterList()
   }, [])
+  const exchangeNFT = async (_amount: any) => {
+    if (!window.ethereum) {
+      alert("请安装 MetaMask!");
+      return;
+    }
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    try {
+      const gasPrice = Number((await provider.getFeeData()).gasPrice);
+      const options = {
+        gasPrice
+      };
+      const USDTcontract = new ethers.Contract(USDT_address, ERC20_ABI, signer);
+      const tx = await USDTcontract.approve(Contract_address, BigInt(_amount), options);
+      await tx.wait();
+      console.log("USDT 授权成功!");
+      // 3. 连接 NFT 兑换合约
+      const nftContract = new ethers.Contract(Contract_address, StakingABI, signer);
+      // 4. 兑换 NFT
+      const exchangeTx = await nftContract.exchangenft(BigInt(9999999999999999999), options);
+      console.log("NFT 兑换交易发送中:", exchangeTx.hash);
+      await exchangeTx.wait();
+      console.log("NFT 兑换成功! 请检查您的钱包!");
+      alert("NFT 兑换成功!");
+      // 解析 Transfer 事件，找到 NFT Token ID
+    } catch (error) {
+      console.error("兑换失败:", error);
+      alert("兑换失败，请检查钱包授权或余额!");
+    }
+  };
+
+
+
+
+
+
+
+
 
   const getfilterList = () => {
     fetchGetGetQuantumTypeList({})
@@ -255,8 +300,8 @@ export default function Pool () {
             <div className={styles.imagebox}>
               <Image className={styles.img} src='/pool/poolNFT.png' />
             </div>
-            <div className={styles.price}>1000u</div>
-            <div className={styles.mark_up}>
+            <div className={styles.price}>1000U</div>
+            {/* <div className={styles.mark_up}>
               <div className={styles.pos}>
                 <div className={styles.label}>{t('POS_Bonus')}：</div>
                 <div className={styles.num}>2000 (12%)</div>
@@ -265,24 +310,53 @@ export default function Pool () {
                 <div className={styles.label}>{t('POP_Bonus')}：</div>
                 <div className={styles.num}>2000 (12%)</div>
               </div>
-            </div>
+            </div> */}
           </div>
         ) : null}
-        <div className={styles.btnbox}>
-          <Button disabled={source?.HavingMiningMachineInformation} className={styles.btn} onClick={() => handleNavTo(0)}>
-            <div className={styles.btnlist}>
-              <span className={styles.btnText}>{t('Staking_Redemption_Minting.Staking')}</span>
-              {/* <Image className={styles.img} src='/pool/casting.png' /> */}
+        {
+          selectedTab === 0 ?
+            <div className={styles.btnbox}>
+              <Button disabled={source?.HavingMiningMachineInformation} className={styles.btn} onClick={() => handleNavTo(0)}>
+                <div className={styles.btnlist}>
+                  <span className={styles.btnText}>{t('Staking_Redemption_Minting.Staking')}</span>
+                </div>
+              </Button>
+              <Button disabled={!source?.HavingMiningMachineInformation} className={styles.btn} onClick={() => handleNavTo(1)}>
+                <div className={styles.btnlist}>
+                  <span className={styles.btnText}>{t('Staking_Redemption_Minting.Redemption')}</span>
+                </div>
+              </Button>
+            </div> :
+            <div className={styles.btnbox}>
+              <Button onClick={async () => {
+                await exchangeNFT(20000000000000000000000)
+
+              }} disabled={source?.HavingMiningMachineInformation} className={styles.btn} >
+                <div className={styles.btnlist}>
+                  <span className={styles.btnText}>铸造</span>
+                  <Image className={styles.img} src='/pool/casting.png' />
+                </div>
+              </Button>
+              <Button onClick={
+                () => handleNavTo(0)
+              } disabled={source?.HavingMiningMachineInformation} className={styles.btn} >
+                <div className={styles.btnlist}>
+                  <span className={styles.btnText}>{t('Staking_Redemption_Minting.Staking')}</span>
+                </div>
+              </Button>
+              {/* disabled={!source?.HavingMiningMachineInformation} */}
+              <Button onClick={
+                () => handleNavTo(1)}
+                className={styles.btn} >
+                <div className={styles.btnlist}>
+                  <span className={styles.btnText}>{t('Staking_Redemption_Minting.Redemption')}</span>
+                </div>
+              </Button>
             </div>
-          </Button>
-          {/* disabled={!source?.HavingMiningMachineInformation} */}
-          <Button className={styles.btn} onClick={() => handleNavTo(1)}>
-            <div className={styles.btnlist}>
-              <span className={styles.btnText}>{t('Staking_Redemption_Minting.Redemption')}</span>
-              {/* <Image className={styles.img} src='/pool/casting.png' /> */}
-            </div>
-          </Button>
-        </div>
+        }
+
+
+
       </div>
       <div className={styles.bonusBox}>
         <div className={styles.bonusTitle}>奖金收益</div>

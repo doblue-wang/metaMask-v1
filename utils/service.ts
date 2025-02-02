@@ -62,7 +62,7 @@ const checkStatus = (response: Response, newOptions: any) => {
  */
 export default function request (url: string, option: any) {
   if (process.env.NODE_ENV === "production") {
-    url = "http://154.19.85.158:85/" + url;
+    url = "http://154.19.85.158:85" + url;
   }
 
   const options = {

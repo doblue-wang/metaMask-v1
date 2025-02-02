@@ -82,8 +82,6 @@ export default function Convert () {
         };
         const signer = await provider.getSigner();
         const USDTcontract = new ethers.Contract(USDT_address, ERC20_ABI, signer);
-        (USDTcontract);
-
         const tx = await USDTcontract.approve(Contract_address, BigInt(appunmu), options);
         await tx.wait();
         await change(appunmu)
