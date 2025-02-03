@@ -13,7 +13,8 @@ export default function MyShare () {
     }
 
     const getSource = () => {
-        fetchGetGetMyShare({ AccountId: 123 }).then(({ data }) => {
+        const AccountId = localStorage.getItem('AccountId')
+        fetchGetGetMyShare({ AccountId }).then(({ data }) => {
             setSource(data);
         })
             .catch((e) => {

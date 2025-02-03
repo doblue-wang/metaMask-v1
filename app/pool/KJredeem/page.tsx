@@ -1,8 +1,9 @@
 'use client';
+
+import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./page.module.scss";
 import React, { useEffect, useState } from 'react'
 import { Image, Popup } from 'antd-mobile'
-// import { useSearchParams } from "next/navigation";
 import NavBar from "@/components/NavBar/page";
 import Empty from "@/components/empty/page";
 import { getCookie } from "@/utils/utils";
@@ -11,10 +12,10 @@ import { NFT_ABI } from "../../../NFT";
 import { StakingABI } from "@/StakingABI";
 import NewLoading from "@/components/Loading";
 import CustomAlert from "@/components/Toast";
-import { useSearchParams } from "next/navigation";
 export default function KJredeem () {
     const searchParams = useSearchParams();
-    const type = searchParams.get('type');
+    const paramValue = searchParams.get("type");
+
 
     const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
     const STAKING_CONTRACT_ADDRESS = '0xe8f59c86808F5DD44d7E92beD2f8405a6988BEeB'// dtv 合约
@@ -130,7 +131,7 @@ export default function KJredeem () {
             <div className={styles.content}>
                 {
                     (() => {
-                        if (type === "1") {
+                        if (paramValue === "1") {
                             return <div className={styles.onminingbox}>
                                 <div className={styles.item}>
                                     <div className={styles.topbox}>
@@ -146,7 +147,7 @@ export default function KJredeem () {
                                 </div>
 
                             </div>
-                        } else if (type === "2") {
+                        } else if (paramValue === "2") {
                             return <div className={styles.nftbox1}>
                                 <div className={styles.mark_up}>
                                     <div className={styles.pos}>
@@ -181,8 +182,8 @@ export default function KJredeem () {
 
 
                 {
-                    (type === "1" || type === "3") && <div onClick={async () => {
-                        if (type === "1") {
+                    (paramValue === "1" || paramValue === "3") && <div onClick={async () => {
+                        if (paramValue === "1") {
                             await withdrawTokens(getCookie('accounts'), 1, 20000)
                         } else {
                             await withdrawNFT()
@@ -190,7 +191,7 @@ export default function KJredeem () {
                     }} className={styles.btnbox}>赎回</div>
                 }
                 {
-                    type === "2" && <div onClick={async () => {
+                    paramValue === "2" && <div onClick={async () => {
                         await stakeNFT(1)
 
                     }} className={styles.btnbox}>质押</div>

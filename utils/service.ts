@@ -1,9 +1,9 @@
+'use client'
 import { Toast } from "antd-mobile";
 import hash from "hash.js";
 import { stringify } from "qs";
-import router from "next/router";
-
-import { getCookie } from "./utils";
+import { fetchLogin } from "@/api/home";
+import { useState } from "react";
 
 const codeMessage = {
   200: "服务器成功返回请求的数据。",
@@ -22,9 +22,51 @@ const codeMessage = {
   503: "服务不可用，服务器暂时过载或维护。",
   504: "网关超时。",
 };
-
+let redirectExecuted = false; // 全局标志，确保重定向只执行一次
 // 拷贝 response
 const copyResponse = (response: Response) => response.clone().json();
+//接口授权
+const getGoodsNineTrans = async ({ WalletAddress }: { WalletAddress: Number }) => {
+  fetchLogin({ WalletAddress: WalletAddress })
+    .then(({ data }) => {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('AccountId', data.AccountId);
+      window.location.href = "/"
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+};
+//metamask 授权
+const connectMetaMask = async () => {
+  if (typeof window !== 'undefined' && window.ethereum) {
+    try {
+      // 请求用户连接 MetaMask
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+      console.log(accounts);
+      localStorage.setItem('accounts', accounts[0]);
+      getGoodsNineTrans({ WalletAddress: accounts[0] })
+    } catch (error: any) {
+      console.error('Error connecting to MetaMask:', error);
+      if (error.code === 4001) {
+        alert("User rejected the request.");
+      } else {
+        alert("An error occurred while connecting to MetaMask.");
+      }
+    }
+  } else {
+    alert('MetaMask is not installed');
+  }
+};
+
+
+
+
+
+
+
 
 const checkStatus = (response: Response, newOptions: any) => {
   const { status } = response;
@@ -76,7 +118,7 @@ export default function request (url: string, option: any) {
   const newOptions = {
     ...defaultOptions,
     ...options,
-    headers: { Authorization: `${getCookie('token')}` },
+    headers: { Authorization: `${localStorage.getItem('token')}` },
   };
 
   if (["POST", "PUT", "DELETE"].includes(newOptions.method)) {
@@ -120,25 +162,19 @@ export default function request (url: string, option: any) {
     }
   }
 
+
   return (
     fetch(url, newOptions)
       .then((response) => checkStatus(response, newOptions))
       .then((response) => {
         return response.json();
+      }).then((data) => {
+        if (data.code === 600) {
+          return connectMetaMask()
+        }
+        return data;
       })
       .catch((response: any) => {
-        const { status } = response;
-        // 无权限访问
-        if (status === 401) {
-          // router.push("/user/wx-login");
-        }
-        else if (status === 403) {
-          router.push("/user/wx-login");
-        } else if (status <= 504 && status >= 500) {
-          Toast.show({ icon: "fail", content: codeMessage["500"] });
-        } else if (status >= 404 && status < 422) {
-          Toast.show({ icon: "fail", content: codeMessage["404"] });
-        }
         return response.json();
       })
   );

@@ -26,7 +26,8 @@ export default function MyPool () {
         router.back()
     }
     const getSource = () => {
-        fetchGetMyMineralPoolSummary({ AccountId: 643253273452609477 }).then(({ data }) => {
+        const AccountId = localStorage.getItem('AccountId')
+        fetchGetMyMineralPoolSummary({ AccountId }).then(({ data }) => {
             setSource(data);
         })
             .catch((e) => {

@@ -39,7 +39,8 @@ export default function Mine () {
 
   //接口授权
   const fetchGetMineSource = async () => {
-    fetchGetMine({ AccountId: getCookie('AccountId') })
+    const AccountId = localStorage.getItem('AccountId')
+    fetchGetMine({ AccountId })
       .then(({ data }) => {
         setSource(data);
       })
@@ -49,7 +50,8 @@ export default function Mine () {
   };
   //语言
   const fetchLanguage = async (val: any) => {
-    MyInformationUploadImage({ AccountId: getCookie('AccountId'), Languages: val })
+    const AccountId = localStorage.getItem('AccountId')
+    MyInformationUploadImage({ AccountId, Languages: val })
       .then(({ data }) => {
         (data);
       })

@@ -29,8 +29,9 @@ export default function Pool () {
     getSource()
   }, [])
   const getSource = () => {
+    const AccountId = localStorage.getItem('AccountId')
     fetchGetMiningPool({
-      AccountId: getCookie('AccountId')
+      AccountId
     }).then(({ code, data }) => {
       setSource(data)
     })

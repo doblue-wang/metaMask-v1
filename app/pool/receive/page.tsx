@@ -52,8 +52,9 @@ export default function Receive () {
 
     };
     const exchange = () => {
+        const AccountId = localStorage.getItem('AccountId')
         ClaimIncome({
-            AccountId: getCookie('AccountId')
+            AccountId
         })
             .then(({ data }) => {
                 console.log(data);
@@ -75,9 +76,7 @@ export default function Receive () {
                 // 调用合约的 getcominglist 方法获取用户收益记录
                 const records = await stakingContract.getcominglist(_address);
                 const parsedRecords = parseRecords(records);
-                (parsedRecords);
                 setList(parsedRecords)
-
                 return records;  // 返回收益记录数组
             } catch (e) {
                 console.error("获取收益记录失败", e);

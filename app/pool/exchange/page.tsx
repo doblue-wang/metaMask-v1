@@ -13,8 +13,9 @@ export default function Exchange () {
         Record()
     }, [])
     const exchange = () => {
+        const AccountId = localStorage.getItem('AccountId')
         ExchangeDtv({
-            AccountId: getCookie('AccountId')
+            AccountId
         })
             .then(({ data }) => {
                 console.log(data);
@@ -24,8 +25,9 @@ export default function Exchange () {
             });
     }
     const Record = () => {
+        const AccountId = localStorage.getItem('AccountId')
         ExchangeDtvRecord({
-            AccountId: getCookie('AccountId')
+            AccountId
         })
             .then(({ data }) => {
                 console.log(data);

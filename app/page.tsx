@@ -8,19 +8,13 @@ import { useRouter } from "next/navigation";
 import CountUp from "react-countup";
 import BottomNav from "@/components/Tabbar";
 import { fetchGetHome, fetchGetSpeedOfProgress, fetchLogin } from "@/api/home";
-import { getCookie, setCookie } from "@/utils/utils";
 import { useTranslation } from "react-i18next";
 export default function Home () {
   const router = useRouter();
   const [source, setSource] = useState({} as any);
   const [progress, setProgress] = useState({} as any);
   const { t } = useTranslation();
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    const savedToken = getCookie("token");
-    setToken(savedToken);
-  }, []);
+  const [AccountIdata, setAccountId] = useState("");
   const items = source?.RotationData?.[0]?.pic?.map((item: any, index: any) => (
     <Swiper.Item className={styles.item} key={index}>
       <div
@@ -32,24 +26,26 @@ export default function Home () {
   ))
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    console.log(token);
+
     if (token) {
-      console.log(token);
       getHome();
       getProgress();
     } else {
       connectMetaMask();
     }
-  }, [token]); //
-
-
+  }, []); //
 
   //接口授权
   const getGoodsNineTrans = async ({ WalletAddress }: { WalletAddress: Number }) => {
     fetchLogin({ WalletAddress: WalletAddress })
       .then(({ data }) => {
-        setCookie("token", data.token, 7);
-        setCookie('AccountId', data.AccountId, 7)
-        getHome()
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('AccountId', data.AccountId);
+        setTimeout(() => {
+          getHome(data.AccountId);
+        }, 100);
       })
       .catch((e) => {
         console.log(e);
@@ -59,8 +55,6 @@ export default function Home () {
 
   //metamask 授权
   const connectMetaMask = async () => {
-    console.log("-----");
-
     if (typeof window !== 'undefined' && window.ethereum) {
       try {
         // 请求用户连接 MetaMask
@@ -68,8 +62,7 @@ export default function Home () {
           method: 'eth_requestAccounts',
         });
         console.log(accounts);
-
-        setCookie("accounts", accounts[0], 7);
+        localStorage.setItem('accounts', accounts[0]);
         getGoodsNineTrans({ WalletAddress: accounts[0] })
       } catch (error: any) {
         console.error('Error connecting to MetaMask:', error);
@@ -87,15 +80,10 @@ export default function Home () {
 
 
   // 首页数据
-  const getHome = () => {
+  const getHome = (AccountId?: any) => {
     fetchGetHome({
-      AccountId: getCookie('AccountId')
-    }).then(({ code, data }) => {
-      (code);
-      if (code === 600) {
-        //重新登录
-        connectMetaMask()
-      }
+      AccountId: AccountId ? AccountId : localStorage.getItem('AccountId')
+    }).then(({ data }) => {
       setSource(data);
     })
       .catch((e) => {
@@ -105,10 +93,10 @@ export default function Home () {
 
   //数据进度
   const getProgress = () => {
+    const AccountId = localStorage.getItem('AccountId')
     fetchGetSpeedOfProgress({
-      AccountId: getCookie('AccountId')
-    }).then(({ code, data }) => {
-      (data);
+      AccountId
+    }).then(({ data }) => {
       setProgress(data)
     })
       .catch((e) => {
