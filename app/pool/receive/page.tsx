@@ -6,7 +6,6 @@ import NavBar from "@/components/NavBar/page";
 import Empty from "@/components/empty/page";
 import { ethers } from "ethers";
 import { StakingABI } from "@/StakingABI";
-import { getCookie } from "@/utils/utils";
 import CustomAlert from "@/components/Toast";
 import { t } from "i18next";
 import { ClaimIncome } from "@/api/home";
@@ -18,10 +17,10 @@ export default function Receive () {
     const [list, setList] = useState<any>([])
     const [show, setShow] = useState(false)
     useEffect(() => {
-        getComingList(getCookie('accounts'))
+        getComingList(localStorage.getItem('accounts'))
     }, [])
 
-    const withdrawComing = async (_address: string) => {
+    const withdrawComing = async (_address: any) => {
         if (typeof window !== 'undefined' && window.ethereum) {
             try {
                 const provider = new ethers.BrowserProvider(window.ethereum);
@@ -66,7 +65,7 @@ export default function Receive () {
 
 
 
-    const getComingList = async (_address: string) => {
+    const getComingList = async (_address: any) => {
         if (typeof window !== 'undefined' && window.ethereum) {
             try {
                 const provider = new ethers.BrowserProvider(window.ethereum);
@@ -125,7 +124,7 @@ export default function Receive () {
                     </div>
                     <div className={styles.price}>138.23 DTV</div>
                     <div className={styles.txt}>{t('Income_Collection.Available_for_Collection')}</div>
-                    <div onClick={() => withdrawComing(getCookie('accounts'))} className={styles.btn}>{t('Earnings.Collect')}</div>
+                    <div onClick={() => withdrawComing(localStorage.getItem('accounts'))} className={styles.btn}>{t('Earnings.Collect')}</div>
                     <div className={styles.prompt}>{t('burning')}</div>
 
                 </div>

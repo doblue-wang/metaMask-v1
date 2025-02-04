@@ -4,12 +4,15 @@
     padding: 16px 12px 36px 12px;
     display: flex;
     align-items: center;
+    margin-top: 10px;
     justify-content: center;
     flex-direction: column;
+
     .img {
         width: 140px;
         height: 140px;
     }
+
     .emptytext {
         font-family:
             PingFang SC,

@@ -7,7 +7,6 @@ import NavBar from "@/components/NavBar/page";
 import Empty from "@/components/empty/page";
 import { t } from "i18next";
 import { ExchangeDtv, ExchangeDtvRecord } from "@/api/home";
-import { getCookie } from "@/utils/utils";
 export default function Exchange () {
     useEffect(() => {
         Record()
@@ -58,7 +57,6 @@ export default function Exchange () {
                         <div className={styles.desc}>DTVC</div>
                     </div>
                 </div>
-
             </div>
             <div className={styles.listbox}>
                 <div className={styles.listTitle}>DTVC {t('Earnings.Exchange_Record')}</div>

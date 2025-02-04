@@ -122,6 +122,14 @@
                 margin-right: 12px;
             }
 
+            .nft_no {
+                width: 42px;
+                height: 54px;
+                margin-right: 12px;
+                filter: grayscale(100%);
+                /* 使元素变为黑白 */
+            }
+
             .namerow {
                 p {
                     font-weight: bold;

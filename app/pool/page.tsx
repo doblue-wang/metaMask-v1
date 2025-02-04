@@ -10,8 +10,9 @@ import { ethers, parseUnits } from "ethers";
 import { ERC20_ABI } from "../../ERC20ABI";
 
 import { StakingABI } from "../../StakingABI";
-import { getCookie } from "@/utils/utils";
 import { t } from "i18next";
+import CustomAlert from "@/components/Toast";
+import NewLoading from "@/components/Loading";
 // import { utils } from "ethers"; // 显式导入utils模块
 export default function Pool () {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -20,7 +21,9 @@ export default function Pool () {
   const [itemSource, setItemSource] = useState({} as any)
   const [filterList, setFilterList] = useState<any>([])
   const [defults, setDefult] = useState<any>()
-
+  const [show, setShow] = useState(false)
+  const [visible1, setVisble1] = useState(false)
+  const [message, setMessage] = useState('')
   const tabs = [
     { id: 0, label: `${t('Miner')}` },
     { id: 1, label: 'NFT' },
@@ -63,7 +66,6 @@ export default function Pool () {
   const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
   const STAKING_CONTRACT_ADDRESS = '0xe8f59c86808F5DD44d7E92beD2f8405a6988BEeB'// dtv 合约
   const USDT_address = '0xa2d272B92Cd921C572698Db1b999c1fC4c8374CA';//usdt 合约
-  const NFT_CONTRACT_ADDRESS = '0xb20bb150f744ca661FDf14c9E4f78FbB903200Fc';//nft测试合约地址
   //授权钱包
   const approveToken = async (appunmu: any) => {
     if (typeof window !== 'undefined' && window.ethereum) {
@@ -76,22 +78,23 @@ export default function Pool () {
         };
         const signer = await provider.getSigner();
         const USDTcontract = new ethers.Contract(STAKING_CONTRACT_ADDRESS, ERC20_ABI, signer);
-
         // 执行 approve 操作
         const tx = await USDTcontract.approve(Contract_address, BigInt(appunmu), options);
-        console.log("授权成功", tx);
-
         // 等待授权交易完成
         await tx.wait();
-
+        const walletAddress = localStorage.getItem('accounts')
+        setShow(true)
         // 授权完成后，执行质押操作
-        await stakeTokens(getCookie('accounts'), itemSource.MappingValue, appunmu);
-
+        await stakeTokens(walletAddress, itemSource.MappingValue, appunmu);
       } catch (e) {
+        setShow(false)
         console.error("授权失败", e);
+        setMessage('授权失败')
+        setVisble1(true)
       }
     } else {
-      alert('MetaMask is not installed');
+      setMessage('MetaMask is not installed')
+      setVisble1(true)
     }
   };
 
@@ -99,22 +102,19 @@ export default function Pool () {
     console.log(_address, _product, _amount);
     try {
       if (typeof window.ethereum === "undefined") {
-        console.error("MetaMask 未安装");
+        setMessage('MetaMask 未安装')
+        setVisble1(true)
         return;
       }
-
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
-
       // 初始化质押合约
       const stakingContract = new ethers.Contract(Contract_address, StakingABI, signer);
-
       // 获取 Gas 费用数据
       const gasPrice = Number((await provider.getFeeData()).gasPrice);
       const options = {
         gasPrice
       };
-
       // 执行质押操作
       const tx = await stakingContract.stakeproducts(
         _address,
@@ -123,12 +123,15 @@ export default function Pool () {
         options
       );
       console.log("质押成功", tx);
-
       // 等待质押交易完成
       await tx.wait();
-
+      setShow(false)
+      setVisble1(true)
+      setMessage('质押成功')
     } catch (e) {
       console.error("质押失败", e);
+      setVisble1(true)
+      setMessage('质押失败')
     }
   };
 
@@ -139,10 +142,17 @@ export default function Pool () {
     //自定义跳转页面type  1，矿池赎回，2，NFT质押，3，NFT赎回
     if (selectedTab == 0) {
       if (index == 0) {
-        const num = 20000;
-        const amountInUnits = parseUnits(num.toString(), 18);  // 转换为最小单位
-        const amountInUnitsStr = amountInUnits.toString();  // 转换为字符串
-        await approveToken(amountInUnitsStr)
+        if (Object.keys(itemSource).length) {
+          console.log(itemSource);
+          const num = 20000;
+          const amountInUnits = parseUnits(num.toString(), 18);  // 转换为最小单位
+          const amountInUnitsStr = amountInUnits.toString();  // 转换为字符串
+          await approveToken(amountInUnitsStr)
+        } else {
+          setMessage('请先选择矿机')
+          setVisble1(true)
+        }
+
         //质押
       } else if (index == 1) {
         // await withdrawTokens(getCookie('accounts'), 1, 20000)
@@ -150,8 +160,6 @@ export default function Pool () {
         router.push('/pool/KJredeem?type=1')
       }
     } else if (selectedTab == 1) {
-      console.log("81289891");
-
       if (index == 0) {
         //质押
         router.push('/pool/KJredeem?type=2')
@@ -181,6 +189,7 @@ export default function Pool () {
       };
       const USDTcontract = new ethers.Contract(USDT_address, ERC20_ABI, signer);
       const tx = await USDTcontract.approve(Contract_address, BigInt(_amount), options);
+      setShow(true)
       await tx.wait();
       console.log("USDT 授权成功!");
       // 3. 连接 NFT 兑换合约
@@ -189,22 +198,16 @@ export default function Pool () {
       const exchangeTx = await nftContract.exchangenft(BigInt(9999999999999999999), options);
       console.log("NFT 兑换交易发送中:", exchangeTx.hash);
       await exchangeTx.wait();
-      console.log("NFT 兑换成功! 请检查您的钱包!");
-      alert("NFT 兑换成功!");
+      setShow(false)
+      setVisble1(true)
+      setMessage('NFT 铸造成功! 请检查您的钱包!')
       // 解析 Transfer 事件，找到 NFT Token ID
     } catch (error) {
-      console.error("兑换失败:", error);
-      alert("兑换失败，请检查钱包授权或余额!");
+      setVisble1(true)
+      setMessage('铸造失败')
+      console.error("铸造失败:", error);
     }
   };
-
-
-
-
-
-
-
-
 
   const getfilterList = () => {
     fetchGetGetQuantumTypeList({})
@@ -214,7 +217,6 @@ export default function Pool () {
       })
       .catch((e) => {
         console.log(e);
-
       });
   }
   return (
@@ -255,15 +257,13 @@ export default function Pool () {
               })}
             </div>
             <div onClick={() => {
-
               if (itemSource.MappingValue === 6) {
                 setVisible(true)
               }
-
             }} className={styles.selectedbox}>
               <div className={styles.fivebox}>
                 <div className={styles.top}>
-                  <div className={styles.label}>{t('Current_Selection')}：</div>
+                  <div className={styles.label}>{t('Current_Selection')}</div>
                   <div className={styles.nummin}>   {
                     itemSource?.MappingValue === 6 ? defults.Price :
                       itemSource?.Staking || 0} DTV</div>
@@ -278,7 +278,6 @@ export default function Pool () {
                   <Image className={styles.img} src='/pool/select.png' />
                 </div> : null
               }
-
             </div>
           </div>
           // 已质押
@@ -329,35 +328,36 @@ export default function Pool () {
               </Button>
             </div> :
             <div className={styles.btnbox}>
-              <Button onClick={async () => {
-                await exchangeNFT(20000000000000000000000)
+              {
+                source?.IsNFTIlluminate ? <>
+                  <Button onClick={
+                    () => handleNavTo(0)
+                  } disabled={source?.HavingMiningMachineInformation} className={styles.btn} >
+                    <div className={styles.btnlist}>
+                      <span className={styles.btnText}>{t('Staking_Redemption_Minting.Staking')}</span>
+                    </div>
+                  </Button>
+                  {/* disabled={!source?.HavingMiningMachineInformation} */}
+                  <Button onClick={
+                    () => handleNavTo(1)}
+                    className={styles.btn} >
+                    <div className={styles.btnlist}>
+                      <span className={styles.btnText}>{t('Staking_Redemption_Minting.Redemption')}</span>
+                    </div>
+                  </Button>
+                </> : <Button onClick={async () => {
+                  await exchangeNFT(20000000000000000000000)
+                }} disabled={source?.HavingMiningMachineInformation} className={styles.btn} >
+                  <div className={styles.btnlist}>
+                    <span className={styles.btnText}>铸造</span>
+                    <Image className={styles.img} src='/pool/casting.png' />
+                  </div>
+                </Button>
+              }
 
-              }} disabled={source?.HavingMiningMachineInformation} className={styles.btn} >
-                <div className={styles.btnlist}>
-                  <span className={styles.btnText}>铸造</span>
-                  <Image className={styles.img} src='/pool/casting.png' />
-                </div>
-              </Button>
-              <Button onClick={
-                () => handleNavTo(0)
-              } disabled={source?.HavingMiningMachineInformation} className={styles.btn} >
-                <div className={styles.btnlist}>
-                  <span className={styles.btnText}>{t('Staking_Redemption_Minting.Staking')}</span>
-                </div>
-              </Button>
-              {/* disabled={!source?.HavingMiningMachineInformation} */}
-              <Button onClick={
-                () => handleNavTo(1)}
-                className={styles.btn} >
-                <div className={styles.btnlist}>
-                  <span className={styles.btnText}>{t('Staking_Redemption_Minting.Redemption')}</span>
-                </div>
-              </Button>
+
             </div>
         }
-
-
-
       </div>
       <div className={styles.bonusBox}>
         <div className={styles.bonusTitle}>奖金收益</div>
@@ -409,6 +409,7 @@ export default function Pool () {
           {
             (filterList || []).map((item: any, index: number) => <div onClick={() => {
               setDefult(item)
+              setVisible(false)
             }} key={index} className={item.Price === defults.Price ? `${styles.list} ${styles.listSelect}` : styles.list}>
               <div className={styles.name}>{item.Price} DTV</div>
               <div className={styles.price}>POS: {item.Hashrate} </div>
@@ -417,6 +418,8 @@ export default function Pool () {
         </div>
       </Popup >
       <BottomNav initialTab='/pool' />
+      <NewLoading show={show} />
+      <CustomAlert visible={visible1} message={message} setVisible={setVisble1} />
     </div >
   );
 }

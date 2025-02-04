@@ -4,22 +4,24 @@ import styles from './page.module.scss'
 import React, { useRef, useState, useEffect, } from 'react'
 // import NavBar from '@/components/NavBar/page';
 import { useRouter } from 'next/navigation';
-import { fetchGetMyMineralPoolSummary } from '@/api/home';
-// import Empty from "@/components/empty/page";
+import { fetchGetMyMaxeralPoolList, fetchGetMyMineralPoolSummary } from '@/api/home';
+import Empty from "@/components/empty/page";
 export default function MyPool () {
     const [selectedTab, setSelectedTab] = useState(0);
     const [source, setSource] = useState({} as any);
+    const [list, setList] = useState<any[]>([]);
     const tabs = [
         { id: 0, label: '矿池汇总' },
         { id: 1, label: '矿池列表' },
-        // 你可以继续添加更多 tab 项
     ];
     const sortList = [
         { id: 0, label: 'POS总算力' },
         { id: 1, label: '注册时间' },
     ]
     const [sort, setSort] = useState(-1)
-    const [sortOrder, setSortOrder] = useState("asc"); // 默认升序
+    const [selectedSort, setSelectedSort] = useState<number[]>([]); // 存储选中的排序项索引
+    const [sortOrder, setSortOrder] = useState<{ [key: number]: 'ASC' | 'desc' }>({}); // 存储每个排序项的顺序
+
     const router = useRouter()
 
     const handleBack = () => {
@@ -35,10 +37,34 @@ export default function MyPool () {
             });
     }
 
+    const getList = () => {
+        const AccountId = localStorage.getItem('AccountId')
+        fetchGetMyMaxeralPoolList({
+            AccountId, SortingTypes: [
+                {
+                    FieldName: "RegistrationTime",
+                    SortingType: sortOrder[1]
+                },
+                {
+                    FieldName: "POSSummary",
+                    SortingType: sortOrder[0]
+                }
+            ]
+        }).then(({ data }) => {
+            console.log(data);
+            setList(data)
+        })
+    }
+
+
 
     useEffect(() => {
-        getSource()
-    }, [])
+        if (selectedTab === 0) {
+            getSource()
+        } else {
+            getList()
+        }
+    }, [selectedTab])
 
     const tabRefs = useRef<(HTMLDivElement | null)[]>([]);
     const [colorBarPosition, setColorBarPosition] = useState(0);
@@ -55,17 +81,27 @@ export default function MyPool () {
     };
 
     const handleSortClick = (index: number) => {
-        setSort(index)
-        if (sortOrder === "asc") {
-            setSortOrder("desc");
+        // 判断当前排序项是否已被选中
+        const isSelected = selectedSort.includes(index);
+        if (isSelected) {
+            setSortOrder(prev => ({
+                ...prev,
+                [index]: prev[index] === 'ASC' ? 'desc' : 'ASC',
+            }));
+            // console.log(sortOrder);
         } else {
-            setSortOrder("asc");
+            // 如果没有选中，则添加到选中项，并设置升序
+            setSelectedSort([...selectedSort, index]);
+            setSortOrder(prev => ({
+                ...prev,
+                [index]: 'ASC', // 默认升序
+            }));
+            // console.log(sortOrder);
         }
-    }
-
+    };
     useEffect(() => {
-        setSortOrder("desc");
-    }, [sort])
+        getList()
+    }, [sortOrder]);
 
 
 
@@ -102,7 +138,7 @@ export default function MyPool () {
                     <div className={styles.myMachine}>
                         <div className={styles.titlebox}>
                             <div className={styles.title}>我的矿机</div>
-                            <Image className={styles.titleimg} src="/mine/share.png" />
+                            {/* <Image className={styles.titleimg} src="/mine/share.png" /> */}
                         </div>
                         <div className={styles.machinedetail}>
                             <div className={styles.detail_left}>
@@ -121,7 +157,6 @@ export default function MyPool () {
                                 合格矿池
                                 <div className={styles.txt}>POP：{source?.POPSummary || 0}</div>
                             </div>
-                            <Image className={styles.titleimg} src="/mine/share.png" />
                         </div>
                         <div className={styles.listbox}>
                             <div className={styles.listlabel}>
@@ -136,12 +171,9 @@ export default function MyPool () {
                                             <div className={styles.time}>{item?.CompletionTime || '--'}</div>
                                         </div>)
                                     }
-                                </> : null
+                                </> : <Empty />
                             }
-
-
                         </div>
-
                     </div>
                     <div className={styles.myMachine}>
                         <div className={styles.titlebox}>
@@ -149,7 +181,6 @@ export default function MyPool () {
                                 合格矿池
                                 <div className={styles.txt}>POP：160w</div>
                             </div>
-                            <Image className={styles.titleimg} src="/mine/share.png" />
                         </div>
                         <div className={styles.listbox}>
                             <div className={styles.listlabel}>
@@ -157,17 +188,22 @@ export default function MyPool () {
                                 <div className={styles.txt}>完成度</div>
                             </div>
                             {
-                                (source?.PreparationMiningPoolList || []).map((item: any, index: number) =>
-                                    <div key={index} className={styles.listitem}>
-                                        <div className={styles.name}>{item?.MiningPoolName || '--'}</div>
-                                        <div className={styles.Circlebox}>
-                                            <div >{item?.MiningPoolSpeedOfProgress || 0}%</div>
-                                            <div className={styles.Circle}>
-                                                <ProgressCircle percent={item?.MiningPoolSpeedOfProgress || 0} style={{ '--track-width': '4px', '--track-color': 'rgba(255,110,145,0.1)', '--fill-color': '#FF6E91', '--size': '18px' }} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                )
+                                (source?.PreparationMiningPoolList || []).length > 0 ?
+                                    <>
+                                        {
+                                            source?.PreparationMiningPoolList.map((item: any, index: number) =>
+                                                <div key={index} className={styles.listitem}>
+                                                    <div className={styles.name}>{item?.MiningPoolName || '--'}</div>
+                                                    <div className={styles.Circlebox}>
+                                                        <div >{item?.MiningPoolSpeedOfProgress || 0}%</div>
+                                                        <div className={styles.Circle}>
+                                                            <ProgressCircle percent={item?.MiningPoolSpeedOfProgress || 0} style={{ '--track-width': '4px', '--track-color': 'rgba(255,110,145,0.1)', '--fill-color': '#FF6E91', '--size': '18px' }} />
+                                                        </div>
+                                                    </div>
+                                                </div>)
+                                        }
+                                    </> : <Empty />
+
                             }
 
                         </div>
@@ -178,83 +214,71 @@ export default function MyPool () {
                 <div className={styles.poolbox}>
                     {/* //排序 */}
                     <div className={styles.sortbox}>
-                        {
-                            sortList.map((item: any, index: number) => {
-                                return (
-                                    <div key={index} className={styles.sortitem} onClick={() => handleSortClick(index)}>
-                                        <div className={`${styles.sorttxt} ${sort == index ? styles.active : ''}`}>{item.label}</div>
-                                        <div className={styles.arrowbox}>
-                                            <div className={`${styles.uparrow} ${sort == index && sortOrder == 'asc' ? styles.active : ''}`}></div>
-                                            <div className={`${styles.downarrow} ${sort == index && sortOrder == 'desc' ? styles.active : ''} `} ></div>
-                                        </div>
-                                    </div>
-                                )
-                            })
-                        }
+                        {sortList.map((item, index) => (
+                            <div
+                                key={index}
+                                className={styles.sortitem}
+                                onClick={() => handleSortClick(index)}
+                            >
+                                <div className={`${styles.sorttxt} ${selectedSort.includes(index) ? styles.active : ''}`}>
+                                    {item.label}
+                                </div>
+                                <div className={styles.arrowbox}>
+                                    <div
+                                        className={`${styles.uparrow} ${selectedSort.includes(index) && sortOrder[index] === 'ASC' ? styles.active : ''
+                                            }`}
+                                    ></div>
+                                    <div
+                                        className={`${styles.downarrow} ${selectedSort.includes(index) && sortOrder[index] === 'desc' ? styles.active : ''
+                                            }`}
+                                    ></div>
+                                </div>
+                            </div>
+                        ))}
 
 
                     </div>
                     <div className={styles.poollist}>
-                        <div className={styles.listitem}>
-                            <div className={styles.userbox}>
-                                <div className={styles.userleft}>
-                                    <Image className={styles.userimg} src="/mine/receives.png" alt="" />
-                                    <div className={styles.usernamebox}>
-                                        <div className={styles.username}>用户名</div>
-                                        {/* <div className={styles.Circlebox}>
-                                            <ProgressCircle percent={75} style={{ '--track-width': '4px', '--track-color': 'rgba(255,110,145,0.1)', '--fill-color': '#FF6E91', '--size': '18px' }} />
-                                            <div className={styles.cricetxt}>Lv.1</div>
-                                            </div> */}
-                                        <div className={styles.tag}>算力达标</div>
-                                    </div>
-                                </div>
-                                <div className={styles.usertime}>2023-12-12 12:12:12</div>
-                            </div>
-                            <div className={styles.contentbox}>
-                                <div className={styles.item}>
-                                    <div className={styles.label}>矿机数量：</div>
-                                    <div className={styles.value}>20</div>
-                                </div>
-                                <div className={styles.item1}>
-                                    <div className={styles.label}>POS总算力：</div>
-                                    <div className={styles.value}>30000</div>
-                                </div>
-                                <div className={styles.item}>
-                                    <div className={styles.label}>备注：</div>
-                                    <div className={styles.value}>XXXXXX</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className={styles.listitem}>
-                            <div className={styles.userbox}>
-                                <div className={styles.userleft}>
-                                    <Image className={styles.userimg} src="/mine/receives.png" alt="" />
-                                    <div className={styles.usernamebox}>
-                                        <div className={styles.username}>用户名</div>
-                                        <div className={styles.Circlebox}>
-                                            <ProgressCircle percent={75} style={{ '--track-width': '4px', '--track-color': 'rgba(255,110,145,0.1)', '--fill-color': '#FF6E91', '--size': '18px' }} />
-                                            <div className={styles.cricetxt}>Lv.1</div>
+                        {
+                            (list || []).length > 0 ? <>
+                                {
+                                    list.map((item: any, index: any) => <div key={index} className={styles.listitem}>
+                                        <div className={styles.userbox}>
+                                            <div className={styles.userleft}>
+                                                <Image className={styles.userimg} src={item?.AccountImg} alt="" />
+                                                <div className={styles.usernamebox}>
+                                                    <div className={styles.username}>{item.AccountName || ''}</div>
+                                                    {
+                                                        item.MiningPoolSpeedOfProgress > 0 ? <div className={styles.Circlebox}>
+                                                            <ProgressCircle percent={item.MiningPoolSpeedOfProgress} style={{ '--track-width': '4px', '--track-color': 'rgba(255,110,145,0.1)', '--fill-color': '#FF6E91', '--size': '18px' }} />
+                                                            <div className={styles.cricetxt}>{item.MiningPoolSpeedOfProgress}%</div>
+                                                        </div> : null
+                                                    }
+                                                    <div className={styles.tag}>算力达标</div>
+                                                </div>
+                                            </div>
+                                            <div className={styles.usertime}>{item.CompletionTime}</div>
                                         </div>
-                                        {/* <div className={styles.tag}>算力达标</div> */}
-                                    </div>
-                                </div>
-                                <div className={styles.usertime}>2023-12-12 12:12:12</div>
-                            </div>
-                            <div className={styles.contentbox}>
-                                <div className={styles.item}>
-                                    <div className={styles.label}>矿机数量：</div>
-                                    <div className={styles.value}>20</div>
-                                </div>
-                                <div className={styles.item1}>
-                                    <div className={styles.label}>POS总算力：</div>
-                                    <div className={styles.value}>30000</div>
-                                </div>
-                                <div className={styles.item}>
-                                    <div className={styles.label}>备注：</div>
-                                    <div className={styles.value}>XXXXXX</div>
-                                </div>
-                            </div>
-                        </div>
+                                        <div className={styles.contentbox}>
+                                            <div className={styles.item}>
+                                                <div className={styles.label}>矿机数量：</div>
+                                                <div className={styles.value}>{item.NumberOfMiningMachines || 0}</div>
+                                            </div>
+                                            <div className={styles.item1}>
+                                                <div className={styles.label}>POS总算力：</div>
+                                                <div className={styles.value}>{item.POSSummary || 0}</div>
+                                            </div>
+                                            <div className={styles.item}>
+                                                <div className={styles.label}>备注：</div>
+                                                <div className={styles.value}>XXXXXX</div>
+                                            </div>
+                                        </div>
+                                    </div>)
+                                }
+
+                            </> : <Empty />
+                        }
+
                     </div>
 
 

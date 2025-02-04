@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
 import { MyInformationUploadImage, fetchGetMine } from '@/api/home';
-import { getCookie } from '@/utils/utils';
 export default function Mine () {
   const router = useRouter();
   const [show, setShow] = useState(false)
@@ -65,15 +64,15 @@ export default function Mine () {
   return (
     <div className='mine'>
       <div className="userInfo">
-        <div className="left">
-          <Image className='avatr' alt='' src='/mine/idcard.png' fit='fill' />
+        <div className="left" onClick={() => router.push('/face')}>
+          <Image className='avatr' alt='' src={source?.AccountImg} fit='fill' />
           <div className="nameRow">
             <div className="top">
               <div className="name">{source?.AccountName || '--'}</div>
               <div className="status">{t('Face_Authentication.Face_Authenticated')}</div>
-              <div className="statusNomal">
+              {/* <div className="statusNomal">
                 <Image className='idcard' src="/mine/idcard.png" alt="" />
-                {t('Face_Authentication.Face_Not_Authenticated')}</div>
+                {t('Face_Authentication.Face_Not_Authenticated')}</div> */}
             </div>
             <div className="share">上级分享人{source?.SuperiorSharer || '--'}</div>
           </div>
@@ -103,7 +102,7 @@ export default function Mine () {
               <img className='arrow' src="/mine/arrow.png" alt="" />
             </div>
             <div className="num">
-              <CountUp start={0} end={source?.PendingRewardsDTV || 0} duration={3} />
+              <CountUp start={0} end={source?.PendingRewardsDTV || 0} duration={3} decimals={2} />
             </div>
 
           </div>
@@ -129,7 +128,7 @@ export default function Mine () {
               POP
             </div>
             <div className="num">
-              <CountUp start={0} end={source?.MyPop || 0} duration={1} />
+              <CountUp start={0} end={source?.MyPop || 0} duration={1} decimals={2} />
             </div>
 
           </div>
@@ -139,7 +138,7 @@ export default function Mine () {
       <div className="assets">
         <div className="title">{t('NFT_Assets')}</div>
         <div className="nftRow">
-          <Image className='nft' src="/mine/NFT.png" alt="" />
+          <Image className={source?.IsCastingNFT > 0 ? 'nft' : "nft_no"} src="/mine/NFT.png" alt="" />
           <div className="namerow">
             <p>NFT</p>
             {

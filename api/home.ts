@@ -49,10 +49,10 @@ export async function fetchGetMyMineralPoolSummary (params: object) {
 }
 
 //矿池列表
-export async function fetchGetMyMaxeralPoolList (params: object) {
+export async function fetchGetMyMaxeralPoolList (body: object) {
   return request("/api/DeclarationForm/myinformation/GetMyMaxeralPoolList", {
-    method: "GET",
-    params,
+    method: "POST",
+    body,
   });
 }
 

@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react'
 import { Image, Popup } from 'antd-mobile'
 import NavBar from "@/components/NavBar/page";
 import Empty from "@/components/empty/page";
-import { getCookie } from "@/utils/utils";
 import { ethers } from "ethers";
 import { NFT_ABI } from "../../../NFT";
 import { StakingABI } from "@/StakingABI";
@@ -15,14 +14,12 @@ import CustomAlert from "@/components/Toast";
 export default function KJredeem () {
     const searchParams = useSearchParams();
     const paramValue = searchParams.get("type");
-
-
     const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
     const STAKING_CONTRACT_ADDRESS = '0xe8f59c86808F5DD44d7E92beD2f8405a6988BEeB'// dtv 合约
     const USDT_address = '0xa2d272B92Cd921C572698Db1b999c1fC4c8374CA';//usdt 合约
-    const NFT_CONTRACT_ADDRESS = '0xb20bb150f744ca661FDf14c9E4f78FbB903200Fc';//nft测试合约地址
+    const NFT_CONTRACT_ADDRESS = '0x4Df31fBA8EEB438604c4c489dE14AA8cdaaEe0e9';//nft测试合约地址
     //矿机赎回
-    const withdrawTokens = async (_address: string, _product: number, _amount: any) => {
+    const withdrawTokens = async (_address: any, _product: number, _amount: any) => {
         console.log(_address, _product, _amount);
 
         try {
@@ -77,57 +74,76 @@ export default function KJredeem () {
             const approveTx = await nftContract.setApprovalForAll(Contract_address, true, options);
             console.log("NFT 授权交易发送中:", approveTx.hash);
             await approveTx.wait();
+            setShow(true)
             console.log("NFT 授权成功!");
-
             // 2. 调用质押合约的 stakenft 方法
             const stakeContract = new ethers.Contract(Contract_address, StakingABI, signer);
             const stakeTx = await stakeContract.stakenft(_tokenid, options);
+            setAlart(true)
+            setMessage('质押失败')
             console.log("NFT 质押交易发送中:", stakeTx.hash);
             await stakeTx.wait();
-
-            console.log(`NFT ${_tokenid} 质押成功!`);
-            alert(`NFT ${_tokenid} 质押成功!`);
+            setShow(false)
+            setAlart(true)
+            setMessage('质押成功')
         } catch (error) {
+            setAlart(true)
+            setMessage('质押失败')
             console.error("质押失败:", error);
-            alert("质押失败，请检查 NFT 授权或余额!");
         }
     };
+
+
+
+    const getIds = async () => {
+        const provider = new ethers.BrowserProvider(window.ethereum)
+        const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
+        const ownerAddress = await signer.getAddress();
+        console.log(ownerAddress);
+
+        const nftContract = new ethers.Contract(NFT_CONTRACT_ADDRESS, NFT_ABI, signer);
+        const balance = await nftContract.balanceOf(ownerAddress);
+        const tokenIds = [];
+        for (let i = 0; i < balance; i++) {
+            const tokenId = await nftContract.tokenOfOwnerByIndex(ownerAddress, i);
+            tokenIds.push(tokenId.toString());
+        }
+        console.log(tokenIds);
+        await stakeNFT(tokenIds[0])
+        return tokenIds;
+    }
     //nft 赎回
     const withdrawNFT = async () => {
         if (!window.ethereum) {
             alert("请安装 MetaMask!");
             return;
         }
-
         const provider = new ethers.BrowserProvider(window.ethereum)
         const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
         const gasPrice = Number((await provider.getFeeData()).gasPrice);
         const options = {
             gasPrice
         };
-
         const stakeContract = new ethers.Contract(Contract_address, StakingABI, signer);
-
         try {
             // 发送赎回交易（并支付 Gas 费用）
             const withdrawTx = await stakeContract.withdrawnft({
                 options
             });
-
             console.log("NFT 赎回交易发送中:", withdrawTx.hash);
+            setShow(true)
             await withdrawTx.wait();
-            console.log("NFT 赎回成功!");
-
-            alert("NFT 赎回成功!");
+            setShow(false)
+            setAlart(true)
+            setMessage('NFT 赎回成功')
         } catch (error) {
-            console.error("赎回失败:", error);
-            alert("赎回失败，请检查余额或合约状态!");
+            setAlart(true)
+            setMessage('NFT 赎回失败')
         }
     };
-
     return (
         <div className={styles.page}>
-            <NavBar title="矿机赎回" />
+            <NavBar title="矿机" />
             <div className={styles.content}>
                 {
                     (() => {
@@ -184,7 +200,7 @@ export default function KJredeem () {
                 {
                     (paramValue === "1" || paramValue === "3") && <div onClick={async () => {
                         if (paramValue === "1") {
-                            await withdrawTokens(getCookie('accounts'), 1, 20000)
+                            await withdrawTokens(localStorage.getItem('accounts'), 1, 20000)
                         } else {
                             await withdrawNFT()
                         }
@@ -192,9 +208,9 @@ export default function KJredeem () {
                 }
                 {
                     paramValue === "2" && <div onClick={async () => {
-                        await stakeNFT(1)
-
-                    }} className={styles.btnbox}>质押</div>
+                        // await stakeNFT(1)
+                        await getIds()
+                    }} className={styles.btnbox1}>质押</div>
                 }
 
             </div>
