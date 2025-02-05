@@ -178,7 +178,7 @@ export default function MyPool () {
                     <div className={styles.myMachine}>
                         <div className={styles.titlebox}>
                             <div className={styles.title}>
-                                合格矿池
+                                预备矿池
                                 <div className={styles.txt}>POP：160w</div>
                             </div>
                         </div>

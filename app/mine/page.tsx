@@ -63,8 +63,8 @@ export default function Mine () {
 
   return (
     <div className='mine'>
-      <div className="userInfo">
-        <div className="left" onClick={() => router.push('/mine/face')}>
+      <div className="userInfo" onClick={() => router.push('/mine/face')}>
+        <div className="left">
           <Image className='avatr' alt='' src={source?.AccountImg} fit='fill' />
           <div className="nameRow">
             <div className="top">

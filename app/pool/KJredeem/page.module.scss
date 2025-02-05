@@ -71,9 +71,6 @@
                 }
 
                 .pos {
-                    font-family:
-                        PingFang SC,
-                        PingFang SC;
                     font-weight: 400;
                     font-size: 14px;
                     color: #c9cdd4;
@@ -119,6 +116,7 @@
                 .pos {
                     display: flex;
                     align-items: center;
+                    margin-right: 15px;
 
                     .label {
                         font-family:

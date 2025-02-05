@@ -1,13 +1,15 @@
 
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Image } from 'antd-mobile'
 import './index.scss';
 import NavBar from '@/components/NavBar/page';
 import Head from 'next/head';
 export default function face () {
   const [isProcessing, setIsProcessing] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);  // 使用 useRef 来存储定时器 ID
+
   useEffect(() => {
     const script = document.createElement('script');
     script.src = "https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js";
@@ -16,6 +18,23 @@ export default function face () {
       initialize(); // 确保 faceapi 加载完成后再初始化
     };
     document.head.appendChild(script);
+    return () => {
+      // 停止定时器
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null; // 清除定时器引用
+        console.log("计时器已停止");
+      }
+      console.log("摄像头已关闭");
+      // 停止摄像头流
+      const videoElement = document.getElementById('video') as HTMLVideoElement;
+      if (videoElement) {
+        const stream = videoElement.srcObject as MediaStream;
+        const tracks = stream?.getTracks() as any;
+        tracks.forEach((track: any) => track.stop()); // 停止所有轨道
+        console.log("摄像头已关闭");
+      }
+    };
   }, []);
 
   const initialize = async () => {
@@ -24,27 +43,27 @@ export default function face () {
       await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
       await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
       await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
-
       // 启动摄像头
       const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
       const video = document.getElementById('video') as HTMLVideoElement;
       if (video) {
         video.srcObject = stream;
-
         // 启动检测循环
         video.addEventListener('play', () => {
-          setInterval(async () => {
+          intervalRef.current = setInterval(async () => {
             if (!isProcessing) {
               setIsProcessing(true);
               await detectFace();
               setIsProcessing(false);
             }
-          }, 1000); // 每秒检测一次
+          }, 1000);
         });
       }
 
       updateStatus("准备就绪");
     } catch (err: any) {
+      console.log(err);
+
       updateStatus(`初始化失败: ${err.message}`, true);
     }
   };

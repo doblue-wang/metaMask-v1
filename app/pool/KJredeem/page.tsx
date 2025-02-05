@@ -1,27 +1,54 @@
 'use client';
-
 import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./page.module.scss";
 import React, { useEffect, useState } from 'react'
 import { Image, Popup } from 'antd-mobile'
 import NavBar from "@/components/NavBar/page";
 import Empty from "@/components/empty/page";
-import { ethers } from "ethers";
+import { ethers, parseUnits } from "ethers";
 import { NFT_ABI } from "../../../NFT";
 import { StakingABI } from "@/StakingABI";
 import NewLoading from "@/components/Loading";
 import CustomAlert from "@/components/Toast";
+import { UpdateAllFixedAssets, fetchGetMiningPool } from "@/api/home";
+
 export default function KJredeem () {
     const searchParams = useSearchParams();
     const paramValue = searchParams.get("type");
+    const [source, setSource] = useState({} as any)
     const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
-    const STAKING_CONTRACT_ADDRESS = '0xe8f59c86808F5DD44d7E92beD2f8405a6988BEeB'// dtv 合约
-    const USDT_address = '0xa2d272B92Cd921C572698Db1b999c1fC4c8374CA';//usdt 合约
     const NFT_CONTRACT_ADDRESS = '0x4Df31fBA8EEB438604c4c489dE14AA8cdaaEe0e9';//nft测试合约地址
+    const [list, setList] = useState<any>([])
+    const [nftlist, setNftList] = useState<any>([])
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1; // 月份从 0 开始
+    const day = currentDate.getDate();
+    const hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    useEffect(() => {
+        getSource()
+        if (paramValue === "1") {
+            getComingList(localStorage.getItem('accounts'))
+        } else if (paramValue === "2" || paramValue === "3") {
+            getNftStakingList(localStorage.getItem('accounts'))
+        }
+    }, [paramValue])
+
+    const getSource = () => {
+        const AccountId = localStorage.getItem('AccountId')
+        fetchGetMiningPool({
+            AccountId
+        }).then(({ code, data }) => {
+            setSource(data)
+        })
+            .catch((e) => {
+                console.log(e);
+            });
+    }
     //矿机赎回
     const withdrawTokens = async (_address: any, _product: number, _amount: any) => {
         console.log(_address, _product, _amount);
-
         try {
             if (typeof window.ethereum === "undefined") {
                 console.error("MetaMask 未安装");
@@ -29,7 +56,6 @@ export default function KJredeem () {
             }
             const provider = new ethers.BrowserProvider(window.ethereum)
             const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
-
             // 你的质押合约地址，确认该地址是正确的
             const stakingContract = new ethers.Contract(Contract_address, StakingABI, signer);
             // 获取当前 Gas 费用数据
@@ -37,17 +63,23 @@ export default function KJredeem () {
             const options = {
                 gasPrice,
             };
+            const amountInUnits = parseUnits(_amount.toString(), 18);  // 转换为最小单位
+            const amountInUnitsStr = amountInUnits.toString();  // 转换为字符串
             // 调用合约的 withdrawproducts 方法赎回 DTV
-            const tx = await stakingContract.withdrawproducts(_address, _product, BigInt(_amount), options);
+            const tx = await stakingContract.withdrawproducts(_address, _product, BigInt(amountInUnitsStr), options);
             // 等待交易确认
             setShow(true)
             await tx.wait();
             setShow(false)
-            console.error("赎回成功");
             setAlart(true)
             setMessage('赎回成功')
+            setTimeout(() => {
+                router.back()
+            }, 2000);
         } catch (e) {
-            console.error("赎回失败", e);
+            console.log(e);
+            setAlart(true)
+            setMessage('赎回失败')
         }
     };
 
@@ -55,7 +87,7 @@ export default function KJredeem () {
     const [show, setShow] = useState(false)
     const [alart, setAlart] = useState(false)
     const [message, setMessage] = useState('')
-
+    const router = useRouter();
     //nft 质押
     const stakeNFT = async (_tokenid: number) => {
         if (!window.ethereum) {
@@ -80,27 +112,20 @@ export default function KJredeem () {
             const stakeContract = new ethers.Contract(Contract_address, StakingABI, signer);
             const stakeTx = await stakeContract.stakenft(_tokenid, options);
             setAlart(true)
-            setMessage('质押失败')
+            setMessage('NFT 质押交易发送中')
             console.log("NFT 质押交易发送中:", stakeTx.hash);
             await stakeTx.wait();
             setShow(false)
-            setAlart(true)
-            setMessage('质押成功')
+            setVisible(true)
         } catch (error) {
             setAlart(true)
             setMessage('质押失败')
-            console.error("质押失败:", error);
         }
     };
-
-
-
     const getIds = async () => {
         const provider = new ethers.BrowserProvider(window.ethereum)
         const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
         const ownerAddress = await signer.getAddress();
-        console.log(ownerAddress);
-
         const nftContract = new ethers.Contract(NFT_CONTRACT_ADDRESS, NFT_ABI, signer);
         const balance = await nftContract.balanceOf(ownerAddress);
         const tokenIds = [];
@@ -136,10 +161,75 @@ export default function KJredeem () {
             setShow(false)
             setAlart(true)
             setMessage('NFT 赎回成功')
+            setTimeout(() => {
+                router.back()
+            }, 2000);
         } catch (error) {
             setAlart(true)
             setMessage('NFT 赎回失败')
         }
+    };
+    //矿机赎回记录
+    const getComingList = async (_address: any) => {
+        if (typeof window !== 'undefined' && window.ethereum) {
+            try {
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
+                // 你的质押合约地址和 ABI
+                const stakingContract = new ethers.Contract(Contract_address, StakingABI, signer);
+                // 调用合约的 getcominglist 方法获取用户收益记录
+                const records = await stakingContract.getproductslist(_address);
+                const parsedRecords = parseRecords(records);
+                console.log(parsedRecords);
+                setList(parsedRecords)
+            } catch (e) {
+                console.error("获取记录失败", e);
+            }
+        }
+
+    };
+    //nft质押记录
+    const getNftStakingList = async (_address: any) => {
+        if (typeof window !== 'undefined' && window.ethereum) {
+            try {
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
+                const stakingContract = new ethers.Contract(Contract_address, StakingABI, signer);
+                const records = await stakingContract.getnftlist(_address);
+                const parsedRecords = parseRecords(records);
+                console.log(parsedRecords);
+                setNftList(parsedRecords)
+            } catch (e) {
+                console.error("获取记录失败", e);
+            }
+        }
+
+    };
+
+
+
+    const parseRecords = (records: any) => {
+        console.log(records);
+        return records.map((record: any) => parseRecord(record));
+    };
+
+    // 解析单个记录的函数
+    const parseRecord = (record: any) => {
+        // 获取时间戳（秒）
+        const timestamp = Number(record[0]);
+        // 时间戳转换为日期和时间
+        const date = new Date(timestamp * 1000);
+        const dateStr = date.toLocaleDateString(); // 获取日期部分
+        const timeStr = date.toLocaleTimeString(); // 获取时间部分
+        const amount = ethers.formatUnits(record[1], 18);  // 转换为普通数字字符串
+        const inout = record[2] === BigInt(0) ? '进' : '出';
+        // 返回格式化后的结果
+        return {
+            date: dateStr,
+            time: timeStr,
+            amount,
+            inout,
+        };
     };
     return (
         <div className={styles.page}>
@@ -155,11 +245,11 @@ export default function KJredeem () {
                                             <Image className={styles.img} src='/pool/leave.png' />
                                         </div>
                                     </div>
-                                    <div className={styles.itemTitle}>尾矿</div>
+                                    <div className={styles.itemTitle}>{source?.HavingMiningMachineInformation?.Name}</div>
                                 </div>
                                 <div className={styles.numbox}>
-                                    <div className={styles.nummin}>20,000 DTV</div>
-                                    <div className={styles.pos}>POS：20</div>
+                                    <div className={styles.nummin}>{source?.HavingMiningMachineInformation?.Staking}DTV</div>
+                                    <div className={styles.pos}>POS：{source?.HavingMiningMachineInformation?.Hashrate || 0}</div>
                                 </div>
 
                             </div>
@@ -167,16 +257,16 @@ export default function KJredeem () {
                             return <div className={styles.nftbox1}>
                                 <div className={styles.mark_up}>
                                     <div className={styles.pos}>
-                                        <div className={styles.label}>在售：</div>
-                                        <div className={styles.num}>2000</div>
+                                        <div className={styles.label}>在售:</div>
+                                        <div className={styles.num}>{source?.NFTType?.QuantityOnSale || 0}</div>
                                     </div>
                                     <div className={styles.pos}>
-                                        <div className={styles.label}>已售：</div>
-                                        <div className={styles.num}>2000</div>
+                                        <div className={styles.label}>已售:</div>
+                                        <div className={styles.num}>{source?.NFTType?.IssuedQuantity || 0}</div>
                                     </div>
                                     <div className={styles.pos}>
-                                        <div className={styles.label}>总数：</div>
-                                        <div className={styles.num}>2000</div>
+                                        <div className={styles.label}>总数:</div>
+                                        <div className={styles.num}>{source?.NFTType?.Total || 0}</div>
                                     </div>
                                 </div>
                                 <div className={styles.imagebox}>
@@ -195,12 +285,10 @@ export default function KJredeem () {
                         </div>
                     })()
                 }
-
-
                 {
                     (paramValue === "1" || paramValue === "3") && <div onClick={async () => {
                         if (paramValue === "1") {
-                            await withdrawTokens(localStorage.getItem('accounts'), 1, 20000)
+                            await withdrawTokens(localStorage.getItem('accounts'), source?.HavingMiningMachineInformation.MappingValue, source?.HavingMiningMachineInformation.Staking)
                         } else {
                             await withdrawNFT()
                         }
@@ -208,54 +296,73 @@ export default function KJredeem () {
                 }
                 {
                     paramValue === "2" && <div onClick={async () => {
-                        // await stakeNFT(1)
                         await getIds()
                     }} className={styles.btnbox1}>质押</div>
                 }
 
             </div>
-            <div className={styles.listbox}>
-                <div className={styles.listTitle}>矿机赎回记录</div>
-                <div className={styles.list}>
-                    <div className={styles.listitem} onClick={() => setVisible(true)}>
-                        <div className={styles.left}>
-                            <div className={styles.DTV}>10,000 DTV</div>
-                            <div className={styles.itemTitle}>矿机_赎回</div>
-
+            {
+                (() => {
+                    if (paramValue === "1") {
+                        return <div className={styles.listbox}>
+                            <div className={styles.listTitle}>矿机赎回记录</div>
+                            <div className={styles.list}>
+                                {
+                                    (list || []).length > 0 ? <>
+                                        {
+                                            list.filter(((item: any) => item.inout === "出")).map((item: any, index: any) => <div key={index} className={styles.listitem} >
+                                                <div className={styles.left}>
+                                                    <div className={styles.DTV}>{item.amount} DTV</div>
+                                                    <div className={styles.itemTitle}>矿机_赎回</div>
+                                                </div>
+                                                <div className={styles.time}>{item.date}</div>
+                                            </div>)
+                                        }
+                                    </> : <Empty />
+                                }
+                            </div>
                         </div>
-                        <div className={styles.time}>2025-01-03</div>
-                    </div>
-                    <div className={styles.listitem}>
-                        <div className={styles.left}>
-                            <div className={styles.DTV}>10,000 DTV</div>
-                            <div className={styles.itemTitle}>c</div>
-
+                    } else if (paramValue === "2") {
+                        return <div className={styles.listbox}>
+                            <div className={styles.listTitle}>质押记录</div>
+                            <div className={styles.list}>
+                                {
+                                    (nftlist || []).length > 0 ? <>
+                                        {
+                                            nftlist.filter(((item: any) => item.inout === "进")).map((item: any, index: any) => <div key={index} className={styles.listitem} >
+                                                <div className={styles.left}>
+                                                    <div className={styles.DTV}>{item.amount} 个</div>
+                                                    <div className={styles.itemTitle}>NFT_质押</div>
+                                                </div>
+                                                <div className={styles.time}>{item.date}</div>
+                                            </div>)
+                                        }
+                                    </> : <Empty />
+                                }
+                            </div>
                         </div>
-                        <div className={styles.time}>2025-01-03</div>
-                    </div>
-                    <div className={styles.listitem}>
-                        <div className={styles.left}>
-                            <div className={styles.DTV}>10,000 DTV</div>
-                            <div className={styles.itemTitle}>矿机_赎回</div>
-
+                    }
+                    return <div className={styles.listbox}>
+                        <div className={styles.listTitle}>赎回记录</div>
+                        <div className={styles.list}>
+                            {
+                                (nftlist || []).length > 0 ? <>
+                                    {
+                                        nftlist.filter(((item: any) => item.inout === "出")).map((item: any, index: any) => <div key={index} className={styles.listitem} >
+                                            <div className={styles.left}>
+                                                <div className={styles.DTV}>{item.amount} 个</div>
+                                                <div className={styles.itemTitle}>NFT_赎回</div>
+                                            </div>
+                                            <div className={styles.time}>{item.date}</div>
+                                        </div>)
+                                    }
+                                </> : <Empty />
+                            }
                         </div>
-                        <div className={styles.time}>2025-01-03</div>
                     </div>
-                    <div className={styles.listitem}>
-                        <div className={styles.left}>
-                            <div className={styles.DTV}>10,000 DTV</div>
-                            <div className={styles.itemTitle}>矿机_赎回</div>
+                })()
+            }
 
-                        </div>
-                        <div className={styles.time}>2025-01-03</div>
-                    </div>
-                </div>
-                {/* <Empty /> */}
-                {/* <div className={styles.empty}>
-                    <Image className={styles.img} src='/pool/empty.png' />
-                    <div className={styles.emptytext}>暂无记录~</div>
-                </div> */}
-            </div>
             <Popup
                 visible={visible}
                 onMaskClick={() => {
@@ -283,10 +390,15 @@ export default function KJredeem () {
                         </div>
                         <div className={styles.detailitem}>
                             <div className={styles.detailtitle}>时间 </div>
-                            <div className={styles.detailvalue}>2025-01-03 12:21:31 </div>
+                            <div className={styles.detailvalue}>{
+                                `${year}-${month}-${day} ${hours}:${minutes}`
+                            } </div>
                         </div>
                     </div>
-                    <div className={styles.btn} onClick={() => setVisible(false)}>返回</div>
+                    <div className={styles.btn} onClick={() => {
+                        setVisible(false)
+                        router.back()
+                    }}>返回</div>
                 </div>
 
             </Popup>

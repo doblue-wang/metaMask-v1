@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import NavBar from "@/components/NavBar/page";
 import { ethers } from "ethers";
 import { StakingABI } from "@/StakingABI";
-import dynamic from 'next/dynamic';
+import Empty from "@/components/empty/page";
 
 // 动态导入 Toast 组件，禁用服务器端渲染
 
@@ -91,35 +91,39 @@ export default function ConvertRecord () {
             <NavBar title={title} />
             <div className={styles.listbox}>
                 <div className={styles.item}>
-                    {/* <div className={styles.item_time}>2025-01-04</div> */}
                     {
-                        (list || []).map((item: any, index: number) =>
-                            <div onClick={() => handleDetail(item)} key={index} className={styles.itemMap}>
-                                <div className={styles.subItem}>
-                                    <div className={styles.content1}>
-                                        <div className={styles.top}>
-                                            <div className={styles.dui}>兑</div>
-                                            <div className={styles.txt}>到</div>
-                                            <div className={styles.name}>{getObfuscatedAccount(Contract_address)}</div>
-                                        </div>
-                                        <div className={styles.time}>12:21:31 </div>
-                                    </div>
-                                    <div className={styles.content2}>
-                                        <div className={styles.top}>
-                                            <div className={styles.zhi}>支</div>
-                                            <div className={styles.txt}>从</div>
-                                            <div className={styles.name}> {getObfuscatedAccount(localStorage.getItem('accounts'))}</div>
-                                        </div>
-                                        <div className={styles.time}>12:21:31 </div>
+                        (list || []).length > 0 ? <>
+                            {
+                                (list || []).map((item: any, index: number) =>
+                                    <div onClick={() => handleDetail(item)} key={index} className={styles.itemMap}>
+                                        <div className={styles.subItem}>
+                                            <div className={styles.content1}>
+                                                <div className={styles.top}>
+                                                    <div className={styles.dui}>兑</div>
+                                                    <div className={styles.txt}>到</div>
+                                                    <div className={styles.name}>{getObfuscatedAccount(Contract_address)}</div>
+                                                </div>
+                                                <div className={styles.time}>12:21:31 </div>
+                                            </div>
+                                            <div className={styles.content2}>
+                                                <div className={styles.top}>
+                                                    <div className={styles.zhi}>支</div>
+                                                    <div className={styles.txt}>从</div>
+                                                    <div className={styles.name}> {getObfuscatedAccount(localStorage.getItem('accounts'))}</div>
+                                                </div>
+                                                <div className={styles.time}>12:21:31 </div>
 
-                                    </div>
-                                    <div className={styles.rightArrow}>
-                                        <Image alt="" className={styles.rightArrowImg} src="/images/recordArrow.png" />
-                                    </div>
-                                </div>
+                                            </div>
+                                            <div className={styles.rightArrow}>
+                                                <Image alt="" className={styles.rightArrowImg} src="/images/recordArrow.png" />
+                                            </div>
+                                        </div>
 
-                            </div>)
+                                    </div>)
+                            }
+                        </> : <Empty />
                     }
+
                 </div>
 
 

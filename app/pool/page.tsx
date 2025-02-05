@@ -4,16 +4,15 @@ import { Image, Button, Popup } from 'antd-mobile'
 import React, { useRef, useState, useEffect, } from 'react'
 import { useRouter } from "next/navigation";
 import BottomNav from "@/components/Tabbar";
-import { fetchGetGetQuantumTypeList, fetchGetMiningPool } from "@/api/home";
+import { UpdateAllFixedAssets, fetchGetGetQuantumTypeList, fetchGetMiningPool } from "@/api/home";
 import CountUp from "react-countup";
 import { ethers, parseUnits } from "ethers";
 import { ERC20_ABI } from "../../ERC20ABI";
-
 import { StakingABI } from "../../StakingABI";
 import { t } from "i18next";
 import CustomAlert from "@/components/Toast";
 import NewLoading from "@/components/Loading";
-// import { utils } from "ethers"; // 显式导入utils模块
+import { NFT_ABI } from "@/NFT";
 export default function Pool () {
   const [selectedTab, setSelectedTab] = useState(0);
   const [visible, setVisible] = useState(false);
@@ -24,6 +23,8 @@ export default function Pool () {
   const [show, setShow] = useState(false)
   const [visible1, setVisble1] = useState(false)
   const [message, setMessage] = useState('')
+  const [isstaking, setIsstaking] = useState(false)
+  const NFT_CONTRACT_ADDRESS = '0x4Df31fBA8EEB438604c4c489dE14AA8cdaaEe0e9';//nft测试合约地址
   const tabs = [
     { id: 0, label: `${t('Miner')}` },
     { id: 1, label: 'NFT' },
@@ -42,6 +43,19 @@ export default function Pool () {
         console.log(e);
       });
   }
+  const UpdateAllFixedAssetss = () => {
+    const AccountId = localStorage.getItem('AccountId')
+    UpdateAllFixedAssets({
+      AccountId
+    }).then(({ code, data }) => {
+      console.log(data);
+    })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
+
 
   const handleTabClick = (index: number) => {
     setSelectedTab(index);
@@ -85,7 +99,9 @@ export default function Pool () {
         const walletAddress = localStorage.getItem('accounts')
         setShow(true)
         // 授权完成后，执行质押操作
-        await stakeTokens(walletAddress, itemSource.MappingValue, appunmu);
+        const amountInUnits = parseUnits(itemSource.Staking.toString(), 18);  // 转换为最小单位
+        const amountInUnitsStr = amountInUnits.toString();
+        await stakeTokens(walletAddress, itemSource.MappingValue, amountInUnitsStr);
       } catch (e) {
         setShow(false)
         console.error("授权失败", e);
@@ -128,14 +144,34 @@ export default function Pool () {
       setShow(false)
       setVisble1(true)
       setMessage('质押成功')
+      UpdateAllFixedAssetss()
+      getSource()
+
     } catch (e) {
       console.error("质押失败", e);
       setVisble1(true)
       setMessage('质押失败')
     }
   };
-
-
+  //是否质押 nft
+  const getIds = async () => {
+    const provider = new ethers.BrowserProvider(window.ethereum)
+    const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
+    const ownerAddress = await signer.getAddress();
+    const nftContract = new ethers.Contract(NFT_CONTRACT_ADDRESS, NFT_ABI, signer);
+    const balance = await nftContract.balanceOf(ownerAddress);
+    const tokenIds = [];
+    for (let i = 0; i < balance; i++) {
+      const tokenId = await nftContract.tokenOfOwnerByIndex(ownerAddress, i);
+      tokenIds.push(tokenId.toString());
+    }
+    console.log(tokenIds);
+    if (tokenIds.length > 0) {
+      setIsstaking(true)
+    } else {
+      setIsstaking(false)
+    }
+  }
 
   const handleNavTo = async (index: number) => {
     console.log(index);
@@ -144,7 +180,7 @@ export default function Pool () {
       if (index == 0) {
         if (Object.keys(itemSource).length) {
           console.log(itemSource);
-          const num = 20000;
+          const num = itemSource.Staking + 10000;
           const amountInUnits = parseUnits(num.toString(), 18);  // 转换为最小单位
           const amountInUnitsStr = amountInUnits.toString();  // 转换为字符串
           await approveToken(amountInUnitsStr)
@@ -155,9 +191,7 @@ export default function Pool () {
 
         //质押
       } else if (index == 1) {
-        // await withdrawTokens(getCookie('accounts'), 1, 20000)
-        //赎回 带参
-        router.push('/pool/KJredeem?type=1')
+        router.push("/pool/KJredeem?type=1")
       }
     } else if (selectedTab == 1) {
       if (index == 0) {
@@ -174,6 +208,7 @@ export default function Pool () {
   }
   useEffect(() => {
     getfilterList()
+    getIds()
   }, [])
   const exchangeNFT = async (_amount: any) => {
     if (!window.ethereum) {
@@ -195,12 +230,16 @@ export default function Pool () {
       // 3. 连接 NFT 兑换合约
       const nftContract = new ethers.Contract(Contract_address, StakingABI, signer);
       // 4. 兑换 NFT
-      const exchangeTx = await nftContract.exchangenft(BigInt(9999999999999999999), options);
+      const num = source?.NFTType.Price
+      const amountInUnits = parseUnits(num.toString(), 18);  // 转换为最小单位
+      const amountInUnitsStr = amountInUnits.toString();
+      const exchangeTx = await nftContract.exchangenft(BigInt(amountInUnitsStr), options);
       console.log("NFT 兑换交易发送中:", exchangeTx.hash);
       await exchangeTx.wait();
       setShow(false)
       setVisble1(true)
       setMessage('NFT 铸造成功! 请检查您的钱包!')
+      getIds()
       // 解析 Transfer 事件，找到 NFT Token ID
     } catch (error) {
       setVisble1(true)
@@ -289,10 +328,10 @@ export default function Pool () {
                   <Image className={styles.img} src='/pool/leave.png' />
                 </div>
               </div>
-              <div className={styles.itemTitle}>尾矿</div>
+              <div className={styles.itemTitle}>{source?.HavingMiningMachineInformation?.Name}</div>
             </div>
-            <div className={styles.nummin}>20,000 DTV</div>
-            <div className={styles.pos}>POS：20</div>
+            <div className={styles.nummin}>{source?.HavingMiningMachineInformation?.Staking || 0}DTV</div>
+            <div className={styles.pos}>POS：{source?.HavingMiningMachineInformation?.Hashrate || 0}</div>
           </div>
           //NFT页面
         ) : selectedTab == 1 ? (
@@ -300,17 +339,7 @@ export default function Pool () {
             <div className={styles.imagebox}>
               <Image className={styles.img} src='/pool/poolNFT.png' />
             </div>
-            <div className={styles.price}>1000U</div>
-            {/* <div className={styles.mark_up}>
-              <div className={styles.pos}>
-                <div className={styles.label}>{t('POS_Bonus')}：</div>
-                <div className={styles.num}>2000 (12%)</div>
-              </div>
-              <div className={styles.pos}>
-                <div className={styles.label}>{t('POP_Bonus')}：</div>
-                <div className={styles.num}>2000 (12%)</div>
-              </div>
-            </div> */}
+            <div className={styles.price}>{source?.NFTType.Price}U</div>
           </div>
         ) : null}
         {
@@ -329,33 +358,35 @@ export default function Pool () {
             </div> :
             <div className={styles.btnbox}>
               {
-                source?.IsNFTIlluminate ? <>
-                  <Button onClick={
-                    () => handleNavTo(0)
-                  } disabled={source?.HavingMiningMachineInformation} className={styles.btn} >
+                !isstaking && !source?.IsNFTIlluminate ?
+                  <Button onClick={async () => {
+                    const num = source?.NFTType.Price + 1000
+                    const amountInUnits = parseUnits(num.toString(), 18);  // 转换为最小单位
+                    const amountInUnitsStr = amountInUnits.toString();
+                    await exchangeNFT(amountInUnitsStr)
+                  }} className={styles.btn} >
                     <div className={styles.btnlist}>
-                      <span className={styles.btnText}>{t('Staking_Redemption_Minting.Staking')}</span>
+                      <span className={styles.btnText}>铸造</span>
+                      <Image className={styles.img} src='/pool/casting.png' />
                     </div>
-                  </Button>
-                  {/* disabled={!source?.HavingMiningMachineInformation} */}
-                  <Button onClick={
-                    () => handleNavTo(1)}
-                    className={styles.btn} >
-                    <div className={styles.btnlist}>
-                      <span className={styles.btnText}>{t('Staking_Redemption_Minting.Redemption')}</span>
-                    </div>
-                  </Button>
-                </> : <Button onClick={async () => {
-                  await exchangeNFT(20000000000000000000000)
-                }} disabled={source?.HavingMiningMachineInformation} className={styles.btn} >
-                  <div className={styles.btnlist}>
-                    <span className={styles.btnText}>铸造</span>
-                    <Image className={styles.img} src='/pool/casting.png' />
-                  </div>
-                </Button>
+                  </Button> :
+                  <>
+                    <Button onClick={
+                      () => handleNavTo(0)
+                    } disabled={source?.IsNFTIlluminate} className={styles.btn} >
+                      <div className={styles.btnlist}>
+                        <span className={styles.btnText}>{t('Staking_Redemption_Minting.Staking')}</span>
+                      </div>
+                    </Button>
+                    <Button disabled={!source?.IsNFTIlluminate} onClick={
+                      () => handleNavTo(1)}
+                      className={styles.btn} >
+                      <div className={styles.btnlist}>
+                        <span className={styles.btnText}>{t('Staking_Redemption_Minting.Redemption')}</span>
+                      </div>
+                    </Button>
+                  </>
               }
-
-
             </div>
         }
       </div>
@@ -373,7 +404,6 @@ export default function Pool () {
             </div>
           </div>
           <div className={styles.bonusbtn} onClick={() => { router.push('/pool/receive') }}>{t('Earnings.Collect')}</div>
-
         </div>
         <div className={styles.bonusList}>
           <div className={styles.sublist}>
@@ -387,9 +417,7 @@ export default function Pool () {
             </div>
           </div>
           <div className={styles.bonusbtn1} onClick={() => { router.push('/pool/exchange') }}>{t('Earnings.Exchange')}</div>
-
         </div>
-
       </div>
       <Popup
         visible={visible}

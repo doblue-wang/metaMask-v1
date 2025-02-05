@@ -114,3 +114,11 @@ export async function MyInformationUploadImage (body: object) {
     body,
   });
 }
+
+//更欣资产
+export async function UpdateAllFixedAssets (body: object) {
+  return request("/api/DeclarationForm/SystemFundamentals/UpdateAllFixedAssets", {
+    method: "POST",
+    body,
+  });
+}
