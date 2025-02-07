@@ -7,6 +7,7 @@ import NavBar from "@/components/NavBar/page";
 import { ethers } from "ethers";
 import { StakingABI } from "@/StakingABI";
 import Empty from "@/components/empty/page";
+import CustomAlert from "@/components/Toast";
 
 // 动态导入 Toast 组件，禁用服务器端渲染
 
@@ -16,6 +17,8 @@ export default function ConvertRecord () {
     const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
     const [list, setList] = useState<any>([])
     const router = useRouter();
+    const [visible1, setVisble1] = useState(false)
+    const [message, setMessage] = useState('')
     const handleDetail = (data: any) => {
         const encodedData = encodeURIComponent(JSON.stringify(data));
         // 将数据以 JSON 字符串的形式传递
@@ -39,25 +42,19 @@ export default function ConvertRecord () {
                 console.log(records);
                 const parsedRecords = parseRecords(records);
                 console.log(parsedRecords);
-
-                setList(parsedRecords)
+                const reversedRecords = parsedRecords.reverse();
+                setList(reversedRecords)
                 return records;
             } catch (e) {
                 console.error("失败", e);
             }
         } else {
-            alert('MetaMask is not installed');
+            setVisble1(true)
+            setMessage('MetaMask is not installed')
         }
     }
     const parseRecords = (records: any) => {
         return records.map((record: any) => parseRecord(record));
-    };
-    const showToast = () => {
-        // 调用 Toast.show 显示 toast 消息
-        Toast.show({
-            content: 'This is a toast!',
-            duration: 2000,  // 设置 Toast 显示时长
-        });
     };
     // 解析单个记录的函数
     const parseRecord = (record: any) => {
@@ -128,6 +125,7 @@ export default function ConvertRecord () {
 
 
             </div>
+            <CustomAlert visible={visible1} message={message} setVisible={setVisble1} />
         </div>
     )
 }

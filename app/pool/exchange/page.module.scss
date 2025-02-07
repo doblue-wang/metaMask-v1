@@ -3,6 +3,7 @@
     padding: 52px 12px 100px 12px;
     min-height: 100vh;
     background-color: #17161b;
+
     .content {
         background: #242426;
         border-radius: 12px 12px 12px 12px;
@@ -10,16 +11,26 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+
         .l_con,
         .r_con {
             display: flex;
             align-items: center;
+            justify-content: center;
+            flex-direction: column;
+
             .img {
                 width: 40px;
                 height: 40px;
             }
+
             .txtbox {
                 margin-left: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+
                 .title {
                     font-family: D-DIN-DIN, D-DIN-DIN;
                     font-weight: bold;
@@ -27,6 +38,7 @@
                     color: #ffffff;
                     line-height: 21px;
                 }
+
                 .desc {
                     font-family: D-DIN, D-DIN;
                     font-weight: 400;
@@ -34,19 +46,23 @@
                     color: #c9cdd4;
                     line-height: 16px;
                     margin-top: 4px;
+                    margin-bottom: 10px;
                 }
             }
         }
+
         .c_con {
             background: #4e5969;
             border-radius: 61px 61px 61px 61px;
             display: flex;
             align-items: center;
             padding: 8px 14px;
+
             .img {
                 width: 16px;
                 height: 16px;
             }
+
             .txt {
                 font-family:
                     PingFang SC,
@@ -58,8 +74,10 @@
             }
         }
     }
+
     .listbox {
         margin-top: 32px;
+
         .listTitle {
             padding: 0 8px;
             font-family:
@@ -70,16 +88,19 @@
             color: #4e5969;
             line-height: 20px;
         }
+
         .list {
             margin-top: 9px;
             background: #242426;
             border-radius: 12px 12px 12px 12px;
             padding: 16px 12px;
+
             .listitem {
                 padding: 12px 6px;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
+
                 .left {
                     .DTV {
                         font-family:
@@ -90,6 +111,7 @@
                         color: #ffffff;
                         line-height: 16px;
                     }
+
                     .itemTitle {
                         font-family:
                             PingFang SC,
@@ -101,6 +123,7 @@
                         margin-top: 4px;
                     }
                 }
+
                 .time {
                     font-family:
                         PingFang SC,
@@ -112,6 +135,7 @@
                 }
             }
         }
+
         .empty {
             background: #242426;
             border-radius: 12px 12px 12px 12px;
@@ -120,10 +144,12 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
+
             .img {
                 width: 140px;
                 height: 140px;
             }
+
             .emptytext {
                 font-family:
                     PingFang SC,

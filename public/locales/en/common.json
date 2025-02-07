@@ -25,10 +25,12 @@
     "Current_Selection": "Current selection:",
     "Earnings": {
         "Yesterday_Earnings": "Yesterday's earnings",
-        "Pending_Collection": "Pending collection / Total earnings",
+        "Pending_Collection": "Pending collection",
+        "Total_earnings": "Total earnings",
         "Collect": "Collect",
         "Yesterday_Rewards": "Yesterday's rewards (DTVc)",
-        "Pending_Collection_Reward": "Pending collection / Accumulated rewards",
+        "Pending_Collection_Reward": "Pending collection",
+        "Accumulated_rewards": "Accumulated rewards",
         "Exchange": "Exchange",
         "Exchange_Record": "Exchange record"
     },

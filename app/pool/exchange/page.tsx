@@ -1,23 +1,47 @@
 'use client';
 import styles from "./page.module.scss";
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image } from 'antd-mobile'
 import { useRouter, useSearchParams } from "next/navigation";
 import NavBar from "@/components/NavBar/page";
 import Empty from "@/components/empty/page";
 import { t } from "i18next";
-import { ExchangeDtv, ExchangeDtvRecord } from "@/api/home";
+import { ExchangeDtv, ExchangeDtvRecord, fetchGetMiningPool } from "@/api/home";
+import CustomAlert from "@/components/Toast";
 export default function Exchange () {
+    const [visible1, setVisble1] = useState(false)
+    const [message, setMessage] = useState('')
+    const [source, setSource] = useState({} as any)
     useEffect(() => {
         Record()
+        getSource()
     }, [])
+    const getSource = () => {
+        const AccountId = localStorage.getItem('AccountId')
+        fetchGetMiningPool({
+            AccountId
+        }).then(({ code, data }) => {
+            setSource(data)
+        })
+            .catch((e) => {
+                console.log(e);
+            });
+    }
     const exchange = () => {
         const AccountId = localStorage.getItem('AccountId')
         ExchangeDtv({
             AccountId
         })
-            .then(({ data }) => {
-                console.log(data);
+            .then(({ data, code, msg }) => {
+                console.log(data, code, msg);
+
+                if (code === 200) {
+                    setMessage('兑换成功')
+                    setVisble1(true);
+                } else {
+                    setMessage(msg)
+                    setVisble1(true);
+                }
             })
             .catch((e) => {
                 console.log(e);
@@ -42,8 +66,9 @@ export default function Exchange () {
                 <div className={styles.l_con}>
                     <Image className={styles.img} src="/pool/receive.png" />
                     <div className={styles.txtbox}>
-                        <div className={styles.title}>138.23</div>
                         <div className={styles.desc}>DTV</div>
+                        <div className={styles.title}>{source?.ConvertibleDTV || 0}</div>
+
                     </div>
                 </div>
                 <div onClick={() => exchange()} className={styles.c_con}>
@@ -53,8 +78,8 @@ export default function Exchange () {
                 <div className={styles.r_con}>
                     <Image className={styles.img} src="/pool/exchange.png" />
                     <div className={styles.txtbox}>
-                        <div className={styles.title}>1,138.23</div>
                         <div className={styles.desc}>DTVC</div>
+                        <div className={styles.title}>{source?.ConvertibleDTVC || 0}</div>
                     </div>
                 </div>
             </div>
@@ -72,6 +97,7 @@ export default function Exchange () {
                 </div> */}
                 <Empty />
             </div>
+            <CustomAlert visible={visible1} message={message} setVisible={setVisble1} />
         </div>
     )
 }

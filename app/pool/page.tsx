@@ -31,6 +31,7 @@ export default function Pool () {
   ];
   useEffect(() => {
     getSource()
+    UpdateAllFixedAssetss()
   }, [])
   const getSource = () => {
     const AccountId = localStorage.getItem('AccountId')
@@ -49,6 +50,8 @@ export default function Pool () {
       AccountId
     }).then(({ code, data }) => {
       console.log(data);
+      getSource()
+      setShow(false)
     })
       .catch((e) => {
         console.log(e);
@@ -93,11 +96,11 @@ export default function Pool () {
         const signer = await provider.getSigner();
         const USDTcontract = new ethers.Contract(STAKING_CONTRACT_ADDRESS, ERC20_ABI, signer);
         // 执行 approve 操作
+        setShow(true)
         const tx = await USDTcontract.approve(Contract_address, BigInt(appunmu), options);
         // 等待授权交易完成
         await tx.wait();
         const walletAddress = localStorage.getItem('accounts')
-        setShow(true)
         // 授权完成后，执行质押操作
         const amountInUnits = parseUnits(itemSource.Staking.toString(), 18);  // 转换为最小单位
         const amountInUnitsStr = amountInUnits.toString();
@@ -118,7 +121,7 @@ export default function Pool () {
     console.log(_address, _product, _amount);
     try {
       if (typeof window.ethereum === "undefined") {
-        setMessage('MetaMask 未安装')
+        setMessage('MetaMask is not installed')
         setVisble1(true)
         return;
       }
@@ -141,11 +144,11 @@ export default function Pool () {
       console.log("质押成功", tx);
       // 等待质押交易完成
       await tx.wait();
-      setShow(false)
       setVisble1(true)
       setMessage('质押成功')
-      UpdateAllFixedAssetss()
-      getSource()
+      setTimeout(() => {
+        UpdateAllFixedAssetss()
+      }, 500);
 
     } catch (e) {
       console.error("质押失败", e);
@@ -212,7 +215,8 @@ export default function Pool () {
   }, [])
   const exchangeNFT = async (_amount: any) => {
     if (!window.ethereum) {
-      alert("请安装 MetaMask!");
+      setMessage('MetaMask is not installed')
+      setVisble1(true)
       return;
     }
     const provider = new ethers.BrowserProvider(window.ethereum);
@@ -309,7 +313,7 @@ export default function Pool () {
                 </div>
                 <div className={styles.bottom}>
                   <div className={styles.label}>{itemSource?.Name}</div>
-                  <div className={styles.nummin}>POS：{itemSource?.Hashrate || 0}</div>
+                  <div className={styles.nummin}>POS：{itemSource.MappingValue === 6 ? defults?.Hashrate : itemSource?.Hashrate || 0}</div>
                 </div>
               </div>
               {
@@ -400,6 +404,10 @@ export default function Pool () {
             </div>
             <div className={styles.subitem}>
               <div className={styles.label}>{t('Earnings.Pending_Collection')}（DTV）</div>
+              <div className={styles.num}><CountUp start={0} end={source?.PendingRewardsDTV || 0} duration={3} /></div>
+            </div>
+            <div className={`${styles.subitem} ${styles.subitem1}`}>
+              <div className={styles.label}>{t('Earnings.Total_earnings')}（DTV）</div>
               <div className={styles.num}><CountUp start={0} end={source?.AccumulatedIncomeDTV || 0} duration={3} /></div>
             </div>
           </div>
@@ -413,6 +421,10 @@ export default function Pool () {
             </div>
             <div className={styles.subitem}>
               <div className={styles.label1}>{t('Earnings.Pending_Collection_Reward')}(DTVC)</div>
+              <div className={styles.num}><CountUp start={0} end={source?.PendingRewardsDTVC || 0} duration={3} /></div>
+            </div>
+            <div className={`${styles.subitem} ${styles.subitem1}`}>
+              <div className={styles.label1}>{t('Earnings.Accumulated_rewards')}(DTVC)</div>
               <div className={styles.num}><CountUp start={0} end={source?.AccumulatedIncomeDTVC || 0} duration={3} /></div>
             </div>
           </div>

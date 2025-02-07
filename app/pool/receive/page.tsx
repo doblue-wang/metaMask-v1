@@ -8,7 +8,7 @@ import { ethers } from "ethers";
 import { StakingABI } from "@/StakingABI";
 import CustomAlert from "@/components/Toast";
 import { t } from "i18next";
-import { ClaimIncome } from "@/api/home";
+import { ClaimIncome, fetchGetMiningPool } from "@/api/home";
 import NewLoading from "@/components/Loading";
 export default function Receive () {
     const [visible, setVisble] = useState(false)
@@ -16,10 +16,22 @@ export default function Receive () {
     const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
     const [list, setList] = useState<any>([])
     const [show, setShow] = useState(false)
+    const [source, setSource] = useState({} as any)
     useEffect(() => {
         getComingList(localStorage.getItem('accounts'))
+        getSource()
     }, [])
-
+    const getSource = () => {
+        const AccountId = localStorage.getItem('AccountId')
+        fetchGetMiningPool({
+            AccountId
+        }).then(({ code, data }) => {
+            setSource(data)
+        })
+            .catch((e) => {
+                console.log(e);
+            });
+    }
     const withdrawComing = async (_address: any) => {
         if (typeof window !== 'undefined' && window.ethereum) {
             try {
@@ -122,7 +134,7 @@ export default function Receive () {
                     <div className={styles.imagebox}>
                         <Image className={styles.img} src='/pool/receive.png' />
                     </div>
-                    <div className={styles.price}>138.23 DTV</div>
+                    <div className={styles.price}>{source?.CanReceiveDTV || 0} DTV</div>
                     <div className={styles.txt}>{t('Income_Collection.Available_for_Collection')}</div>
                     <div onClick={() => withdrawComing(localStorage.getItem('accounts'))} className={styles.btn}>{t('Earnings.Collect')}</div>
                     <div className={styles.prompt}>{t('burning')}</div>

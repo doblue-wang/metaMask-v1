@@ -24,11 +24,13 @@
   },
   "Current_Selection": "当前选择：",
   "Earnings": {
-    "Yesterday_Earnings": "昨日收益（dtv）",
-    "Pending_Collection": "待领取/累计收益",
+    "Yesterday_Earnings": "昨日收益",
+    "Pending_Collection": "待领取",
+    "Total_earnings": "累计收益",
     "Collect": "领取",
-    "Yesterday_Rewards": "昨日奖励（dtvc）",
-    "Pending_Collection_Reward": "待领取/累计奖励",
+    "Yesterday_Rewards": "昨日奖励（DTVC）",
+    "Pending_Collection_Reward": "待领取",
+    "Accumulated_rewards": "累计奖励",
     "Exchange": "兑换",
     "Exchange_Record": "兑换记录"
   },

@@ -362,12 +362,18 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
+                flex-wrap: wrap;
 
                 .subitem {
+                    margin-bottom: 5px;
                     width: 159px;
                     padding: 12px 8px;
                     background-color: #343438;
                     border-radius: 8px;
+
+                    &.subitem1 {
+                        width: 100%;
+                    }
 
                     .num {
                         font-weight: bold;

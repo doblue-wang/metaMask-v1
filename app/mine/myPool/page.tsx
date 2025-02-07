@@ -138,16 +138,15 @@ export default function MyPool () {
                     <div className={styles.myMachine}>
                         <div className={styles.titlebox}>
                             <div className={styles.title}>我的矿机</div>
-                            {/* <Image className={styles.titleimg} src="/mine/share.png" /> */}
                         </div>
                         <div className={styles.machinedetail}>
                             <div className={styles.detail_left}>
-                                <div className={styles.detail_left_title}>{source?.Staking || 0} DTV</div>
-                                <div className={styles.detail_left_content}>POS：{source?.Hashrate || 0}</div>
+                                <div className={styles.detail_left_title}>{source?.MinerType?.Staking || 0} DTV</div>
+                                <div className={styles.detail_left_content}>POS：{source?.MinerType?.Hashrate || 0}</div>
                             </div>
                             <div className={styles.detail_right}>
                                 <Image className={styles.detail_right_img} src="/pool/leave.png" />
-                                <div className={styles.detail_right_title}>{source?.Name || '--'}</div>
+                                <div className={styles.detail_right_title}>{source?.MinerType?.Name || '--'}</div>
                             </div>
                         </div>
                     </div>
@@ -242,22 +241,40 @@ export default function MyPool () {
                         {
                             (list || []).length > 0 ? <>
                                 {
-                                    list.map((item: any, index: any) => <div key={index} className={styles.listitem}>
+                                    list.map((item: any, index: any) => <div key={index} className={item?.MiningPoolSpeedOfProgress >= 1 ? styles.listitem : styles.listitem1}>
                                         <div className={styles.userbox}>
                                             <div className={styles.userleft}>
-                                                <Image className={styles.userimg} src={item?.AccountImg} alt="" />
+                                                <Image className={styles.userimg} src={item?.AccountImg || null} alt="" />
                                                 <div className={styles.usernamebox}>
                                                     <div className={styles.username}>{item.AccountName || ''}</div>
                                                     {
-                                                        item.MiningPoolSpeedOfProgress > 0 ? <div className={styles.Circlebox}>
-                                                            <ProgressCircle percent={item.MiningPoolSpeedOfProgress} style={{ '--track-width': '4px', '--track-color': 'rgba(255,110,145,0.1)', '--fill-color': '#FF6E91', '--size': '18px' }} />
-                                                            <div className={styles.cricetxt}>{item.MiningPoolSpeedOfProgress}%</div>
+                                                        item.MiningPoolSpeedOfProgress < 1 ? <div className={styles.Circlebox}>
+                                                            <ProgressCircle percent={item.MiningPoolSpeedOfProgress * 100} style={{ '--track-width': '4px', '--track-color': 'rgba(255,110,145,0.1)', '--fill-color': '#FF6E91', '--size': '18px' }} />
+                                                            <div className={styles.cricetxt}>{item.MiningPoolSpeedOfProgress * 100}%</div>
                                                         </div> : null
                                                     }
-                                                    <div className={styles.tag}>算力达标</div>
+                                                    {
+                                                        item?.MiningPoolSpeedOfProgress >= 1 ? <div className={styles.tag}>算力达标</div> : null
+                                                    }
+
                                                 </div>
                                             </div>
-                                            <div className={styles.usertime}>{item.CompletionTime}</div>
+                                            <div className={styles.usertime}>
+                                                {
+                                                    (() => {
+                                                        const timestamp = item.CompletionTime; // 假设是一个时间戳
+                                                        const date = new Date(timestamp); // 将时间戳转为 Date 对象
+                                                        // 格式化为可读的日期格式
+                                                        const formattedDate = date.toLocaleDateString(); // 格式化日期
+                                                        const formattedTime = date.toLocaleTimeString(); // 格式化时间
+                                                        return <>
+                                                            <span> {formattedDate}</span>
+                                                            <p> {formattedTime}</p>
+                                                        </>
+                                                    })()
+                                                }
+
+                                            </div>
                                         </div>
                                         <div className={styles.contentbox}>
                                             <div className={styles.item}>
@@ -270,7 +287,7 @@ export default function MyPool () {
                                             </div>
                                             <div className={styles.item}>
                                                 <div className={styles.label}>备注：</div>
-                                                <div className={styles.value}>XXXXXX</div>
+                                                <div className={styles.value}>{item.Description || "--"}</div>
                                             </div>
                                         </div>
                                     </div>)

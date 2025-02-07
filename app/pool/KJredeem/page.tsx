@@ -51,7 +51,8 @@ export default function KJredeem () {
         console.log(_address, _product, _amount);
         try {
             if (typeof window.ethereum === "undefined") {
-                console.error("MetaMask 未安装");
+                setAlart(true)
+                setMessage('MetaMask 未安装')
                 return;
             }
             const provider = new ethers.BrowserProvider(window.ethereum)
@@ -65,17 +66,17 @@ export default function KJredeem () {
             };
             const amountInUnits = parseUnits(_amount.toString(), 18);  // 转换为最小单位
             const amountInUnitsStr = amountInUnits.toString();  // 转换为字符串
+            setShow(true)
             // 调用合约的 withdrawproducts 方法赎回 DTV
             const tx = await stakingContract.withdrawproducts(_address, _product, BigInt(amountInUnitsStr), options);
             // 等待交易确认
-            setShow(true)
             await tx.wait();
             setShow(false)
             setAlart(true)
             setMessage('赎回成功')
             setTimeout(() => {
                 router.back()
-            }, 2000);
+            }, 1000);
         } catch (e) {
             console.log(e);
             setAlart(true)
@@ -91,7 +92,8 @@ export default function KJredeem () {
     //nft 质押
     const stakeNFT = async (_tokenid: number) => {
         if (!window.ethereum) {
-            alert("请安装 MetaMask!");
+            setAlart(true)
+            setMessage('MetaMask is not installed')
             return;
         }
         const provider = new ethers.BrowserProvider(window.ethereum)
@@ -102,11 +104,11 @@ export default function KJredeem () {
         };
         const nftContract = new ethers.Contract(NFT_CONTRACT_ADDRESS, NFT_ABI, signer);
         try {
+            setShow(true)
             // 1. 授权质押合约可以使用 NFT
             const approveTx = await nftContract.setApprovalForAll(Contract_address, true, options);
             console.log("NFT 授权交易发送中:", approveTx.hash);
             await approveTx.wait();
-            setShow(true)
             console.log("NFT 授权成功!");
             // 2. 调用质押合约的 stakenft 方法
             const stakeContract = new ethers.Contract(Contract_address, StakingABI, signer);
@@ -140,7 +142,8 @@ export default function KJredeem () {
     //nft 赎回
     const withdrawNFT = async () => {
         if (!window.ethereum) {
-            alert("请安装 MetaMask!");
+            setAlart(true)
+            setMessage('MetaMask 未安装')
             return;
         }
         const provider = new ethers.BrowserProvider(window.ethereum)
@@ -150,13 +153,13 @@ export default function KJredeem () {
             gasPrice
         };
         const stakeContract = new ethers.Contract(Contract_address, StakingABI, signer);
+        setShow(true)
         try {
             // 发送赎回交易（并支付 Gas 费用）
             const withdrawTx = await stakeContract.withdrawnft({
                 options
             });
             console.log("NFT 赎回交易发送中:", withdrawTx.hash);
-            setShow(true)
             await withdrawTx.wait();
             setShow(false)
             setAlart(true)
@@ -181,7 +184,8 @@ export default function KJredeem () {
                 const records = await stakingContract.getproductslist(_address);
                 const parsedRecords = parseRecords(records);
                 console.log(parsedRecords);
-                setList(parsedRecords)
+                const reversedRecords = parsedRecords.reverse();
+                setList(reversedRecords)
             } catch (e) {
                 console.error("获取记录失败", e);
             }
@@ -196,32 +200,30 @@ export default function KJredeem () {
                 const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
                 const stakingContract = new ethers.Contract(Contract_address, StakingABI, signer);
                 const records = await stakingContract.getnftlist(_address);
-                const parsedRecords = parseRecords(records);
+                const parsedRecords = parseRecords(records, true);
                 console.log(parsedRecords);
-                setNftList(parsedRecords)
+                const reversedRecords = parsedRecords.reverse();
+                setNftList(reversedRecords)
             } catch (e) {
                 console.error("获取记录失败", e);
             }
         }
 
     };
-
-
-
-    const parseRecords = (records: any) => {
+    const parseRecords = (records: any, show?: boolean) => {
         console.log(records);
-        return records.map((record: any) => parseRecord(record));
+        return records.map((record: any) => parseRecord(record, show));
     };
 
     // 解析单个记录的函数
-    const parseRecord = (record: any) => {
+    const parseRecord = (record: any, show?: boolean) => {
         // 获取时间戳（秒）
         const timestamp = Number(record[0]);
         // 时间戳转换为日期和时间
         const date = new Date(timestamp * 1000);
         const dateStr = date.toLocaleDateString(); // 获取日期部分
         const timeStr = date.toLocaleTimeString(); // 获取时间部分
-        const amount = ethers.formatUnits(record[1], 18);  // 转换为普通数字字符串
+        const amount = show ? ethers.formatUnits(record[1], 0) : ethers.formatUnits(record[1], 18);  // 转换为普通数字字符串
         const inout = record[2] === BigInt(0) ? '进' : '出';
         // 返回格式化后的结果
         return {
@@ -327,11 +329,11 @@ export default function KJredeem () {
                             <div className={styles.listTitle}>质押记录</div>
                             <div className={styles.list}>
                                 {
-                                    (nftlist || []).length > 0 ? <>
+                                    (nftlist.filter(((item: any) => item.inout === "进")) || []).length > 0 ? <>
                                         {
                                             nftlist.filter(((item: any) => item.inout === "进")).map((item: any, index: any) => <div key={index} className={styles.listitem} >
                                                 <div className={styles.left}>
-                                                    <div className={styles.DTV}>{item.amount} 个</div>
+                                                    <div className={styles.DTV}>{item.amount} 号</div>
                                                     <div className={styles.itemTitle}>NFT_质押</div>
                                                 </div>
                                                 <div className={styles.time}>{item.date}</div>
@@ -346,11 +348,11 @@ export default function KJredeem () {
                         <div className={styles.listTitle}>赎回记录</div>
                         <div className={styles.list}>
                             {
-                                (nftlist || []).length > 0 ? <>
+                                (nftlist.filter(((item: any) => item.inout === "出")) || []).length > 0 ? <>
                                     {
                                         nftlist.filter(((item: any) => item.inout === "出")).map((item: any, index: any) => <div key={index} className={styles.listitem} >
                                             <div className={styles.left}>
-                                                <div className={styles.DTV}>{item.amount} 个</div>
+                                                <div className={styles.DTV}>{item.amount} 号</div>
                                                 <div className={styles.itemTitle}>NFT_赎回</div>
                                             </div>
                                             <div className={styles.time}>{item.date}</div>

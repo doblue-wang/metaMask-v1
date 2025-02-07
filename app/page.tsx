@@ -9,14 +9,24 @@ import CountUp from "react-countup";
 import BottomNav from "@/components/Tabbar";
 import { fetchGetHome, fetchGetSpeedOfProgress, fetchLogin } from "@/api/home";
 import { useTranslation } from "react-i18next";
+import { log } from "console";
+import CustomAlert from "@/components/Toast";
 export default function Home () {
   const router = useRouter();
   const [source, setSource] = useState({} as any);
   const [progress, setProgress] = useState({} as any);
   const { t } = useTranslation();
+  const [visible1, setVisble1] = useState(false)
+  const [message, setMessage] = useState('')
   const [AccountIdata, setAccountId] = useState("");
   const items = source?.RotationData?.[0]?.pic?.map((item: any, index: any) => (
-    <Swiper.Item className={styles.item} key={index}>
+    <Swiper.Item onClick={() => {
+      console.log(item);
+
+      // if (item.url) {
+      //   location.href = item.url
+      // }
+    }} className={styles.item} key={index}>
       <div
         className={styles.content}
       >
@@ -26,15 +36,7 @@ export default function Home () {
   ))
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    console.log(token);
-
-    if (token) {
-      getHome();
-      getProgress();
-    } else {
-      connectMetaMask();
-    }
+    connectMetaMask();
   }, []); //
 
   //接口授权
@@ -45,6 +47,7 @@ export default function Home () {
         localStorage.setItem('AccountId', data.AccountId);
         setTimeout(() => {
           getHome(data.AccountId);
+          getProgress();
         }, 100);
       })
       .catch((e) => {
@@ -67,13 +70,16 @@ export default function Home () {
       } catch (error: any) {
         console.error('Error connecting to MetaMask:', error);
         if (error.code === 4001) {
-          alert("User rejected the request.");
+          setMessage('User rejected the request.')
+          setVisble1(true)
         } else {
-          alert("An error occurred while connecting to MetaMask.");
+          setMessage('An error occurred while connecting to MetaMask.')
+          setVisble1(true)
         }
       }
     } else {
-      alert('MetaMask is not installed');
+      setMessage('MetaMask is not installed.')
+      setVisble1(true)
     }
   };
 
@@ -128,7 +134,7 @@ export default function Home () {
       <div className={styles.DTV}>
         <div className={styles.title}>{t('DTV_Mining')}</div>
         <div className={styles.progress}>
-          <ProgressBar percent={(progress?.TotalReleaseQty / progress?.TotalQty) * 100} text={formatProgressQty(progress?.TotalQty)}
+          <ProgressBar percent={(progress?.TotalReleaseQty / progress?.TotalQty) * 100} text={formatProgressQty(progress?.TotalQty) || 0}
             style={{
               '--fill-color': 'rgba(255, 110, 145, 0.20)', '--track-color': 'rgba(255,110,145,0.2)',
             }}
@@ -200,8 +206,8 @@ export default function Home () {
           <div className={styles.Item_title}>{t('Yesterday_Burned_Quantity')}</div>
           <div className={styles.content}>
             <div className={styles.num}>
-              <span><CountUp start={0} end={progress?.DailyAlreadyDestructionQty} duration={3} /></span>
-              <p className={styles.unit}>{progress?.DailyDestructionQty}</p>
+              <span><CountUp start={0} end={progress?.DailyAlreadyDestructionQty || 0} duration={3} /></span>
+              <p className={styles.unit}>{progress?.DailyDestructionQty || 0}</p>
             </div>
             <div className={styles.icon}>
               <Image className={styles.iconimg} src='/home/destroy.png' fit='fill' />
@@ -213,7 +219,9 @@ export default function Home () {
         <div className={styles.drama_title}>{t('Popular_Drama')}</div>
         <div className={styles.drama_list}>
           {
-            (source?.HotDramaData || []).map((item: any) => <div key={item.id} className={styles.drama_item}>
+            (source?.HotDramaData || []).map((item: any) => <div onClick={() => {
+              location.href = "https://data.demedia.tv/page/download.html"
+            }} key={item.id} className={styles.drama_item}>
               <div className={styles.top}>
                 <Image className={styles.img} src={item?.pic[0]?.url} fit='fill' />
                 <div className={styles.item_num}>更新至30集</div>
@@ -226,7 +234,10 @@ export default function Home () {
       </div>
       <div className={styles.linkbox}>
         {
-          (source?.ExternalLinksData || []).map((item: any) => <div key={item.id} className={styles.linkitem}>
+          (source?.ExternalLinksData || []).map((item: any) => <div onClick={() => {
+            console.log(item);
+            location.href = item.url
+          }} key={item.id} className={styles.linkitem}>
             <div className={styles.icon}>
               <Image className={styles.iconimg} src={item?.pic[0]?.url} fit='fill' />
             </div>
@@ -235,6 +246,7 @@ export default function Home () {
         }
       </div>
       <BottomNav initialTab='/' />
+      <CustomAlert visible={visible1} message={message} setVisible={setVisble1} />
     </div>
   );
 }

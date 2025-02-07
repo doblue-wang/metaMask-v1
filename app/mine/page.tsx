@@ -69,10 +69,13 @@ export default function Mine () {
           <div className="nameRow">
             <div className="top">
               <div className="name">{source?.AccountName || '--'}</div>
-              <div className="status">{t('Face_Authentication.Face_Authenticated')}</div>
-              {/* <div className="statusNomal">
-                <Image className='idcard' src="/mine/idcard.png" alt="" />
-                {t('Face_Authentication.Face_Not_Authenticated')}</div> */}
+              {
+                source?.AccountState === 1 ? <div className="status">{t('Face_Authentication.Face_Authenticated')}</div> : <div className="statusNomal">
+                  <Image className='idcard' src="/mine/idcard.png" alt="" />
+                  {t('Face_Authentication.Face_Not_Authenticated')}</div>
+              }
+
+
             </div>
             <div className="share">上级分享人{source?.SuperiorSharer || '--'}</div>
           </div>
@@ -142,7 +145,20 @@ export default function Mine () {
           <div className="namerow">
             <p>NFT</p>
             {
-              source?.IsCastingNFT > 0 ? <span>{t('Staking_Redemption_Minting.Minting')}：{source?.CastingDateTime}</span> : null
+              source?.IsCastingNFT > 0 ?
+                <>
+                  {
+                    (() => {
+                      const timestamp = source?.CastingDateTime; // 假设是一个时间戳
+                      const date = new Date(timestamp); // 将时间戳转为 Date 对象
+                      // 格式化为可读的日期格式
+                      const formattedDate = date.toLocaleString();
+                      return <span>{t('Staking_Redemption_Minting.Minting')}：{formattedDate}</span>
+                    })()
+                  }
+                </>
+
+                : null
             }
 
           </div>
@@ -152,7 +168,7 @@ export default function Mine () {
       <div className="container">
         <div className="mypool" onClick={() => router.push('/mine/myPool')}>
           <div className="optionLeft" >
-            <Image className='icon' src="/mine/receives.png" alt="" />
+            <Image className='icon' src="/mine/my.png" alt="" />
             <div className="optionname">{t('My_Mining_Pool')}</div>
           </div>
           <Image className='arroww' src="/mine/arrow.png" alt="" />
@@ -160,21 +176,21 @@ export default function Mine () {
 
         <div className="mypool">
           <div className="optionLeft">
-            <Image className='icon' src="/mine/receives.png" alt="" />
+            <Image className='icon' src="/mine/detv.png" alt="" />
             <div className="optionname">{t('DETV_Account_Binding')}</div>
           </div>
           <Image className='arroww' src="/mine/arrow.png" alt="" />
         </div>
         <div onClick={() => setShow(true)} className="mypool">
           <div className="optionLeft">
-            <Image className='icon' src="/mine/receives.png" alt="" />
+            <Image className='icon' src="/mine/lunage.png" alt="" />
             <div className="optionname">{t('Language')}</div>
           </div>
           <Image className='arroww' src="/mine/arrow.png" alt="" />
         </div>
         <div className="mypool" onClick={() => router.push('/mine/myShare')}>
           <div className="optionLeft">
-            <Image className='icon' src="/mine/receives.png" alt="" />
+            <Image className='icon' src="/mine/shareicon.png" alt="" />
             <div className="optionname">{t('Share')}</div>
           </div>
           <Image className='arroww' src="/mine/arrow.png" alt="" />

@@ -122,3 +122,12 @@ export async function UpdateAllFixedAssets (body: object) {
     body,
   });
 }
+
+
+//更新会员表中的认证状态
+export async function UpdateAuthenticationStatus (body: object) {
+  return request("/api/DeclarationForm/myinformation/UpdateAuthenticationStatus", {
+    method: "POST",
+    body,
+  });
+}

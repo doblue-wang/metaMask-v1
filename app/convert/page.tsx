@@ -11,6 +11,7 @@ import { ERC20_ABI } from "../../ERC20ABI";
 import { StakingABI } from "../../StakingABI";
 import { t } from "i18next";
 import NewLoading from "@/components/Loading";
+import { NFT_ABI } from "@/NFT";
 export default function Convert () {
   const [USDTValue, setUSDTValue] = useState(''); // USDT 输入框的值
   const [DTVValue, setDTVValue] = useState('');   // DTV 输入框的值
@@ -18,6 +19,7 @@ export default function Convert () {
   const [visible, setVisble] = useState(false)
   const [message, setMessage] = useState('')
   const [show, setShow] = useState(false)
+  const [moneySource, setMoney] = useState("")
   const router = useRouter();
   const handleRecord = () => {
     router.push('/convert/convertRecord');
@@ -34,6 +36,8 @@ export default function Convert () {
       setDTVValue('');
     }
   }
+
+
 
   // 处理 DTV 输入框的变化
   const handleDTVChange = (val: string) => {
@@ -57,9 +61,8 @@ export default function Convert () {
       });
   }
   useEffect(() => {
-
     fetchGetDivaSource()
-
+    money()
   }, [])
 
 
@@ -70,6 +73,21 @@ export default function Convert () {
 
   const USDT_address = '0xa2d272B92Cd921C572698Db1b999c1fC4c8374CA';//usdt 合约
   const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
+
+
+  const money = async () => {
+    const provider = new ethers.BrowserProvider(window.ethereum)
+    const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
+    const ownerAddress = await signer.getAddress();
+    const nftContract = new ethers.Contract(USDT_address, ERC20_ABI, signer);
+    const balance = await nftContract.balanceOf(ownerAddress);
+    console.log(balance);
+    const num = Number(ethers.formatUnits(balance, 18)).toFixed(0) as any
+    const formattedMoney = new Intl.NumberFormat().format(num);
+    setMoney(formattedMoney);
+  }
+
+
   //授权钱包
   const approveToken = async (appunmu: any) => {
 
@@ -82,6 +100,8 @@ export default function Convert () {
         };
         const signer = await provider.getSigner();
         const USDTcontract = new ethers.Contract(USDT_address, ERC20_ABI, signer);
+        setShow(true)
+        console.log(BigInt(appunmu));
         const tx = await USDTcontract.approve(Contract_address, BigInt(appunmu), options);
         await tx.wait();
         await change(appunmu)
@@ -90,7 +110,8 @@ export default function Convert () {
         console.error("授权失败", e);
       }
     } else {
-      alert('MetaMask is not installed');
+      setVisble(true)
+      setMessage('MetaMask is not installed')
     }
 
   };
@@ -105,6 +126,8 @@ export default function Convert () {
     } else {
       const amountInUnits = parseUnits(USDTValue.toString(), 18);  // 转换为最小单位
       const amountInUnitsStr = amountInUnits.toString();  // 转换为字符串
+      console.log(amountInUnitsStr);
+
       await approveToken(amountInUnitsStr)
     }
 
@@ -113,7 +136,6 @@ export default function Convert () {
 
   const change = async (appunmu: any) => {
     if (typeof window !== 'undefined' && window.ethereum) {
-
       const provider = new ethers.BrowserProvider(window.ethereum);
 
       const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
@@ -125,15 +147,15 @@ export default function Convert () {
         gasPrice,
       };
       // 调用合约的 exchange 方法兑换 DTV
-      const tx = await exchangeContract.exchange(BigInt(9999999999999999999), options);
+      const tx = await exchangeContract.exchange(BigInt(appunmu), options);
       // 等待交易确认
-      setShow(true)
       await tx.wait();
       setShow(false)
       setVisble(true)
       setMessage('兑换成功')
     } else {
-      alert('MetaMask is not installed');
+      setVisble(true)
+      setMessage('MetaMask is not installed')
     }
 
   }
@@ -154,7 +176,7 @@ export default function Convert () {
         <div className={styles.purseicon}>
           <Image className={styles.purseIconImg} src="/convert/purse.png" />
         </div>
-        <div className={styles.price}>0.00</div>
+        <div className={styles.price}>{moneySource}</div>
       </div>
       <div className={styles.exchangeArea}>
         <div className={styles.exchange}>

@@ -50,14 +50,7 @@ const connectMetaMask = async () => {
       getGoodsNineTrans({ WalletAddress: accounts[0] })
     } catch (error: any) {
       console.error('Error connecting to MetaMask:', error);
-      if (error.code === 4001) {
-        alert("User rejected the request.");
-      } else {
-        alert("An error occurred while connecting to MetaMask.");
-      }
     }
-  } else {
-    alert('MetaMask is not installed');
   }
 };
 
