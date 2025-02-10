@@ -33,6 +33,11 @@ export default function Receive () {
             });
     }
     const withdrawComing = async (_address: any) => {
+        if (source?.CanReceiveDTV === 0) {
+            setVisble(true)
+            setMessage('金额不足');
+            return
+        }
         if (localStorage.getItem("show") === "0") {
             setVisble(true)
             setMessage('请进行人脸识别');
@@ -62,7 +67,7 @@ export default function Receive () {
                 await getComingList(_address)
                 exchange()
             } catch (e) {
-                console.error("提取收益失败", e);
+                console.log("提取收益失败", e);
             }
         }
 
@@ -97,7 +102,7 @@ export default function Receive () {
                 setList(parsedRecords)
                 return records;  // 返回收益记录数组
             } catch (e) {
-                console.error("获取收益记录失败", e);
+                console.log("获取收益记录失败", e);
             }
         }
 
@@ -114,13 +119,10 @@ export default function Receive () {
         const date = new Date(timestamp * 1000);
         const dateStr = date.toLocaleDateString(); // 获取日期部分
         const timeStr = date.toLocaleTimeString(); // 获取时间部分
-
         // 金额（假设是 DTV 或类似代币，使用 18 位小数）
         const amount = ethers.formatUnits(record[1], 18);  // 转换为普通数字字符串
-
         // 进出标记，0 为进，1 为出
         const inout = record[2] === BigInt(0) ? '进' : '出';
-
         // 返回格式化后的结果
         return {
             date: dateStr,

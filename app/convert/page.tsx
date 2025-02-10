@@ -12,6 +12,9 @@ import { StakingABI } from "../../StakingABI";
 import { t } from "i18next";
 import NewLoading from "@/components/Loading";
 export default function Convert () {
+  useEffect(() => {
+    document.title = "兑换";
+  }, []);
   const [USDTValue, setUSDTValue] = useState(''); // USDT 输入框的值
   const [DTVValue, setDTVValue] = useState('');   // DTV 输入框的值
   const [scale, setScale] = useState(0);
@@ -93,11 +96,8 @@ export default function Convert () {
         await change(appunmu)
         // await stakeTokens(getCookie('accounts'), product, appunmu)
       } catch (e) {
-        console.error("授权失败", e);
+        console.log('Error:', e);
       }
-    } else {
-      setVisble(true)
-      setMessage('MetaMask is not installed')
     }
   };
   //兑换
@@ -136,9 +136,6 @@ export default function Convert () {
       setShow(false)
       setVisble(true)
       setMessage('兑换成功')
-    } else {
-      setVisble(true)
-      setMessage('MetaMask is not installed')
     }
   }
   return (

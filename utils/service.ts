@@ -49,7 +49,7 @@ const connectMetaMask = async () => {
       localStorage.setItem('accounts', accounts[0]);
       getGoodsNineTrans({ WalletAddress: accounts[0] })
     } catch (error: any) {
-      console.error('Error connecting to MetaMask:', error);
+      console.log('Error connecting to MetaMask:', error);
     }
   }
 };

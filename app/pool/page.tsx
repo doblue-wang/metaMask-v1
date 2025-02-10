@@ -14,6 +14,9 @@ import CustomAlert from "@/components/Toast";
 import NewLoading from "@/components/Loading";
 import { NFT_ABI } from "@/NFT";
 export default function Pool () {
+  useEffect(() => {
+    document.title = "矿池";
+  }, []);
   const [selectedTab, setSelectedTab] = useState(0);
   const [visible, setVisible] = useState(false);
   const [source, setSource] = useState({} as any)
@@ -104,21 +107,16 @@ export default function Pool () {
         await stakeTokens(walletAddress, itemSource.MappingValue, amountInUnitsStr);
       } catch (e) {
         setShow(false)
-        console.error("授权失败", e);
+        console.log("授权失败", e);
         setMessage('授权失败')
         setVisble1(true)
       }
-    } else {
-      setMessage('MetaMask is not installed')
-      setVisble1(true)
     }
   };
   const stakeTokens = async (_address: any, _product: any, _amount: any) => {
     console.log(_address, _product, _amount);
     try {
       if (typeof window.ethereum === "undefined") {
-        setMessage('MetaMask is not installed')
-        setVisble1(true)
         return;
       }
       const provider = new ethers.BrowserProvider(window.ethereum);
@@ -148,7 +146,7 @@ export default function Pool () {
 
     } catch (e) {
       setShow(false)
-      console.error("质押失败", e);
+      console.log("质押失败", e);
       setShow(false)
       setVisble1(true)
       setMessage('质押失败')
@@ -217,8 +215,6 @@ export default function Pool () {
   }, [])
   const exchangeNFT = async (_amount: any) => {
     if (!window.ethereum) {
-      setMessage('MetaMask is not installed')
-      setVisble1(true)
       return;
     }
     const provider = new ethers.BrowserProvider(window.ethereum);
@@ -251,7 +247,7 @@ export default function Pool () {
       setShow(false)
       setVisble1(true)
       setMessage('铸造失败')
-      console.error("铸造失败:", error);
+      console.log("铸造失败:", error);
     }
   };
   const getfilterList = () => {

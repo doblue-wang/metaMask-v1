@@ -13,6 +13,7 @@ import CustomAlert from "@/components/Toast";
 import { UpdateAllFixedAssets, fetchGetMiningPool } from "@/api/home";
 
 export default function KJredeem () {
+    const [title, setTitle] = useState("")
     const searchParams = useSearchParams();
     const paramValue = searchParams.get("type");
     const [source, setSource] = useState({} as any)
@@ -29,9 +30,11 @@ export default function KJredeem () {
     useEffect(() => {
         getSource()
         if (paramValue === "1") {
+            setTitle('矿机')
             getComingList(localStorage.getItem('accounts'))
         } else if (paramValue === "2" || paramValue === "3") {
             getNftStakingList(localStorage.getItem('accounts'))
+            setTitle('NTF')
         }
     }, [paramValue])
 
@@ -56,8 +59,6 @@ export default function KJredeem () {
         console.log(_address, _product, _amount);
         try {
             if (typeof window.ethereum === "undefined") {
-                setAlart(true)
-                setMessage('MetaMask 未安装')
                 return;
             }
             const provider = new ethers.BrowserProvider(window.ethereum)
@@ -107,8 +108,6 @@ export default function KJredeem () {
             return
         }
         if (!window.ethereum) {
-            setAlart(true)
-            setMessage('MetaMask is not installed')
             return;
         }
         const provider = new ethers.BrowserProvider(window.ethereum)
@@ -164,8 +163,6 @@ export default function KJredeem () {
     //nft 赎回
     const withdrawNFT = async () => {
         if (!window.ethereum) {
-            setAlart(true)
-            setMessage('MetaMask 未安装')
             return;
         }
         if (localStorage.getItem("show") === "0") {
@@ -220,7 +217,7 @@ export default function KJredeem () {
                 const reversedRecords = parsedRecords.reverse();
                 setList(reversedRecords)
             } catch (e) {
-                console.error("获取记录失败", e);
+                console.log("获取记录失败", e);
             }
         }
 
@@ -238,7 +235,7 @@ export default function KJredeem () {
                 const reversedRecords = parsedRecords.reverse();
                 setNftList(reversedRecords)
             } catch (e) {
-                console.error("获取记录失败", e);
+                console.log("获取记录失败", e);
             }
         }
 
@@ -268,7 +265,7 @@ export default function KJredeem () {
     };
     return (
         <div className={styles.page}>
-            <NavBar title="矿机" />
+            <NavBar title={title} />
             <div className={styles.content}>
                 {
                     (() => {

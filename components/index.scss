@@ -1,8 +1,12 @@
 .mask {
+  z-index: 9999999999999;
+
   .adm-modal-body {
+    z-index: 9999999999999;
     background-color: rgba(0, 0, 0, .5);
 
     .adm-auto-center-content {
+      z-index: 9999999999999;
       color: #fff;
     }
   }

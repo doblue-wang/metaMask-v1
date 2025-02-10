@@ -7,7 +7,11 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
 import { MyInformationUploadImage, fetchGetMine } from '@/api/home';
+import { title } from 'process';
 export default function Mine () {
+  useEffect(() => {
+    document.title = "我的";
+  }, []);
   const router = useRouter();
   const [show, setShow] = useState(false)
   const [source, setSource] = useState({} as any)
@@ -66,7 +70,7 @@ export default function Mine () {
             <div className="top">
               <div className="name">{source?.AccountName || '--'}</div>
               {
-                source?.AccountState === 1 ? <div className="status">{t('Face_Authentication.Face_Authenticated')}</div> : <div className="statusNomal">
+                source?.AccountState === 0 ? <div className="status">{t('Face_Authentication.Face_Authenticated')}</div> : <div className="statusNomal">
                   <Image className='idcard' src="/mine/idcard.png" alt="" />
                   {t('Face_Authentication.Face_Not_Authenticated')}</div>
               }

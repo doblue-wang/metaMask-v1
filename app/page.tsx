@@ -3,7 +3,7 @@
 
 import styles from "./page.module.scss";
 import React, { useEffect, useRef, useState } from 'react'
-import { Image, Swiper, ProgressBar, Modal, Input, TextArea } from 'antd-mobile'
+import { Image, Swiper, ProgressBar, Modal, Input } from 'antd-mobile'
 import { useRouter } from "next/navigation";
 import CountUp from "react-countup";
 import BottomNav from "@/components/Tabbar";
@@ -11,6 +11,9 @@ import { BindingRelationship, fetchGetHome, fetchGetSpeedOfProgress, fetchLogin 
 import { useTranslation } from "react-i18next";
 import CustomAlert from "@/components/Toast";
 export default function Home () {
+  useEffect(() => {
+    document.title = "首页";
+  }, []);
   const router = useRouter();
   const [source, setSource] = useState({} as any);
   const [progress, setProgress] = useState({} as any);
@@ -18,8 +21,7 @@ export default function Home () {
   const [visible1, setVisble1] = useState(false)
   const [message, setMessage] = useState('')
   const { i18n } = useTranslation();
-  const [show, setShow] = useState(false);
-  const [text, setTSAEXT] = useState("");
+  const [show, setShow] = useState(true);
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef([]) as any;
   const items = source?.RotationData?.[0]?.pic?.map((item: any, index: any) => (
@@ -77,28 +79,20 @@ export default function Home () {
   };
   //metamask 授权
   const connectMetaMask = async () => {
-    if (typeof window !== 'undefined' && window.ethereum) {
-      try {
-        // 请求用户连接 MetaMask
-        const accounts = await window.ethereum.request({
-          method: 'eth_requestAccounts',
-        });
-        console.log(accounts);
-        localStorage.setItem('accounts', accounts[0]);
-        getGoodsNineTrans({ WalletAddress: accounts[0] })
-      } catch (error: any) {
-        console.error('Error connecting to MetaMask:', error);
-        if (error.code === 4001) {
-          setMessage('User rejected the request.')
-          setVisble1(true)
-        } else {
-          setMessage('An error occurred while connecting to MetaMask.')
-          setVisble1(true)
-        }
+    try {
+      // 请求用户连接 MetaMask
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+      console.log(accounts);
+      localStorage.setItem('accounts', accounts[0]);
+      getGoodsNineTrans({ WalletAddress: accounts[0] })
+    } catch (error: any) {
+      console.log('Error:', error);
+      if (error.code === 4001) {
+        setMessage('User rejected the request.')
+        setVisble1(true)
       }
-    } else {
-      setMessage('MetaMask is not installed.')
-      setVisble1(true)
     }
   };
 
@@ -159,21 +153,19 @@ export default function Home () {
       });
 
   }
-
-
   // 处理输入框变化
   const handleChange = (index: any, value: any) => {
     if (!/^[a-zA-Z0-9]?$/.test(value)) return; // 仅允许输入字母或数字
-
-    const newCode = [...code];
-    newCode[index] = value.toUpperCase();
-    newCode[index] = value;
-    setCode(newCode);
-
-    // 自动跳转到下一个输入框
-    if (value && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
+    // 延迟处理输入，确保输入法候选字符完成后再更新状态
+    setTimeout(() => {
+      const newCode = [...code];
+      newCode[index] = value.toUpperCase(); // 强制大写字母
+      setCode(newCode);
+      // 自动跳转到下一个输入框
+      if (value && index < 5) {
+        inputRefs.current[index + 1]?.focus();
+      }
+    }, 100); // 延迟100ms后更新
   };
   // 处理删除操作，回退到上一个输入框
   const handleKeyDown = (index: any, event: any) => {
@@ -351,6 +343,7 @@ export default function Home () {
                   maxLength={1} // 限制每个输入框只能输入一个字符
                 />
               ))}
+              <CustomAlert visible={visible1} message={message} setVisible={setVisble1} />
             </div>
             <div onClick={handleSubmit} className={styles.check}>确认</div>
           </div>

@@ -46,11 +46,8 @@ export default function ConvertRecord () {
                 setList(reversedRecords)
                 return records;
             } catch (e) {
-                console.error("失败", e);
+                console.log("失败", e);
             }
-        } else {
-            setVisble1(true)
-            setMessage('MetaMask is not installed')
         }
     }
     const parseRecords = (records: any) => {
