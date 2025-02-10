@@ -131,3 +131,11 @@ export async function UpdateAuthenticationStatus (body: object) {
     body,
   });
 }
+
+//添加绑定关系
+export async function BindingRelationship (body: object) {
+  return request("/api/DeclarationForm/myinformation/BindingRelationship", {
+    method: "POST",
+    body,
+  });
+}

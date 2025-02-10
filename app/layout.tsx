@@ -6,7 +6,7 @@ import useLocale from "@/utils/useLocale";
 import enUS from 'antd-mobile/es/locales/en-US'
 import '../i18n';
 import { Suspense } from "react";
-import NewLoading from "@/components/Loading";
+import PageLoading from "@/components/PageLoading";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -32,7 +32,7 @@ export default function RootLayout ({
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <ConfigProvider locale={enUS}>
-          <Suspense fallback={<NewLoading show={true} />}>
+          <Suspense fallback={<PageLoading />}>
             {children}
           </Suspense>
         </ConfigProvider>

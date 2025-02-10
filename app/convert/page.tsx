@@ -11,7 +11,6 @@ import { ERC20_ABI } from "../../ERC20ABI";
 import { StakingABI } from "../../StakingABI";
 import { t } from "i18next";
 import NewLoading from "@/components/Loading";
-import { NFT_ABI } from "@/NFT";
 export default function Convert () {
   const [USDTValue, setUSDTValue] = useState(''); // USDT 输入框的值
   const [DTVValue, setDTVValue] = useState('');   // DTV 输入框的值
@@ -24,33 +23,31 @@ export default function Convert () {
   const handleRecord = () => {
     router.push('/convert/convertRecord');
   }
-
   // 处理 USDT 输入框的变化
   const handleUSDTChange = (val: string) => {
+    console.log(val);
     setUSDTValue(val);
     // 如果输入的是有效数字，则转换为 DTV
     const usdtAmount = parseFloat(val);
     if (!isNaN(usdtAmount)) {
-      setDTVValue((usdtAmount * 100).toString());
+      console.log(usdtAmount * scale);
+
+      setDTVValue((usdtAmount * scale).toString());
     } else {
       setDTVValue('');
     }
   }
-
-
-
   // 处理 DTV 输入框的变化
   const handleDTVChange = (val: string) => {
     setDTVValue(val);
     // 如果输入的是有效数字，则转换为 USDT
     const dtvAmount = parseFloat(val);
     if (!isNaN(dtvAmount)) {
-      setUSDTValue((dtvAmount / 100).toString());
+      setUSDTValue((dtvAmount / scale).toString());
     } else {
       setUSDTValue('');
     }
   }
-
   const fetchGetDivaSource = () => {
     fetchGetDiva({})
       .then(({ data }) => {
@@ -64,17 +61,9 @@ export default function Convert () {
     fetchGetDivaSource()
     money()
   }, [])
-
-
-
-
-
   //授权
-
   const USDT_address = '0xa2d272B92Cd921C572698Db1b999c1fC4c8374CA';//usdt 合约
   const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
-
-
   const money = async () => {
     const provider = new ethers.BrowserProvider(window.ethereum)
     const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
@@ -86,11 +75,8 @@ export default function Convert () {
     const formattedMoney = new Intl.NumberFormat().format(num);
     setMoney(formattedMoney);
   }
-
-
   //授权钱包
   const approveToken = async (appunmu: any) => {
-
     if (typeof window !== 'undefined' && window.ethereum) {
       const provider = new ethers.BrowserProvider(window.ethereum)
       try {
@@ -113,13 +99,15 @@ export default function Convert () {
       setVisble(true)
       setMessage('MetaMask is not installed')
     }
-
   };
-
   //兑换
   const exchangeTokens = async () => {
-    (Number(USDTValue));
-
+    console.log(localStorage.getItem("show"));
+    if (localStorage.getItem("show") === "0") {
+      setVisble(true)
+      setMessage('请进行人脸识别');
+      return
+    }
     if (Number(USDTValue) === 0) {
       setVisble(true)
       setMessage('请输入金额')
@@ -127,17 +115,12 @@ export default function Convert () {
       const amountInUnits = parseUnits(USDTValue.toString(), 18);  // 转换为最小单位
       const amountInUnitsStr = amountInUnits.toString();  // 转换为字符串
       console.log(amountInUnitsStr);
-
       await approveToken(amountInUnitsStr)
     }
-
-
   };
-
   const change = async (appunmu: any) => {
     if (typeof window !== 'undefined' && window.ethereum) {
       const provider = new ethers.BrowserProvider(window.ethereum);
-
       const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
       // 你的兑换合约地址，确认该地址是正确的
       const exchangeContract = new ethers.Contract(Contract_address, StakingABI, signer);
@@ -157,13 +140,7 @@ export default function Convert () {
       setVisble(true)
       setMessage('MetaMask is not installed')
     }
-
   }
-
-
-
-
-
   return (
     <div className={styles.page}>
       <div className={styles.nav}>

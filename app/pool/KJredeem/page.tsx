@@ -48,6 +48,11 @@ export default function KJredeem () {
     }
     //矿机赎回
     const withdrawTokens = async (_address: any, _product: number, _amount: any) => {
+        if (localStorage.getItem("show") === "0") {
+            setAlart(true)
+            setMessage('请进行人脸识别');
+            return
+        }
         console.log(_address, _product, _amount);
         try {
             if (typeof window.ethereum === "undefined") {
@@ -70,7 +75,11 @@ export default function KJredeem () {
             // 调用合约的 withdrawproducts 方法赎回 DTV
             const tx = await stakingContract.withdrawproducts(_address, _product, BigInt(amountInUnitsStr), options);
             // 等待交易确认
-            await tx.wait();
+            try {
+                await tx.wait();
+            } catch (error) {
+                setShow(false)
+            }
             setShow(false)
             setAlart(true)
             setMessage('赎回成功')
@@ -79,6 +88,7 @@ export default function KJredeem () {
             }, 1000);
         } catch (e) {
             console.log(e);
+            setShow(false)
             setAlart(true)
             setMessage('赎回失败')
         }
@@ -91,6 +101,11 @@ export default function KJredeem () {
     const router = useRouter();
     //nft 质押
     const stakeNFT = async (_tokenid: number) => {
+        if (localStorage.getItem("show") === "0") {
+            setAlart(true)
+            setMessage('请进行人脸识别');
+            return
+        }
         if (!window.ethereum) {
             setAlart(true)
             setMessage('MetaMask is not installed')
@@ -116,10 +131,17 @@ export default function KJredeem () {
             setAlart(true)
             setMessage('NFT 质押交易发送中')
             console.log("NFT 质押交易发送中:", stakeTx.hash);
-            await stakeTx.wait();
+            try {
+                await stakeTx.wait();
+            } catch (error) {
+                console.log(error);
+                setShow(false)
+            }
             setShow(false)
             setVisible(true)
         } catch (error) {
+            console.log(error);
+            setShow(false)
             setAlart(true)
             setMessage('质押失败')
         }
@@ -146,6 +168,11 @@ export default function KJredeem () {
             setMessage('MetaMask 未安装')
             return;
         }
+        if (localStorage.getItem("show") === "0") {
+            setAlart(true)
+            setMessage('请进行人脸识别');
+            return
+        }
         const provider = new ethers.BrowserProvider(window.ethereum)
         const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
         const gasPrice = Number((await provider.getFeeData()).gasPrice);
@@ -160,7 +187,11 @@ export default function KJredeem () {
                 options
             });
             console.log("NFT 赎回交易发送中:", withdrawTx.hash);
-            await withdrawTx.wait();
+            try {
+                await withdrawTx.wait();
+            } catch (error) {
+                setShow(false)
+            }
             setShow(false)
             setAlart(true)
             setMessage('NFT 赎回成功')
@@ -168,6 +199,8 @@ export default function KJredeem () {
                 router.back()
             }, 2000);
         } catch (error) {
+            console.log(error);
+            setShow(false)
             setAlart(true)
             setMessage('NFT 赎回失败')
         }

@@ -2,14 +2,13 @@
 'use client';
 
 import styles from "./page.module.scss";
-import React, { useEffect, useState } from 'react'
-import { Image, Swiper, ProgressBar } from 'antd-mobile'
+import React, { useEffect, useRef, useState } from 'react'
+import { Image, Swiper, ProgressBar, Modal, Input, TextArea } from 'antd-mobile'
 import { useRouter } from "next/navigation";
 import CountUp from "react-countup";
 import BottomNav from "@/components/Tabbar";
-import { fetchGetHome, fetchGetSpeedOfProgress, fetchLogin } from "@/api/home";
+import { BindingRelationship, fetchGetHome, fetchGetSpeedOfProgress, fetchLogin } from "@/api/home";
 import { useTranslation } from "react-i18next";
-import { log } from "console";
 import CustomAlert from "@/components/Toast";
 export default function Home () {
   const router = useRouter();
@@ -18,7 +17,11 @@ export default function Home () {
   const { t } = useTranslation();
   const [visible1, setVisble1] = useState(false)
   const [message, setMessage] = useState('')
-  const [AccountIdata, setAccountId] = useState("");
+  const { i18n } = useTranslation();
+  const [show, setShow] = useState(false);
+  const [text, setTSAEXT] = useState("");
+  const [code, setCode] = useState(["", "", "", "", "", ""]);
+  const inputRefs = useRef([]) as any;
   const items = source?.RotationData?.[0]?.pic?.map((item: any, index: any) => (
     <Swiper.Item onClick={() => {
       console.log(item);
@@ -45,6 +48,24 @@ export default function Home () {
       .then(({ data }) => {
         localStorage.setItem('token', data.token);
         localStorage.setItem('AccountId', data.AccountId);
+        i18n.changeLanguage(data.Languages || "en");
+        if (data.IsWhetherToBindOnlineOrNot) {
+          setShow(true)
+        } else {
+          setShow(false)
+        }
+        //不识别
+        if (data.IsNeedFacialRecognition === 0) {
+          localStorage.setItem('show', "1");
+        } else {
+          //未认证
+          if (data.Verification === 0) {
+            localStorage.setItem('show', "0");
+          } else {
+            localStorage.setItem('show', "1");
+          }
+        }
+
         setTimeout(() => {
           getHome(data.AccountId);
           getProgress();
@@ -54,8 +75,6 @@ export default function Home () {
         console.log(e);
       });
   };
-
-
   //metamask 授权
   const connectMetaMask = async () => {
     if (typeof window !== 'undefined' && window.ethereum) {
@@ -118,6 +137,65 @@ export default function Home () {
       return qty;  // 小于一万，直接返回数字
     }
   };
+  //绑定
+  const BindingRelationshipon = (inviteCode: any) => {
+    const AccountId = localStorage.getItem('AccountId')
+    BindingRelationship({
+      AccountId,
+      ParentCode: inviteCode
+    }).then(({ data, code, msg }) => {
+      if (code !== 200) {
+        setShow(false)
+        setMessage(msg)
+        setVisble1(true)
+      } else {
+        setShow(false)
+        setMessage("绑定成功")
+        setVisble1(true)
+      }
+    })
+      .catch((e) => {
+        console.log(e);
+      });
+
+  }
+
+
+  // 处理输入框变化
+  const handleChange = (index: any, value: any) => {
+    if (!/^[a-zA-Z0-9]?$/.test(value)) return; // 仅允许输入字母或数字
+
+    const newCode = [...code];
+    newCode[index] = value.toUpperCase();
+    newCode[index] = value;
+    setCode(newCode);
+
+    // 自动跳转到下一个输入框
+    if (value && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+  // 处理删除操作，回退到上一个输入框
+  const handleKeyDown = (index: any, event: any) => {
+    if (event.key === "Backspace" && !code[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+
+  // 点击确认按钮时，合并输入值并提交
+  const handleSubmit = () => {
+    const inviteCode = code.join("");
+    console.log("邀请码:", inviteCode);
+    if (inviteCode.length === 6) {
+      BindingRelationshipon(inviteCode);
+    } else {
+      setVisble1(true);
+      setMessage("请输入完整的邀请码")
+    }
+  };
+
+
   return (
     <div className={styles.page}>
       <div className={styles.swiperbox}>
@@ -247,6 +325,39 @@ export default function Home () {
       </div>
       <BottomNav initialTab='/' />
       <CustomAlert visible={visible1} message={message} setVisible={setVisble1} />
+      <Modal
+        className="modal"
+        visible={show}
+        title="请输入邀请码"
+        closeOnMaskClick
+        content={
+          <div className={styles.modals}>
+            <div className={styles.inputContainer}>
+              {code.map((char, index) => (
+                <Input
+                  key={index}
+                  ref={(el: any) => (inputRefs.current[index] = el)}
+                  className={styles.inputBox}
+                  value={char}
+                  style={{
+                    '--text-align': 'center',         // 文本右对齐
+                    '--color': '#FF6E91',
+                    caretColor: '#FF6E91',
+                    fontWeight: "blod",
+                    "--font-size": "28px",     // 光标颜色为红色
+                  }}
+                  onChange={(val) => handleChange(index, val)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  maxLength={1} // 限制每个输入框只能输入一个字符
+                />
+              ))}
+            </div>
+            <div onClick={handleSubmit} className={styles.check}>确认</div>
+          </div>
+        }
+        closeOnAction
+        onClose={() => setShow(false)}
+      />
     </div>
   );
 }

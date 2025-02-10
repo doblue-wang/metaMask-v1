@@ -12,6 +12,7 @@ export default function Exchange () {
     const [visible1, setVisble1] = useState(false)
     const [message, setMessage] = useState('')
     const [source, setSource] = useState({} as any)
+    const [list, setList] = useState([] as any)
     useEffect(() => {
         Record()
         getSource()
@@ -28,6 +29,11 @@ export default function Exchange () {
             });
     }
     const exchange = () => {
+        if (localStorage.getItem("show") === "0") {
+            setVisble1(true)
+            setMessage('请进行人脸识别');
+            return
+        }
         const AccountId = localStorage.getItem('AccountId')
         ExchangeDtv({
             AccountId
@@ -54,6 +60,7 @@ export default function Exchange () {
         })
             .then(({ data }) => {
                 console.log(data);
+                setList(data);
             })
             .catch((e) => {
                 console.log(e);
@@ -62,12 +69,14 @@ export default function Exchange () {
     return (
         <div className={styles.page}>
             <NavBar title={`DTVC ${t('Earnings.Exchange')}`} />
-            <div className={styles.content}>
+            <div className={(((source?.ConvertibleDTV || 0).toString()).length) > 10 || (((source?.ConvertibleDTVC || 0).toString()).length) > 10 ? styles.content : styles.content1}>
                 <div className={styles.l_con}>
                     <Image className={styles.img} src="/pool/receive.png" />
                     <div className={styles.txtbox}>
                         <div className={styles.desc}>DTV</div>
-                        <div className={styles.title}>{source?.ConvertibleDTV || 0}</div>
+                        <div className={styles.title}>
+                            {source?.ConvertibleDTV || 0}
+                        </div>
 
                     </div>
                 </div>
@@ -79,24 +88,42 @@ export default function Exchange () {
                     <Image className={styles.img} src="/pool/exchange.png" />
                     <div className={styles.txtbox}>
                         <div className={styles.desc}>DTVC</div>
-                        <div className={styles.title}>{source?.ConvertibleDTVC || 0}</div>
+                        <div className={styles.title}>
+                            {source?.ConvertibleDTVC || 0}
+                        </div>
                     </div>
                 </div>
             </div>
-            <div className={styles.listbox}>
-                <div className={styles.listTitle}>DTVC {t('Earnings.Exchange_Record')}</div>
-                {/* <div className={styles.list}>
-                    <div className={styles.listitem} >
-                        <div className={styles.left}>
-                            <div className={styles.DTV}>10,000 DTV</div>
-                            <div className={styles.itemTitle}>手续费：12.12DTV</div>
+            {
+                (list || []).length > 0 ? <div className={styles.listbox}>
+                    <div className={styles.listTitle}>DTVC {t('Earnings.Exchange_Record')}</div>
+                    <div className={styles.list}>
+                        {
+                            list.map((item: any, index: number) =>
+                                <div key={index} className={styles.listitem} >
+                                    <div className={styles.left}>
+                                        <div className={styles.DTV}>{item?.DTVQuantity || 0} DTV</div>
+                                        <div className={styles.itemTitle}>手续费：{item?.ServiceCharge || 0}DTV</div>
 
-                        </div>
-                        <div className={styles.time}>2025-01-03</div>
+                                    </div>
+                                    {
+                                        (() => {
+                                            const timestamp = item?.RedemptionTime; // 假设是一个时间戳
+                                            const date = new Date(timestamp); // 将时间戳转为 Date 对象
+                                            // 格式化为可读的日期格式
+                                            const formattedDate = date.toLocaleString();
+                                            return <div className={styles.time}>{formattedDate}</div>
+                                        })()
+                                    }
+
+                                </div>)
+
+                        }
+
                     </div>
-                </div> */}
-                <Empty />
-            </div>
+                </div> : <Empty />
+            }
+
             <CustomAlert visible={visible1} message={message} setVisible={setVisble1} />
         </div>
     )

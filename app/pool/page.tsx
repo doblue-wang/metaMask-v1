@@ -39,6 +39,7 @@ export default function Pool () {
       AccountId
     }).then(({ code, data }) => {
       setSource(data)
+      console.log(data.Languages);
     })
       .catch((e) => {
         console.log(e);
@@ -57,9 +58,6 @@ export default function Pool () {
         console.log(e);
       });
   }
-
-
-
   const handleTabClick = (index: number) => {
     setSelectedTab(index);
   };
@@ -78,7 +76,6 @@ export default function Pool () {
     setItemSource(item)
   }
   const router = useRouter();
-
   //正式
   const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
   const STAKING_CONTRACT_ADDRESS = '0xe8f59c86808F5DD44d7E92beD2f8405a6988BEeB'// dtv 合约
@@ -102,7 +99,7 @@ export default function Pool () {
         await tx.wait();
         const walletAddress = localStorage.getItem('accounts')
         // 授权完成后，执行质押操作
-        const amountInUnits = parseUnits(itemSource.Staking.toString(), 18);  // 转换为最小单位
+        const amountInUnits = parseUnits(itemSource?.MappingValue === 6 ? defults.Price.toString() : itemSource.Staking.toString(), 18);  // 转换为最小单位
         const amountInUnitsStr = amountInUnits.toString();
         await stakeTokens(walletAddress, itemSource.MappingValue, amountInUnitsStr);
       } catch (e) {
@@ -116,7 +113,6 @@ export default function Pool () {
       setVisble1(true)
     }
   };
-
   const stakeTokens = async (_address: any, _product: any, _amount: any) => {
     console.log(_address, _product, _amount);
     try {
@@ -151,7 +147,9 @@ export default function Pool () {
       }, 500);
 
     } catch (e) {
+      setShow(false)
       console.error("质押失败", e);
+      setShow(false)
       setVisble1(true)
       setMessage('质押失败')
     }
@@ -175,12 +173,16 @@ export default function Pool () {
       setIsstaking(false)
     }
   }
-
   const handleNavTo = async (index: number) => {
     console.log(index);
     //自定义跳转页面type  1，矿池赎回，2，NFT质押，3，NFT赎回
     if (selectedTab == 0) {
       if (index == 0) {
+        if (localStorage.getItem("show") === "0") {
+          setVisble1(true)
+          setMessage('请进行人脸识别');
+          return
+        }
         if (Object.keys(itemSource).length) {
           console.log(itemSource);
           const num = itemSource.Staking + 10000;
@@ -246,12 +248,12 @@ export default function Pool () {
       getIds()
       // 解析 Transfer 事件，找到 NFT Token ID
     } catch (error) {
+      setShow(false)
       setVisble1(true)
       setMessage('铸造失败')
       console.error("铸造失败:", error);
     }
   };
-
   const getfilterList = () => {
     fetchGetGetQuantumTypeList({})
       .then(({ data }) => {
@@ -364,6 +366,11 @@ export default function Pool () {
               {
                 !isstaking && !source?.IsNFTIlluminate ?
                   <Button onClick={async () => {
+                    if (localStorage.getItem("show") === "0") {
+                      setVisble1(true)
+                      setMessage('请进行人脸识别');
+                      return
+                    }
                     const num = source?.NFTType.Price + 1000
                     const amountInUnits = parseUnits(num.toString(), 18);  // 转换为最小单位
                     const amountInUnitsStr = amountInUnits.toString();

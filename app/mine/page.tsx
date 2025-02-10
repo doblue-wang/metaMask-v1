@@ -11,9 +11,9 @@ export default function Mine () {
   const router = useRouter();
   const [show, setShow] = useState(false)
   const [source, setSource] = useState({} as any)
-  const [type, setType] = useState('en')
   const { i18n } = useTranslation();
   const { t } = useTranslation();
+  const [type, setType] = useState(i18n.language)
   const list = [
     {
       key: "English",
@@ -30,12 +30,11 @@ export default function Mine () {
     setType(val.value)
     setShow(false)
   }
-
   useEffect(() => {
+    console.log(i18n.language);
+
     fetchGetMineSource()
   }, [])
-
-
   //接口授权
   const fetchGetMineSource = async () => {
     const AccountId = localStorage.getItem('AccountId')
@@ -58,9 +57,6 @@ export default function Mine () {
         console.log(e);
       });
   };
-
-
-
   return (
     <div className='mine'>
       <div className="userInfo" onClick={() => router.push('/mine/face')}>
@@ -74,13 +70,10 @@ export default function Mine () {
                   <Image className='idcard' src="/mine/idcard.png" alt="" />
                   {t('Face_Authentication.Face_Not_Authenticated')}</div>
               }
-
-
             </div>
             <div className="share">上级分享人{source?.SuperiorSharer || '--'}</div>
           </div>
         </div>
-
         <div className="arrow"></div>
       </div>
       {/* 资产  */}
@@ -96,7 +89,6 @@ export default function Mine () {
             <div className="num">
               <CountUp start={0} end={source?.PendingRewardsDTV || 0} duration={3} decimals={2} />
             </div>
-
           </div>
           <div onClick={() => { router.push('/pool/exchange') }} className="dtv">
             <div className="dtvimg">
@@ -107,7 +99,6 @@ export default function Mine () {
             <div className="num">
               <CountUp start={0} end={source?.PendingRewardsDTV || 0} duration={3} decimals={2} />
             </div>
-
           </div>
         </div>
       </div>
@@ -123,7 +114,6 @@ export default function Mine () {
             <div className="num">
               <CountUp start={0} end={source?.MyHashrate || 0} duration={1} decimals={2} />
             </div>
-
           </div>
           <div className="dtv">
             <div className="pop">
@@ -133,7 +123,6 @@ export default function Mine () {
             <div className="num">
               <CountUp start={0} end={source?.MyPop || 0} duration={1} decimals={2} />
             </div>
-
           </div>
         </div>
       </div>
@@ -157,10 +146,8 @@ export default function Mine () {
                     })()
                   }
                 </>
-
                 : null
             }
-
           </div>
         </div>
       </div>
@@ -195,8 +182,6 @@ export default function Mine () {
           </div>
           <Image className='arroww' src="/mine/arrow.png" alt="" />
         </div>
-
-
       </div>
       <BottomNav initialTab='/mine' />
       <Popup

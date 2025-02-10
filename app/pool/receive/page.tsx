@@ -33,6 +33,11 @@ export default function Receive () {
             });
     }
     const withdrawComing = async (_address: any) => {
+        if (localStorage.getItem("show") === "0") {
+            setVisble(true)
+            setMessage('请进行人脸识别');
+            return
+        }
         if (typeof window !== 'undefined' && window.ethereum) {
             try {
                 const provider = new ethers.BrowserProvider(window.ethereum);
@@ -87,6 +92,8 @@ export default function Receive () {
                 // 调用合约的 getcominglist 方法获取用户收益记录
                 const records = await stakingContract.getcominglist(_address);
                 const parsedRecords = parseRecords(records);
+                console.log(parsedRecords);
+
                 setList(parsedRecords)
                 return records;  // 返回收益记录数组
             } catch (e) {
@@ -150,8 +157,6 @@ export default function Receive () {
                                 <div className={styles.listitem} >
                                     <div className={styles.left}>
                                         <div className={styles.DTV}>{item.amount} DTV</div>
-                                        <div className={styles.itemTitle}>手续费：12.12DTV</div>
-
                                     </div>
                                     <div className={styles.rightcon}>
                                         <div className={styles.date}>{item.date}</div>
@@ -163,8 +168,6 @@ export default function Receive () {
                         }
                     </> : <Empty />
                 }
-                {/*  */}
-
             </div>
             <NewLoading show={show} />
             <CustomAlert visible={visible} message={message} setVisible={setVisble} />
