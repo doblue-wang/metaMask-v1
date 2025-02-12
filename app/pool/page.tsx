@@ -337,12 +337,25 @@ export default function Pool () {
           </div>
           //NFT页面
         ) : selectedTab == 1 ? (
-          <div className={styles.nftbox}>
-            <div className={styles.imagebox}>
-              <Image className={styles.img} src='/pool/poolNFT.png' />
-            </div>
-            <div className={styles.price}>{source?.NFTType.Price}U</div>
-          </div>
+          <>
+            {
+              !isstaking && !source?.IsNFTIlluminate ? <div className={styles.nftbox}>
+                <div className={styles.imagebox}>
+                  <Image className={styles.img} src='/pool/poolNFT.png' />
+                </div>
+                <div className={styles.price}>{source?.NFTType.Price}U</div>
+              </div> : <div className={styles.nftbox}>
+                <div className={styles.imagebox}>
+                  <Image className={styles.img} src='/pool/poolNFT.png' />
+                </div>
+                <div className={styles.price}>{source?.NFTType.Price || 0}U</div>
+                <div className={styles.row}>
+                  <div className={styles.pos}>POS加成：{source?.NFTType.IncreasePos || 0}(12%)</div>
+                  <div className={styles.pop}>POP加成：{source?.NFTType.IncreasePop || 0} (12%)</div>
+                </div>
+              </div>
+            }
+          </>
         ) : null}
         {
           selectedTab === 0 ?

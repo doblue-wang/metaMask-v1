@@ -1,18 +1,23 @@
 'use client';
 import styles from "./page.module.scss";
-import React from 'react'
+import React, { useState } from 'react'
 import { Image } from 'antd-mobile'
 import NavBar from "@/components/NavBar/page";
 import useClipboard from '@/utils/useClipboard'
 import { useSearchParams } from 'next/navigation';
+import CustomAlert from "@/components/Toast";
 export default function ConvertDetails () {
   const { copyToClipboard } = useClipboard();
   const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
-  const handleCopy = async () => {
-    copyToClipboard('2222222')
+  const handleCopy = (text: any) => {
+    setMessage("复制成功")
+    setVisble1(true)
+    copyToClipboard(text)
   }
   const searchParams = useSearchParams();
   const data = searchParams.get('data');
+  const [visible1, setVisble1] = useState(false)
+  const [message, setMessage] = useState('')
   const parsedData = data ? JSON.parse(decodeURIComponent(data)) : null;
   console.log(parsedData);
   const getObfuscatedAccount = (account: string | null) => {
@@ -74,7 +79,7 @@ export default function ConvertDetails () {
           <div className={styles.label}>从</div>
           <div className={styles.txtbox}>
             <div className={styles.txt}>{getObfuscatedAccount(localStorage.getItem('accounts'))}</div>
-            <div className={styles.copyicon} onClick={handleCopy}>
+            <div className={styles.copyicon} onClick={() => handleCopy(localStorage.getItem('accounts'))}>
               <Image alt="" className={styles.copyImg} src="/convert/copy.png" />
             </div>
           </div>
@@ -83,7 +88,7 @@ export default function ConvertDetails () {
           <div className={styles.label}>到</div>
           <div className={styles.txtbox}>
             <div className={styles.txt}>{getObfuscatedAccount(Contract_address)}</div>
-            <div className={styles.copyicon}>
+            <div className={styles.copyicon} onClick={() => handleCopy(Contract_address)}>
               <Image alt="" className={styles.copyImg} src="/convert/copy.png" />
             </div>
           </div>
@@ -102,6 +107,7 @@ export default function ConvertDetails () {
           </div>
         </div>
       </div>
+      <CustomAlert visible={visible1} message={message} setVisible={setVisble1} />
     </div>
   )
 }

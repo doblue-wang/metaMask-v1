@@ -34,7 +34,7 @@ export default function KJredeem () {
             getComingList(localStorage.getItem('accounts'))
         } else if (paramValue === "2" || paramValue === "3") {
             getNftStakingList(localStorage.getItem('accounts'))
-            setTitle('NTF')
+            setTitle('NFT')
         }
     }, [paramValue])
 

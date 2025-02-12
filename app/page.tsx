@@ -4,7 +4,7 @@
 import styles from "./page.module.scss";
 import React, { useEffect, useRef, useState } from 'react'
 import { Image, Swiper, ProgressBar, Modal, Input } from 'antd-mobile'
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import CountUp from "react-countup";
 import BottomNav from "@/components/Tabbar";
 import { BindingRelationship, fetchGetHome, fetchGetSpeedOfProgress, fetchLogin } from "@/api/home";
@@ -21,29 +21,31 @@ export default function Home () {
   const [visible1, setVisble1] = useState(false)
   const [message, setMessage] = useState('')
   const { i18n } = useTranslation();
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef([]) as any;
-  const items = source?.RotationData?.[0]?.pic?.map((item: any, index: any) => (
+  const items = (source?.RotationData || []).map((item: any, index: any) => (
     <Swiper.Item onClick={() => {
-      console.log(item);
-
-      // if (item.url) {
-      //   location.href = item.url
-      // }
+      if (item.url) {
+        location.href = item.url
+      }
     }} className={styles.item} key={index}>
       <div
         className={styles.content}
       >
-        <Image className={styles.img} src={item.url} fit='fill' />
+        <Image className={styles.img} src={item?.pic[0]?.url} fit='fill' />
       </div>
     </Swiper.Item>
   ))
-
+  const searchParams = useSearchParams();
+  const data = searchParams.get('code');
   useEffect(() => {
     connectMetaMask();
-  }, []); //
-
+    console.log(data);
+    if (data) {
+      setCode(data.split(''))
+    }
+  }, []);
   //接口授权
   const getGoodsNineTrans = async ({ WalletAddress }: { WalletAddress: Number }) => {
     fetchLogin({ WalletAddress: WalletAddress })
@@ -95,9 +97,6 @@ export default function Home () {
       }
     }
   };
-
-
-
   // 首页数据
   const getHome = (AccountId?: any) => {
     fetchGetHome({
@@ -109,7 +108,6 @@ export default function Home () {
         console.log(e);
       });
   }
-
   //数据进度
   const getProgress = () => {
     const AccountId = localStorage.getItem('AccountId')
@@ -204,18 +202,19 @@ export default function Home () {
       <div className={styles.DTV}>
         <div className={styles.title}>{t('DTV_Mining')}</div>
         <div className={styles.progress}>
-          <ProgressBar percent={(progress?.TotalReleaseQty / progress?.TotalQty) * 100} text={formatProgressQty(progress?.TotalQty) || 0}
+          <ProgressBar percent={(progress?.TotalReleaseQty / progress?.TotalQty) * 86} text={formatProgressQty(progress?.TotalQty) || 0}
             style={{
               '--fill-color': 'rgba(255, 110, 145, 0.20)', '--track-color': 'rgba(255,110,145,0.2)',
             }}
           />
           {
-            progress?.TotalReleaseQty > 0 ? <div className={styles.progress_bubble} style={{ left: `${(progress?.TotalReleaseQty / progress?.TotalQty) * 100}%`, marginLeft: `-${12 / 2}px` }}>
-              <div className={styles.bubble_content} >  {formatProgressQty(progress?.TotalReleaseQty || 0)}</div>
-            </div> : null
+            progress?.TotalReleaseQty > 0 ?
+              <div className={styles.progress_bubble} style={{ left: `${(progress?.TotalReleaseQty / progress?.TotalQty) * 86}%`, marginLeft: `-${12 / 2}px` }}>
+                <div className={styles.bubble_content} > {formatProgressQty(progress?.TotalReleaseQty || 0)}1</div>
+              </div> : null
           }
 
-          <div className={styles.circle} style={{ left: `${(progress?.TotalReleaseQty / progress?.TotalQty) * 100}%`, marginLeft: `-${12 / 2}px` }}>
+          <div className={styles.circle} style={{ left: `${(progress?.TotalReleaseQty / progress?.TotalQty) * 86}%`, marginLeft: `-${12 / 2}px` }}>
             <div className={styles.circle_inner} ></div>
           </div>
         </div>

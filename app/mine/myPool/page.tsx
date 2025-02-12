@@ -154,7 +154,7 @@ export default function MyPool () {
                         <div className={styles.titlebox}>
                             <div className={styles.title}>
                                 合格矿池
-                                <div className={styles.txt}>POP：{source?.POPSummary || 0}</div>
+                                <div className={styles.txt}>POP：{source?.QualifiedPOPSummary || 0}</div>
                             </div>
                         </div>
                         <div className={styles.listbox}>
@@ -178,7 +178,7 @@ export default function MyPool () {
                         <div className={styles.titlebox}>
                             <div className={styles.title}>
                                 预备矿池
-                                <div className={styles.txt}>POP：160w</div>
+                                <div className={styles.txt}>POP：{source?.PreparationPOPSummary || 0}</div>
                             </div>
                         </div>
                         <div className={styles.listbox}>

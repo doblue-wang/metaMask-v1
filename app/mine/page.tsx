@@ -70,7 +70,7 @@ export default function Mine () {
             <div className="top">
               <div className="name">{source?.AccountName || '--'}</div>
               {
-                source?.AccountState === 0 ? <div className="status">{t('Face_Authentication.Face_Authenticated')}</div> : <div className="statusNomal">
+                source?.AccountState === 1 ? <div className="status">{t('Face_Authentication.Face_Authenticated')}</div> : <div className="statusNomal">
                   <Image className='idcard' src="/mine/idcard.png" alt="" />
                   {t('Face_Authentication.Face_Not_Authenticated')}</div>
               }

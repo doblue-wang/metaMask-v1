@@ -12,7 +12,7 @@ export default function MyShare () {
     const [visible, setVisble] = useState(false)
     const [message, setMessage] = useState('')
     const handleCopy = async () => {
-        copyToClipboard(source?.ShareLinkAddress)
+        copyToClipboard(`https://test.demedia.tv:9940?code=${source?.ShareLinkAddress}`)
         setMessage('复制成功')
         setVisble(true)
     }
