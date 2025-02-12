@@ -35,12 +35,14 @@ export default function Receive () {
     const withdrawComing = async (_address: any) => {
         if (source?.CanReceiveDTV === 0) {
             setVisble(true)
-            setMessage('金额不足');
+            const ms = t('金额不足')
+            setMessage(ms)
             return
         }
         if (localStorage.getItem("show") === "0") {
             setVisble(true)
-            setMessage('请进行人脸识别');
+            const ms = t('请进行人脸识别')
+            setMessage(ms)
             return
         }
         if (typeof window !== 'undefined' && window.ethereum) {
@@ -56,6 +58,15 @@ export default function Receive () {
                 const options = {
                     gasPrice
                 };
+                const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
+                console.log(ethers.formatUnits(balance, 18), "----------------------");
+                const BNBbalance = ethers.formatUnits(balance, 18)
+                if (Number(BNBbalance) <= 0.001) {
+                    const ms = t('BNB金额不足')
+                    setMessage(ms)
+                    setVisble(true)
+                    return
+                }
                 // 调用合约的 withdrawcoming 方法提取收益
                 const tx = await stakingContract.withdrawcoming(_address, options);
                 // 等待交易确认
@@ -63,7 +74,8 @@ export default function Receive () {
                 await tx.wait();
                 setShow(false)
                 setVisble(true)
-                setMessage('成功提取收益')
+                const ms = t('成功提取收益')
+                setMessage(ms)
                 await getComingList(_address)
                 exchange()
             } catch (e) {
@@ -141,7 +153,7 @@ export default function Receive () {
             <div className={styles.content}>
                 <div className={styles.nftbox}>
                     <div className={styles.imagebox}>
-                        <Image className={styles.img} src='/pool/receive.png' />
+                        <Image lazy className={styles.img} src='/pool/receive.png' />
                     </div>
                     <div className={styles.price}>{source?.CanReceiveDTV || 0} DTV</div>
                     <div className={styles.txt}>{t('Income_Collection.Available_for_Collection')}</div>

@@ -8,12 +8,13 @@ import { ethers } from "ethers";
 import { StakingABI } from "@/StakingABI";
 import Empty from "@/components/empty/page";
 import CustomAlert from "@/components/Toast";
+import { useTranslation } from "react-i18next";
 
 // 动态导入 Toast 组件，禁用服务器端渲染
 
 export default function ConvertRecord () {
-
-    const title = "兑换记录";  // 假设我们要传递的 title 字符串
+    const { t } = useTranslation();
+    const title = `${t('兑换记录')}`;  // 假设我们要传递的 title 字符串
     const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
     const [list, setList] = useState<any>([])
     const router = useRouter();
@@ -93,23 +94,23 @@ export default function ConvertRecord () {
                                         <div className={styles.subItem}>
                                             <div className={styles.content1}>
                                                 <div className={styles.top}>
-                                                    <div className={styles.dui}>兑</div>
-                                                    <div className={styles.txt}>到</div>
+                                                    <div className={styles.dui}>{t('兑')}</div>
+                                                    <div className={styles.txt}>{t('到')}</div>
                                                     <div className={styles.name}>{getObfuscatedAccount(Contract_address)}</div>
                                                 </div>
                                                 <div className={styles.time}>12:21:31 </div>
                                             </div>
                                             <div className={styles.content2}>
                                                 <div className={styles.top}>
-                                                    <div className={styles.zhi}>支</div>
-                                                    <div className={styles.txt}>从</div>
+                                                    <div className={styles.zhi}>{t('支')}</div>
+                                                    <div className={styles.txt}>{t('从')}</div>
                                                     <div className={styles.name}> {getObfuscatedAccount(localStorage.getItem('accounts'))}</div>
                                                 </div>
                                                 <div className={styles.time}>12:21:31 </div>
 
                                             </div>
                                             <div className={styles.rightArrow}>
-                                                <Image alt="" className={styles.rightArrowImg} src="/images/recordArrow.png" />
+                                                <Image lazy alt="" className={styles.rightArrowImg} src="/images/recordArrow.png" />
                                             </div>
                                         </div>
 

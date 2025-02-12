@@ -13,7 +13,7 @@ import { t } from "i18next";
 import NewLoading from "@/components/Loading";
 export default function Convert () {
   useEffect(() => {
-    document.title = "兑换";
+    document.title = `${t("兑换")}`;
   }, []);
   const [USDTValue, setUSDTValue] = useState(''); // USDT 输入框的值
   const [DTVValue, setDTVValue] = useState('');   // DTV 输入框的值
@@ -91,6 +91,17 @@ export default function Convert () {
         const USDTcontract = new ethers.Contract(USDT_address, ERC20_ABI, signer);
         setShow(true)
         console.log(BigInt(appunmu));
+
+        const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
+        console.log(ethers.formatUnits(balance, 18), "----------------------");
+        const BNBbalance = ethers.formatUnits(balance, 18)
+        if (Number(BNBbalance) <= 0.001) {
+          const ms = t('BNB金额不足')
+          setMessage(ms)
+          setVisble(true)
+          return
+        }
+
         const tx = await USDTcontract.approve(Contract_address, BigInt(appunmu), options);
         await tx.wait();
         await change(appunmu)
@@ -105,12 +116,14 @@ export default function Convert () {
     console.log(localStorage.getItem("show"));
     if (localStorage.getItem("show") === "0") {
       setVisble(true)
-      setMessage('请进行人脸识别');
+      const ms = t('请进行人脸识别')
+      setMessage(ms)
       return
     }
     if (Number(USDTValue) === 0) {
       setVisble(true)
-      setMessage('请输入金额')
+      const ms = t('请输入金额')
+      setMessage(ms)
     } else {
       const amountInUnits = parseUnits(USDTValue.toString(), 18);  // 转换为最小单位
       const amountInUnitsStr = amountInUnits.toString();  // 转换为字符串
@@ -129,13 +142,25 @@ export default function Convert () {
       const options = {
         gasPrice,
       };
+
+      const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
+      console.log(ethers.formatUnits(balance, 18), "----------------------");
+      const BNBbalance = ethers.formatUnits(balance, 18)
+      if (Number(BNBbalance) <= 0.001) {
+        const ms = t('BNB金额不足')
+        setMessage(ms)
+        setVisble(true)
+        return
+      }
+
       // 调用合约的 exchange 方法兑换 DTV
       const tx = await exchangeContract.exchange(BigInt(appunmu), options);
       // 等待交易确认
       await tx.wait();
       setShow(false)
       setVisble(true)
-      setMessage('兑换成功')
+      const ms = t('兑换成功')
+      setMessage(ms)
     }
   }
   return (
@@ -143,12 +168,12 @@ export default function Convert () {
       <div className={styles.nav}>
         <div className={styles.navTitle}>{t('Earnings.Exchange')}</div>
         <div className={styles.navIcon} onClick={() => handleRecord()}>
-          <Image className={styles.navIconImg} src="/convert/record.png" />
+          <Image lazy className={styles.navIconImg} src="/convert/record.png" />
         </div>
       </div>
       <div className={styles.purse}>
         <div className={styles.purseicon}>
-          <Image className={styles.purseIconImg} src="/convert/purse.png" />
+          <Image lazy className={styles.purseIconImg} src="/convert/purse.png" />
         </div>
         <div className={styles.price}>{moneySource}</div>
       </div>
@@ -156,7 +181,7 @@ export default function Convert () {
         <div className={styles.exchange}>
           <div className={styles.left}>
             <div className={styles.icon}>
-              <Image className={styles.iconImg} src="/convert/exchangeUSDT.png" />
+              <Image lazy className={styles.iconImg} src="/convert/exchangeUSDT.png" />
             </div>
             <div className={styles.text}>USDT</div>
           </div>
@@ -178,7 +203,7 @@ export default function Convert () {
         <div className={styles.exchange}>
           <div className={styles.left}>
             <div className={styles.icon}>
-              <Image className={styles.iconImg} src="/convert/exchangeDTV.png" />
+              <Image lazy className={styles.iconImg} src="/convert/exchangeDTV.png" />
             </div>
             <div className={styles.text}>DTV</div>
           </div>
@@ -198,7 +223,7 @@ export default function Convert () {
           </div>
         </div>
         <div className={styles.arrow}>
-          <Image className={styles.arrowImg} src="/convert/exchangeArrow.png" />
+          <Image lazy className={styles.arrowImg} src="/convert/exchangeArrow.png" />
         </div>
       </div>
       <div className={styles.subscription}>{scale}DTV - 1USDT</div>

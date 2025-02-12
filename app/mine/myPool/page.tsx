@@ -110,7 +110,7 @@ export default function MyPool () {
             <div className={`${styles.top} ${selectedTab === 0 ? styles.active : ''}`}>
                 <div className={styles.navbar}>
                     <div className={styles.navbar__logo} onClick={() => handleBack()}>
-                        <Image className={styles.navbar__logo_img} src="/images/recordArrow.png" />
+                        <Image lazy className={styles.navbar__logo_img} src="/images/recordArrow.png" />
                     </div>
                     <div className={styles.navbar__title}>我的矿池</div>
                     <div className={styles.navbar__links}></div>
@@ -145,7 +145,7 @@ export default function MyPool () {
                                 <div className={styles.detail_left_content}>POS：{source?.MinerType?.Hashrate || 0}</div>
                             </div>
                             <div className={styles.detail_right}>
-                                <Image className={styles.detail_right_img} src="/pool/leave.png" />
+                                <Image lazy className={styles.detail_right_img} src="/pool/leave.png" />
                                 <div className={styles.detail_right_title}>{source?.MinerType?.Name || '--'}</div>
                             </div>
                         </div>
@@ -244,7 +244,7 @@ export default function MyPool () {
                                     list.map((item: any, index: any) => <div key={index} className={item?.MiningPoolSpeedOfProgress >= 1 ? styles.listitem : styles.listitem1}>
                                         <div className={styles.userbox}>
                                             <div className={styles.userleft}>
-                                                <Image className={styles.userimg} src={item?.AccountImg || null} alt="" />
+                                                <Image lazy className={styles.userimg} src={item?.AccountImg || null} alt="" />
                                                 <div className={styles.usernamebox}>
                                                     <div className={styles.username}>{item.AccountName || ''}</div>
                                                     {

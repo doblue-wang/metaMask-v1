@@ -14,7 +14,7 @@ export default function NavBar ({ title }: NavBarProps) {
     return (
         <div className={styles.navbar}>
             <div className={styles.navbar__logo} onClick={() => handleBack()}>
-                <Image className={styles.navbar__logo_img} src="/images/recordArrow.png" />
+                <Image lazy className={styles.navbar__logo_img} src="/images/recordArrow.png" />
             </div>
             <div className={styles.navbar__title}>{title}</div>
             <div className={styles.navbar__links}></div>

@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import CustomAlert from "@/components/Toast";
 export default function Home () {
   useEffect(() => {
-    document.title = "首页";
+    document.title = `${t("首页")}`;
   }, []);
   const router = useRouter();
   const [source, setSource] = useState({} as any);
@@ -33,7 +33,7 @@ export default function Home () {
       <div
         className={styles.content}
       >
-        <Image className={styles.img} src={item?.pic[0]?.url} fit='fill' />
+        <Image lazy className={styles.img} src={item?.pic[0]?.url} fit='fill' />
       </div>
     </Swiper.Item>
   ))
@@ -142,7 +142,8 @@ export default function Home () {
         setVisble1(true)
       } else {
         setShow(false)
-        setMessage("绑定成功")
+        const ms = t('绑定成功')
+        setMessage(ms)
         setVisble1(true)
       }
     })
@@ -171,8 +172,6 @@ export default function Home () {
       inputRefs.current[index - 1]?.focus();
     }
   };
-
-
   // 点击确认按钮时，合并输入值并提交
   const handleSubmit = () => {
     const inviteCode = code.join("");
@@ -181,11 +180,10 @@ export default function Home () {
       BindingRelationshipon(inviteCode);
     } else {
       setVisble1(true);
-      setMessage("请输入完整的邀请码")
+      const ms = t('请输入完整的邀请码')
+      setMessage(ms)
     }
   };
-
-
   return (
     <div className={styles.page}>
       <div className={styles.swiperbox}>
@@ -194,9 +192,9 @@ export default function Home () {
         </Swiper>
       </div>
       <div className={styles.notice} onClick={() => router.push('/homeDetail')}>
-        <Image className={styles.noticeimg} src='/home/notice.png' fit='fill' />
+        <Image lazy className={styles.noticeimg} src='/home/notice.png' fit='fill' />
         <div className={styles.noticebox}>
-          公告：{source?.NoticeData?.title || ""}
+          {t("公告")}：{source?.NoticeData?.title || ""}
         </div>
       </div>
       <div className={styles.DTV}>
@@ -219,8 +217,8 @@ export default function Home () {
           </div>
         </div>
         <div className={styles.year}>
-          <div className={styles.year_num}>{progress?.StartYear || 0}年</div>
-          <div className={styles.year_num}>{progress?.EndYear || 0}年</div>
+          <div className={styles.year_num}>{progress?.StartYear || 0}{t('年')}</div>
+          <div className={styles.year_num}>{progress?.EndYear || 0}{t('年')}</div>
         </div>
         <div className={styles.title}>{t('DTV_Burning_Progress')}</div>
         <div className={styles.progress}>
@@ -233,8 +231,6 @@ export default function Home () {
               <div className={styles.bubble_content} >{formatProgressQty(progress?.AlreadyDestructionQty || 0)}</div>
             </div> : null
           }
-
-
           <div className={styles.circle} style={{ left: `${(progress?.AlreadyDestructionQty / progress?.DestructionTotalQty) * 100}%`, marginLeft: `-${12 / 2}px` }}>
             <div className={styles.circle_inner} ></div>
           </div>
@@ -246,7 +242,7 @@ export default function Home () {
           <div className={styles.content}>
             <div className={styles.num}> <CountUp start={0} end={progress?.TheEntireNetworkHashratePos} duration={3} /></div>
             <div className={styles.icon}>
-              <Image className={styles.iconimg} src='/home/POS.png' fit='fill' />
+              <Image lazy className={styles.iconimg} src='/home/POS.png' fit='fill' />
             </div>
           </div>
         </div>
@@ -255,7 +251,7 @@ export default function Home () {
           <div className={styles.content}>
             <div className={styles.num}> <CountUp start={0} end={progress?.TheEntireNetworkHashratePop} duration={3} /></div>
             <div className={styles.icon}>
-              <Image className={styles.iconimg} src='/home/POP.png' fit='fill' />
+              <Image lazy className={styles.iconimg} src='/home/POP.png' fit='fill' />
             </div>
           </div>
         </div>
@@ -267,7 +263,7 @@ export default function Home () {
               <p className={styles.unit}>{progress?.DailyTotalQty || 0}</p>
             </div>
             <div className={styles.icon}>
-              <Image className={styles.iconimg} src='/home/mining.png' fit='fill' />
+              <Image lazy className={styles.iconimg} src='/home/mining.png' fit='fill' />
             </div>
           </div>
         </div>
@@ -279,7 +275,7 @@ export default function Home () {
               <p className={styles.unit}>{progress?.DailyDestructionQty || 0}</p>
             </div>
             <div className={styles.icon}>
-              <Image className={styles.iconimg} src='/home/destroy.png' fit='fill' />
+              <Image lazy className={styles.iconimg} src='/home/destroy.png' fit='fill' />
             </div>
           </div>
         </div>
@@ -292,7 +288,7 @@ export default function Home () {
               location.href = "https://data.demedia.tv/page/download.html"
             }} key={item.id} className={styles.drama_item}>
               <div className={styles.top}>
-                <Image className={styles.img} src={item?.pic[0]?.url} fit='fill' />
+                <Image lazy className={styles.img} src={item?.pic[0]?.url} fit='fill' />
                 <div className={styles.item_num}>更新至30集</div>
               </div>
               <div className={styles.item_name}>{item?.title || ""}</div>
@@ -308,7 +304,7 @@ export default function Home () {
             location.href = item.url
           }} key={item.id} className={styles.linkitem}>
             <div className={styles.icon}>
-              <Image className={styles.iconimg} src={item?.pic[0]?.url} fit='fill' />
+              <Image lazy className={styles.iconimg} src={item?.pic[0]?.url} fit='fill' />
             </div>
             <div className={styles.title}>{item.title || ''}</div>
           </div>)

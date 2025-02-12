@@ -8,7 +8,7 @@ import Head from 'next/head';
 import { UpdateAuthenticationStatus } from '@/api/home';
 import CustomAlert from '@/components/Toast';
 import { useRouter } from 'next/navigation';
-
+import { t } from "i18next";
 export default function Face () {
   const [isProcessing, setIsProcessing] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -166,7 +166,8 @@ export default function Face () {
       .then(({ data, msg }) => {
         if (data) {
           setVisible1(true);
-          setMessage('人脸识别成功');
+          const ms = t('人脸识别成功')
+          setMessage(ms)
           setTimeout(() => {
             route.back(); // 返回上一页
           }, 2000);
@@ -189,7 +190,7 @@ export default function Face () {
           defer
         ></script>
       </Head>
-      <NavBar title="活体认证" />
+      <NavBar title={t('活体认证')} />
       <div className="video-box">
         <video
           playsInline
@@ -198,13 +199,13 @@ export default function Face () {
           className="video"
           autoPlay
         ></video>
-        <Image className="overlay" src="/mine/face.png" alt="" />
+        <Image lazy className="overlay" src="/mine/face.png" alt="" />
       </div>
 
       <div onClick={() => register()} className="button">
-        开始识别
+        {t('开始识别')}
       </div>
-      <div id="status">初始化中...</div>
+      {/* <div id="status">初始化中...</div> */}
       <CustomAlert visible={visible1} message={message} setVisible={setVisible1} />
     </div>
   );

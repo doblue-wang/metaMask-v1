@@ -13,7 +13,8 @@ export default function MyShare () {
     const [message, setMessage] = useState('')
     const handleCopy = async () => {
         copyToClipboard(`https://test.demedia.tv:9940?code=${source?.ShareLinkAddress}`)
-        setMessage('复制成功')
+        const ms = t('复制成功')
+        setMessage(ms)
         setVisble(true)
     }
     const [source, setSource] = useState({} as any);
@@ -37,28 +38,28 @@ export default function MyShare () {
         <div className={styles.page}>
             <div className={styles.navbar}>
                 <div className={styles.navbar__logo} onClick={() => handleBack()}>
-                    <Image className={styles.navbar__logo_img} src="/images/recordArrow.png" />
+                    <Image lazy className={styles.navbar__logo_img} src="/images/recordArrow.png" />
                 </div>
                 <div className={styles.navbar__title}>{t('Share')}</div>
                 <div className={styles.navbar__links}></div>
             </div>
             <div className={styles.contentbox}>
                 <div className={styles.top}>
-                    <Image className={styles.userimg} src="/mine/receives.png" />
+                    <Image lazy className={styles.userimg} src="/mine/receives.png" />
                     <div className={styles.titlebox}>
                         <div className={styles.title}>{source?.AccountName || '--'}</div>
-                        <div className={styles.text}>上级分享人{source?.SuperiorSharer || '--'}</div>
+                        <div className={styles.text}>{t("上级分享人")}{source?.SuperiorSharer || '--'}</div>
                     </div>
                 </div>
                 <div className={styles.ewmbox}>
-                    <Image className={styles.ewm} src={source?.ShareImg} />
+                    <Image lazy className={styles.ewm} src={source?.ShareImg} />
                 </div>
                 <div className={styles.or}>or</div>
                 <div className={styles.promotion}>{source?.PromotionCopy || '--'}
 
                 </div>
                 <div className={styles.promotioncode}>{source?.ShareLinkAddress || "--"}</div>
-                <div onClick={() => handleCopy()} className={styles.joinbtn}>立即加入</div>
+                <div onClick={() => handleCopy()} className={styles.joinbtn}>{t("立即加入")}</div>
             </div>
             <CustomAlert visible={visible} message={message} setVisible={setVisble} />
         </div>

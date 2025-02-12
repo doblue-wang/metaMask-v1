@@ -10,7 +10,7 @@ import { MyInformationUploadImage, fetchGetMine } from '@/api/home';
 import { title } from 'process';
 export default function Mine () {
   useEffect(() => {
-    document.title = "我的";
+    document.title = `${t("我的")}`;
   }, []);
   const router = useRouter();
   const [show, setShow] = useState(false)
@@ -65,17 +65,17 @@ export default function Mine () {
     <div className='mine'>
       <div className="userInfo" onClick={() => router.push('/mine/face')}>
         <div className="left">
-          <Image className='avatr' alt='' src={source?.AccountImg} fit='fill' />
+          <Image lazy className='avatr' alt='' src={source?.AccountImg} fit='fill' />
           <div className="nameRow">
             <div className="top">
               <div className="name">{source?.AccountName || '--'}</div>
               {
                 source?.AccountState === 1 ? <div className="status">{t('Face_Authentication.Face_Authenticated')}</div> : <div className="statusNomal">
-                  <Image className='idcard' src="/mine/idcard.png" alt="" />
+                  <Image lazy className='idcard' src="/mine/idcard.png" alt="" />
                   {t('Face_Authentication.Face_Not_Authenticated')}</div>
               }
             </div>
-            <div className="share">上级分享人{source?.SuperiorSharer || '--'}</div>
+            <div className="share">{t('上级分享人')}{source?.SuperiorSharer || '--'}</div>
           </div>
         </div>
         <div className="arrow"></div>
@@ -134,7 +134,7 @@ export default function Mine () {
       <div className="assets">
         <div className="title">{t('NFT_Assets')}</div>
         <div className="nftRow">
-          <Image className={source?.IsCastingNFT > 0 ? 'nft' : "nft_no"} src="/mine/NFT.png" alt="" />
+          <Image lazy className={source?.IsCastingNFT > 0 ? 'nft' : "nft_no"} src="/mine/NFT.png" alt="" />
           <div className="namerow">
             <p>NFT</p>
             {
@@ -159,32 +159,32 @@ export default function Mine () {
       <div className="container">
         <div className="mypool" onClick={() => router.push('/mine/myPool')}>
           <div className="optionLeft" >
-            <Image className='icon' src="/mine/my.png" alt="" />
+            <Image lazy className='icon' src="/mine/my.png" alt="" />
             <div className="optionname">{t('My_Mining_Pool')}</div>
           </div>
-          <Image className='arroww' src="/mine/arrow.png" alt="" />
+          <Image lazy className='arroww' src="/mine/arrow.png" alt="" />
         </div>
 
         <div className="mypool">
           <div className="optionLeft">
-            <Image className='icon' src="/mine/detv.png" alt="" />
+            <Image lazy className='icon' src="/mine/detv.png" alt="" />
             <div className="optionname">{t('DETV_Account_Binding')}</div>
           </div>
-          <Image className='arroww' src="/mine/arrow.png" alt="" />
+          <Image lazy className='arroww' src="/mine/arrow.png" alt="" />
         </div>
         <div onClick={() => setShow(true)} className="mypool">
           <div className="optionLeft">
-            <Image className='icon' src="/mine/lunage.png" alt="" />
+            <Image lazy className='icon' src="/mine/lunage.png" alt="" />
             <div className="optionname">{t('Language')}</div>
           </div>
-          <Image className='arroww' src="/mine/arrow.png" alt="" />
+          <Image lazy className='arroww' src="/mine/arrow.png" alt="" />
         </div>
         <div className="mypool" onClick={() => router.push('/mine/myShare')}>
           <div className="optionLeft">
-            <Image className='icon' src="/mine/shareicon.png" alt="" />
+            <Image lazy className='icon' src="/mine/shareicon.png" alt="" />
             <div className="optionname">{t('Share')}</div>
           </div>
-          <Image className='arroww' src="/mine/arrow.png" alt="" />
+          <Image lazy className='arroww' src="/mine/arrow.png" alt="" />
         </div>
       </div>
       <BottomNav initialTab='/mine' />

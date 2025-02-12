@@ -54,7 +54,7 @@
                 flex-wrap: wrap;
 
                 .item {
-                    width: 100px;
+                    width: 103px;
                     border-radius: 7.2px;
                     overflow: hidden;
                     margin-bottom: 10px;
@@ -82,6 +82,25 @@
 
                         &.selected {
                             background-color: #ff6e91;
+
+                            .imgbox {
+                                background-color: #c9cdd4;
+                                border-radius: 7.2px 7.2px 0 0;
+                                width: 100%;
+                                height: 100%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                font-size: 0;
+                                padding: 12px;
+
+                                .img {
+                                    width: 48px;
+                                    height: 48px;
+                                }
+                            }
+
+                            //
                         }
                     }
 

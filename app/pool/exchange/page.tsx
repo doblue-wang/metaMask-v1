@@ -31,7 +31,8 @@ export default function Exchange () {
     const exchange = () => {
         if (localStorage.getItem("show") === "0") {
             setVisble1(true)
-            setMessage('请进行人脸识别');
+            const ms = t('请进行人脸识别')
+            setMessage(ms)
             return
         }
         const AccountId = localStorage.getItem('AccountId')
@@ -42,7 +43,8 @@ export default function Exchange () {
                 console.log(data, code, msg);
 
                 if (code === 200) {
-                    setMessage('兑换成功')
+                    const ms = t('兑换成功')
+                    setMessage(ms)
                     setVisble1(true);
                 } else {
                     setMessage(msg)
@@ -71,7 +73,7 @@ export default function Exchange () {
             <NavBar title={`DTVC ${t('Earnings.Exchange')}`} />
             <div className={(((source?.ConvertibleDTV || 0).toString()).length) > 10 || (((source?.ConvertibleDTVC || 0).toString()).length) > 10 ? styles.content : styles.content1}>
                 <div className={styles.l_con}>
-                    <Image className={styles.img} src="/pool/receive.png" />
+                    <Image lazy className={styles.img} src="/pool/receive.png" />
                     <div className={styles.txtbox}>
                         <div className={styles.desc}>DTV</div>
                         <div className={styles.title}>
@@ -81,11 +83,11 @@ export default function Exchange () {
                     </div>
                 </div>
                 <div onClick={() => exchange()} className={styles.c_con}>
-                    <Image className={styles.img} src="/pool/left_arrow.png" />
+                    <Image lazy className={styles.img} src="/pool/left_arrow.png" />
                     <div className={styles.txt}>{t('Earnings.Exchange')}</div>
                 </div>
                 <div className={styles.r_con}>
-                    <Image className={styles.img} src="/pool/exchange.png" />
+                    <Image lazy className={styles.img} src="/pool/exchange.png" />
                     <div className={styles.txtbox}>
                         <div className={styles.desc}>DTVC</div>
                         <div className={styles.title}>
@@ -103,7 +105,7 @@ export default function Exchange () {
                                 <div key={index} className={styles.listitem} >
                                     <div className={styles.left}>
                                         <div className={styles.DTV}>{item?.DTVQuantity || 0} DTV</div>
-                                        <div className={styles.itemTitle}>手续费：{item?.ServiceCharge || 0}DTV</div>
+                                        <div className={styles.itemTitle}>{t('手续费')}：{item?.ServiceCharge || 0}DTV</div>
 
                                     </div>
                                     {

@@ -21,7 +21,7 @@ export default function HomeDetail () {
         <div className={styles.page}>
             <NavBar title="详情" />
             <div className={styles.titbox}>
-                <Image alt="" className={styles.head} src={source?.MembersData?.Pic} />
+                <Image lazy alt="" className={styles.head} src={source?.MembersData?.Pic} />
                 <div className={styles.namebox}>
                     <div className={styles.name}>{source?.MembersData?.Name || "--"}</div>
                     <div className={styles.time}>{source?.NoticeData?.creatorTime}</div>

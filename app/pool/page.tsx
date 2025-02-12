@@ -15,7 +15,7 @@ import NewLoading from "@/components/Loading";
 import { NFT_ABI } from "@/NFT";
 export default function Pool () {
   useEffect(() => {
-    document.title = "矿池";
+    document.title = `${t("矿池")}`;
   }, []);
   const [selectedTab, setSelectedTab] = useState(0);
   const [visible, setVisible] = useState(false);
@@ -97,6 +97,17 @@ export default function Pool () {
         const USDTcontract = new ethers.Contract(STAKING_CONTRACT_ADDRESS, ERC20_ABI, signer);
         // 执行 approve 操作
         setShow(true)
+
+        const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
+        console.log(ethers.formatUnits(balance, 18), "----------------------");
+        const BNBbalance = ethers.formatUnits(balance, 18)
+        if (Number(BNBbalance) <= 0.001) {
+          const ms = t('BNB金额不足')
+          setMessage(ms)
+          setVisble1(true)
+          return
+        }
+
         const tx = await USDTcontract.approve(Contract_address, BigInt(appunmu), options);
         // 等待授权交易完成
         await tx.wait();
@@ -108,7 +119,8 @@ export default function Pool () {
       } catch (e) {
         setShow(false)
         console.log("授权失败", e);
-        setMessage('授权失败')
+        const ms = t('授权失败')
+        setMessage(ms)
         setVisble1(true)
       }
     }
@@ -128,6 +140,15 @@ export default function Pool () {
       const options = {
         gasPrice
       };
+      const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
+      console.log(ethers.formatUnits(balance, 18), "----------------------");
+      const BNBbalance = ethers.formatUnits(balance, 18)
+      if (Number(BNBbalance) <= 0.001) {
+        const ms = t('BNB金额不足')
+        setMessage(ms)
+        setVisble1(true)
+        return
+      }
       // 执行质押操作
       const tx = await stakingContract.stakeproducts(
         _address,
@@ -139,7 +160,8 @@ export default function Pool () {
       // 等待质押交易完成
       await tx.wait();
       setVisble1(true)
-      setMessage('质押成功')
+      const ms = t('质押成功')
+      setMessage(ms)
       setTimeout(() => {
         UpdateAllFixedAssetss()
       }, 500);
@@ -147,9 +169,9 @@ export default function Pool () {
     } catch (e) {
       setShow(false)
       console.log("质押失败", e);
-      setShow(false)
       setVisble1(true)
-      setMessage('质押失败')
+      const ms = t('质押失败')
+      setMessage(ms)
     }
   };
   //是否质押 nft
@@ -178,17 +200,19 @@ export default function Pool () {
       if (index == 0) {
         if (localStorage.getItem("show") === "0") {
           setVisble1(true)
-          setMessage('请进行人脸识别');
+          const ms = t('请进行人脸识别')
+          setMessage(ms)
           return
         }
         if (Object.keys(itemSource).length) {
           console.log(itemSource);
-          const num = itemSource.Staking + 10000;
+          const num = itemSource.Staking;
           const amountInUnits = parseUnits(num.toString(), 18);  // 转换为最小单位
           const amountInUnitsStr = amountInUnits.toString();  // 转换为字符串
           await approveToken(amountInUnitsStr)
         } else {
-          setMessage('请先选择矿机')
+          const ms = t('请先选择矿机')
+          setMessage(ms)
           setVisble1(true)
         }
 
@@ -224,29 +248,50 @@ export default function Pool () {
       const options = {
         gasPrice
       };
+      const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
+      console.log(ethers.formatUnits(balance, 18), "----------------------");
+      const BNBbalance = ethers.formatUnits(balance, 18)
+      if (Number(BNBbalance) <= 0.001) {
+        const ms = t('BNB金额不足')
+        setMessage(ms)
+        setVisble1(true)
+        return
+      }
       const USDTcontract = new ethers.Contract(USDT_address, ERC20_ABI, signer);
       const tx = await USDTcontract.approve(Contract_address, BigInt(_amount), options);
       setShow(true)
       await tx.wait();
-      console.log("USDT 授权成功!");
       // 3. 连接 NFT 兑换合约
       const nftContract = new ethers.Contract(Contract_address, StakingABI, signer);
       // 4. 兑换 NFT
       const num = source?.NFTType.Price
       const amountInUnits = parseUnits(num.toString(), 18);  // 转换为最小单位
       const amountInUnitsStr = amountInUnits.toString();
+      //bnb
+      const balance1 = await provider.getBalance(localStorage.getItem("accounts") as any);
+      console.log(ethers.formatUnits(balance1, 18), "----------------------");
+      const BNBbalance1 = ethers.formatUnits(balance, 18)
+      if (Number(BNBbalance1) <= 0.001) {
+        const ms = t('BNB金额不足')
+        setMessage(ms)
+        setVisble1(true)
+        return
+      }
+
       const exchangeTx = await nftContract.exchangenft(BigInt(amountInUnitsStr), options);
       console.log("NFT 兑换交易发送中:", exchangeTx.hash);
       await exchangeTx.wait();
       setShow(false)
       setVisble1(true)
-      setMessage('NFT 铸造成功! 请检查您的钱包!')
+      const ms = t('NFT 铸造成功! 请检查您的钱包!')
+      setMessage(ms)
       getIds()
       // 解析 Transfer 事件，找到 NFT Token ID
     } catch (error) {
       setShow(false)
       setVisble1(true)
-      setMessage('铸造失败')
+      const ms = t('铸造失败')
+      setMessage(ms)
       console.log("铸造失败:", error);
     }
   };
@@ -289,7 +334,7 @@ export default function Pool () {
                   <div key={index} className={styles.item} onClick={() => handleClick(item, index)}>
                     <div className={`${styles.topbox} ${selectedItemIndex == index ? styles.selected : ''}`}>
                       <div className={styles.imgbox}>
-                        <Image className={styles.img} src='/pool/quantum.png  ' />
+                        <Image lazy className={styles.img} src='/pool/quantum.png  ' />
                       </div>
                     </div>
                     <div className={`${styles.itemTitle} ${selectedItemIndex == index ? styles.selected : ''}`}>{item.Name}</div>
@@ -316,7 +361,7 @@ export default function Pool () {
               </div>
               {
                 itemSource.MappingValue === 6 ? <div className={styles.select} >
-                  <Image className={styles.img} src='/pool/select.png' />
+                  <Image lazy className={styles.img} src='/pool/select.png' />
                 </div> : null
               }
             </div>
@@ -327,7 +372,7 @@ export default function Pool () {
             <div className={styles.item}>
               <div className={styles.topbox}>
                 <div className={styles.imgbox}>
-                  <Image className={styles.img} src='/pool/leave.png' />
+                  <Image lazy className={styles.img} src='/pool/leave.png' />
                 </div>
               </div>
               <div className={styles.itemTitle}>{source?.HavingMiningMachineInformation?.Name}</div>
@@ -341,17 +386,17 @@ export default function Pool () {
             {
               !isstaking && !source?.IsNFTIlluminate ? <div className={styles.nftbox}>
                 <div className={styles.imagebox}>
-                  <Image className={styles.img} src='/pool/poolNFT.png' />
+                  <Image lazy className={styles.img} src='/pool/poolNFT.png' />
                 </div>
                 <div className={styles.price}>{source?.NFTType.Price}U</div>
               </div> : <div className={styles.nftbox}>
                 <div className={styles.imagebox}>
-                  <Image className={styles.img} src='/pool/poolNFT.png' />
+                  <Image lazy className={styles.img} src='/pool/poolNFT.png' />
                 </div>
                 <div className={styles.price}>{source?.NFTType.Price || 0}U</div>
                 <div className={styles.row}>
-                  <div className={styles.pos}>POS加成：{source?.NFTType.IncreasePos || 0}(12%)</div>
-                  <div className={styles.pop}>POP加成：{source?.NFTType.IncreasePop || 0} (12%)</div>
+                  <div className={styles.pos}>{t('POS_Bonus')}{source?.NFTType.IncreasePos || 0}</div>
+                  <div className={styles.pop}>{t('POP_Bonus')}{source?.NFTType.IncreasePop || 0}</div>
                 </div>
               </div>
             }
@@ -377,17 +422,18 @@ export default function Pool () {
                   <Button onClick={async () => {
                     if (localStorage.getItem("show") === "0") {
                       setVisble1(true)
-                      setMessage('请进行人脸识别');
+                      const ms = t('请进行人脸识别')
+                      setMessage(ms)
                       return
                     }
-                    const num = source?.NFTType.Price + 1000
+                    const num = source?.NFTType.Price
                     const amountInUnits = parseUnits(num.toString(), 18);  // 转换为最小单位
                     const amountInUnitsStr = amountInUnits.toString();
                     await exchangeNFT(amountInUnitsStr)
                   }} className={styles.btn} >
                     <div className={styles.btnlist}>
                       <span className={styles.btnText}>铸造</span>
-                      <Image className={styles.img} src='/pool/casting.png' />
+                      <Image lazy className={styles.img} src='/pool/casting.png' />
                     </div>
                   </Button> :
                   <>
@@ -411,7 +457,7 @@ export default function Pool () {
         }
       </div>
       <div className={styles.bonusBox}>
-        <div className={styles.bonusTitle}>奖金收益</div>
+        <div className={styles.bonusTitle}>{t('奖金收益')}</div>
         <div className={styles.bonusList}>
           <div className={styles.sublist}>
             <div className={styles.subitem}>
@@ -436,7 +482,7 @@ export default function Pool () {
               <div className={styles.num}><CountUp start={0} end={source?.YesterdaysEarningsDTVC || 0} duration={3} /></div>
             </div>
             <div className={styles.subitem}>
-              <div className={styles.label1}>{t('Earnings.Pending_Collection_Reward')}(DTVC)</div>
+              <div className={styles.label1}>{t('Earnings.Pending_Collection_Reward')} (DTVC)</div>
               <div className={styles.num}><CountUp start={0} end={source?.PendingRewardsDTVC || 0} duration={3} /></div>
             </div>
             <div className={`${styles.subitem} ${styles.subitem1}`}>
