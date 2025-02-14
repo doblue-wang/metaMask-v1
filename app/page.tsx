@@ -41,7 +41,6 @@ export default function Home () {
   const data = searchParams.get('code');
   useEffect(() => {
     connectMetaMask();
-    console.log(data);
     if (data) {
       setCode(data.split(''))
     }
@@ -86,11 +85,9 @@ export default function Home () {
       const accounts = await window.ethereum.request({
         method: 'eth_requestAccounts',
       });
-      console.log(accounts);
       localStorage.setItem('accounts', accounts[0]);
       getGoodsNineTrans({ WalletAddress: accounts[0] })
     } catch (error: any) {
-      console.log('Error:', error);
       if (error.code === 4001) {
         setMessage('User rejected the request.')
         setVisble1(true)
@@ -175,7 +172,6 @@ export default function Home () {
   // 点击确认按钮时，合并输入值并提交
   const handleSubmit = () => {
     const inviteCode = code.join("");
-    console.log("邀请码:", inviteCode);
     if (inviteCode.length === 6) {
       BindingRelationshipon(inviteCode);
     } else {
@@ -300,7 +296,6 @@ export default function Home () {
       <div className={styles.linkbox}>
         {
           (source?.ExternalLinksData || []).map((item: any) => <div onClick={() => {
-            console.log(item);
             location.href = item.url
           }} key={item.id} className={styles.linkitem}>
             <div className={styles.icon}>

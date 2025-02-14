@@ -51,7 +51,6 @@ export default function MyPool () {
                 }
             ]
         }).then(({ data }) => {
-            console.log(data);
             setList(data)
         })
     }

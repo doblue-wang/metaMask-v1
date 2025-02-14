@@ -57,8 +57,6 @@ export default function Face () {
         });
         streamRef.current = null;
       }
-
-      console.log("摄像头已关闭");
     };
   }, []);
 
@@ -66,7 +64,6 @@ export default function Face () {
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        console.log("页面进入后台，关闭摄像头");
         if (streamRef.current) {
           streamRef.current.getTracks().forEach(track => track.stop());
           streamRef.current = null;

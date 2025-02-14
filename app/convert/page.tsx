@@ -29,13 +29,10 @@ export default function Convert () {
   }
   // 处理 USDT 输入框的变化
   const handleUSDTChange = (val: string) => {
-    console.log(val);
     setUSDTValue(val);
     // 如果输入的是有效数字，则转换为 DTV
     const usdtAmount = parseFloat(val);
     if (!isNaN(usdtAmount)) {
-      console.log(usdtAmount * scale);
-
       setDTVValue((usdtAmount * scale).toString());
     } else {
       setDTVValue('');
@@ -66,15 +63,14 @@ export default function Convert () {
     money()
   }, [])
   //授权
-  const USDT_address = '0xa2d272B92Cd921C572698Db1b999c1fC4c8374CA';//usdt 合约
-  const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
+  const USDT_address = '0x55d398326f99059fF775485246999027B3197955';//usdt 合约
+  const Contract_address = '0x1E5F7963B774F2e5ceC16d4d761A314Cbfaf1F08';//测试合约地址
   const money = async () => {
     const provider = new ethers.BrowserProvider(window.ethereum)
     const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
     const ownerAddress = await signer.getAddress();
     const nftContract = new ethers.Contract(USDT_address, ERC20_ABI, signer);
     const balance = await nftContract.balanceOf(ownerAddress);
-    console.log(balance);
     const num = Number(ethers.formatUnits(balance, 18)).toFixed(0) as any
     const formattedMoney = new Intl.NumberFormat().format(num);
     setMoney(formattedMoney);
@@ -91,10 +87,7 @@ export default function Convert () {
         const signer = await provider.getSigner();
         const USDTcontract = new ethers.Contract(USDT_address, ERC20_ABI, signer);
         setShow(true)
-        console.log(BigInt(appunmu));
-
         const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
-        console.log(ethers.formatUnits(balance, 18), "----------------------");
         const BNBbalance = ethers.formatUnits(balance, 18)
         if (Number(BNBbalance) <= 0.001) {
           const ms = t('BNB金额不足')
@@ -114,7 +107,6 @@ export default function Convert () {
   };
   //兑换
   const exchangeTokens = async () => {
-    console.log(localStorage.getItem("show"));
     if (localStorage.getItem("show") === "0") {
       setVisble(true)
       const ms = t('请进行人脸识别')
@@ -128,7 +120,6 @@ export default function Convert () {
     } else {
       const amountInUnits = parseUnits(USDTValue.toString(), 18);  // 转换为最小单位
       const amountInUnitsStr = amountInUnits.toString();  // 转换为字符串
-      console.log(amountInUnitsStr);
       await approveToken(amountInUnitsStr)
     }
   };
@@ -145,7 +136,6 @@ export default function Convert () {
       };
 
       const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
-      console.log(ethers.formatUnits(balance, 18), "----------------------");
       const BNBbalance = ethers.formatUnits(balance, 18)
       if (Number(BNBbalance) <= 0.001) {
         const ms = t('BNB金额不足')

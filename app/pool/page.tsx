@@ -29,6 +29,9 @@ export default function Pool () {
   const [message, setMessage] = useState('')
   const [isstaking, setIsstaking] = useState(false)
   const NFT_CONTRACT_ADDRESS = '0x4Df31fBA8EEB438604c4c489dE14AA8cdaaEe0e9';//nft测试合约地址
+  const Contract_address = '0x1E5F7963B774F2e5ceC16d4d761A314Cbfaf1F08';//测试合约地址
+  const STAKING_CONTRACT_ADDRESS = '0x28E053Ce4C6d94E3B6f70C0feB3684A6686d6fF3'// dtv 合约
+  const USDT_address = '0x55d398326f99059fF775485246999027B3197955';//usdt 合约
   const [canStaking, setCanStaking] = useState(true)
 
   const tabs = [
@@ -46,7 +49,6 @@ export default function Pool () {
       AccountId
     }).then(({ code, data }) => {
       setSource(data)
-      console.log(data.Languages);
     })
       .catch((e) => {
         console.log(e);
@@ -57,7 +59,6 @@ export default function Pool () {
     UpdateAllFixedAssets({
       AccountId
     }).then(({ code, data }) => {
-      console.log(data);
       getSource()
       setShow(false)
     })
@@ -83,10 +84,7 @@ export default function Pool () {
     setItemSource(item)
   }
   const router = useRouter();
-  //正式
-  const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
-  const STAKING_CONTRACT_ADDRESS = '0xe8f59c86808F5DD44d7E92beD2f8405a6988BEeB'// dtv 合约
-  const USDT_address = '0xa2d272B92Cd921C572698Db1b999c1fC4c8374CA';//usdt 合约
+
   //授权钱包
   const approveToken = async (appunmu: any) => {
     if (typeof window !== 'undefined' && window.ethereum) {
@@ -103,7 +101,6 @@ export default function Pool () {
         setShow(true)
 
         const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
-        console.log(ethers.formatUnits(balance, 18), "----------------------");
         const BNBbalance = ethers.formatUnits(balance, 18)
         if (Number(BNBbalance) <= 0.001) {
           const ms = t('BNB金额不足')
@@ -121,7 +118,6 @@ export default function Pool () {
         await stakeTokens(walletAddress, itemSource.MappingValue, BigInt(appunmu));
       } catch (e) {
         setShow(false)
-        console.log("授权失败", e);
         const ms = t('授权失败')
         setMessage(ms)
         setVisble1(true)
@@ -129,7 +125,6 @@ export default function Pool () {
     }
   };
   const stakeTokens = async (_address: any, _product: any, _amount: any) => {
-    console.log(_address, _product, _amount);
     try {
       if (typeof window.ethereum === "undefined") {
         return;
@@ -144,7 +139,6 @@ export default function Pool () {
         gasPrice
       };
       const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
-      console.log(ethers.formatUnits(balance, 18), "----------------------");
       const BNBbalance = ethers.formatUnits(balance, 18)
       if (Number(BNBbalance) <= 0.001) {
         const ms = t('BNB金额不足')
@@ -159,7 +153,6 @@ export default function Pool () {
         BigInt(_amount), // 转换为最小单位
         options
       );
-      console.log("质押成功", tx);
       // 等待质押交易完成
       await tx.wait();
       setVisble1(true)
@@ -171,7 +164,6 @@ export default function Pool () {
 
     } catch (e) {
       setShow(false)
-      console.log("质押失败", e);
       setVisble1(true)
       const ms = t('质押失败')
       setMessage(ms)
@@ -189,7 +181,6 @@ export default function Pool () {
       const tokenId = await nftContract.tokenOfOwnerByIndex(ownerAddress, i);
       tokenIds.push(tokenId.toString());
     }
-    console.log(tokenIds);
     if (tokenIds.length > 0) {
       setIsstaking(true)
     } else {
@@ -197,7 +188,6 @@ export default function Pool () {
     }
   }
   const handleNavTo = async (index: number) => {
-    console.log(index);
     //自定义跳转页面type  1，矿池赎回，2，NFT质押，3，NFT赎回
     if (selectedTab == 0) {
       if (index == 0) {
@@ -252,7 +242,6 @@ export default function Pool () {
         gasPrice
       };
       const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
-      console.log(ethers.formatUnits(balance, 18), "----------------------");
       const BNBbalance = ethers.formatUnits(balance, 18)
       if (Number(BNBbalance) <= 0.001) {
         const ms = t('BNB金额不足')
@@ -278,7 +267,6 @@ export default function Pool () {
       const amountInUnitsStr = amountInUnits.toString();
       //bnb
       const balance1 = await provider.getBalance(localStorage.getItem("accounts") as any);
-      console.log(ethers.formatUnits(balance1, 18), "----------------------");
       const BNBbalance1 = ethers.formatUnits(balance, 18)
       if (Number(BNBbalance1) <= 0.001) {
         const ms = t('BNB金额不足')
@@ -289,7 +277,6 @@ export default function Pool () {
       }
 
       const exchangeTx = await nftContract.exchangenft(BigInt(amountInUnitsStr), options);
-      console.log("NFT 兑换交易发送中:", exchangeTx.hash);
       await exchangeTx.wait();
       setShow(false)
       setVisble1(true)
@@ -303,7 +290,6 @@ export default function Pool () {
       setVisble1(true)
       const ms = t('铸造失败')
       setMessage(ms)
-      console.log("铸造失败:", error);
     }
   };
   const getfilterList = () => {
@@ -319,7 +305,6 @@ export default function Pool () {
 
   const status = async () => {
     GetObtainNftSellableStatus({}).then(({ data }) => {
-      console.log(data);
       setCanStaking(data);
       if (!data) {
         setVisble1(true)
@@ -334,7 +319,6 @@ export default function Pool () {
 
   const update = (type: any) => {
     UpdateNftOnSaleQuantity({ OperationType: type }).then(({ data }) => {
-      console.log(data);
       setCanStaking(data);
     })
       .catch((e) => {

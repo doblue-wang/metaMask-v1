@@ -40,8 +40,6 @@ export default function Exchange () {
             AccountId
         })
             .then(({ data, code, msg }) => {
-                console.log(data, code, msg);
-
                 if (code === 200) {
                     const ms = t('兑换成功')
                     setMessage(ms)
@@ -61,7 +59,6 @@ export default function Exchange () {
             AccountId
         })
             .then(({ data }) => {
-                console.log(data);
                 setList(data);
             })
             .catch((e) => {

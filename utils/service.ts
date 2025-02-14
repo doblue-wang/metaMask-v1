@@ -45,7 +45,6 @@ const connectMetaMask = async () => {
       const accounts = await window.ethereum.request({
         method: 'eth_requestAccounts',
       });
-      console.log(accounts);
       localStorage.setItem('accounts', accounts[0]);
       getGoodsNineTrans({ WalletAddress: accounts[0] })
     } catch (error: any) {
@@ -97,7 +96,7 @@ const checkStatus = (response: Response, newOptions: any) => {
  */
 export default function request (url: string, option: any) {
   if (process.env.NODE_ENV === "production") {
-    url = "https://test.demedia.tv:185" + url;
+    url = "https://dao.demedia.tv:185" + url;
   }
   const options = {
     ...option,

@@ -18,7 +18,7 @@ export default function KJredeem () {
     const searchParams = useSearchParams();
     const paramValue = searchParams.get("type");
     const [source, setSource] = useState({} as any)
-    const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
+    const Contract_address = '0x1E5F7963B774F2e5ceC16d4d761A314Cbfaf1F08';//测试合约地址
     const NFT_CONTRACT_ADDRESS = '0x4Df31fBA8EEB438604c4c489dE14AA8cdaaEe0e9';//nft测试合约地址
     const [list, setList] = useState<any>([])
     const [nftlist, setNftList] = useState<any>([])
@@ -59,20 +59,17 @@ export default function KJredeem () {
             setMessage(ms)
             return
         }
-        console.log(_address, _product, _amount);
         try {
             if (typeof window.ethereum === "undefined") {
                 return;
             }
             const provider = new ethers.BrowserProvider(window.ethereum)
             const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
-            // 你的质押合约地址，确认该地址是正确的
             const stakingContract = new ethers.Contract(Contract_address, StakingABI, signer);
             // 获取当前 Gas 费用数据
             const gasPrice = Number((await provider.getFeeData()).gasPrice);
 
             const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
-            console.log(ethers.formatUnits(balance, 18), "----------------------");
             const BNBbalance = ethers.formatUnits(balance, 18)
             if (Number(BNBbalance) <= 0.001) {
                 const ms = t('BNB金额不足')
@@ -135,7 +132,6 @@ export default function KJredeem () {
         const nftContract = new ethers.Contract(NFT_CONTRACT_ADDRESS, NFT_ABI, signer);
 
         const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
-        console.log(ethers.formatUnits(balance, 18), "----------------------");
         const BNBbalance = ethers.formatUnits(balance, 18)
         if (Number(BNBbalance) <= 0.001) {
             const ms = t('BNB金额不足')
@@ -147,16 +143,13 @@ export default function KJredeem () {
             setShow(true)
             // 1. 授权质押合约可以使用 NFT
             const approveTx = await nftContract.setApprovalForAll(Contract_address, true, options);
-            console.log("NFT 授权交易发送中:", approveTx.hash);
             await approveTx.wait();
-            console.log("NFT 授权成功!");
             // 2. 调用质押合约的 stakenft 方法
             const stakeContract = new ethers.Contract(Contract_address, StakingABI, signer);
             const stakeTx = await stakeContract.stakenft(_tokenid, options);
             setAlart(true)
             const ms = t('NFT 质押交易发送中')
             setMessage(ms)
-            console.log("NFT 质押交易发送中:", stakeTx.hash);
             try {
                 await stakeTx.wait();
             } catch (error) {
@@ -184,7 +177,6 @@ export default function KJredeem () {
             const tokenId = await nftContract.tokenOfOwnerByIndex(ownerAddress, i);
             tokenIds.push(tokenId.toString());
         }
-        console.log(tokenIds);
         await stakeNFT(tokenIds[0])
         return tokenIds;
     }
@@ -208,7 +200,6 @@ export default function KJredeem () {
         const stakeContract = new ethers.Contract(Contract_address, StakingABI, signer);
 
         const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
-        console.log(ethers.formatUnits(balance, 18), "----------------------");
         const BNBbalance = ethers.formatUnits(balance, 18)
         if (Number(BNBbalance) <= 0.001) {
             const ms = t('BNB金额不足')
@@ -222,7 +213,6 @@ export default function KJredeem () {
             const withdrawTx = await stakeContract.withdrawnft({
                 options
             });
-            console.log("NFT 赎回交易发送中:", withdrawTx.hash);
             try {
                 await withdrawTx.wait();
             } catch (error) {
@@ -249,12 +239,10 @@ export default function KJredeem () {
             try {
                 const provider = new ethers.BrowserProvider(window.ethereum);
                 const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
-                // 你的质押合约地址和 ABI
                 const stakingContract = new ethers.Contract(Contract_address, StakingABI, signer);
                 // 调用合约的 getcominglist 方法获取用户收益记录
                 const records = await stakingContract.getproductslist(_address);
                 const parsedRecords = parseRecords(records);
-                console.log(parsedRecords);
                 const reversedRecords = parsedRecords.reverse();
                 setList(reversedRecords)
             } catch (e) {
@@ -272,7 +260,6 @@ export default function KJredeem () {
                 const stakingContract = new ethers.Contract(Contract_address, StakingABI, signer);
                 const records = await stakingContract.getnftlist(_address);
                 const parsedRecords = parseRecords(records, true);
-                console.log(parsedRecords);
                 const reversedRecords = parsedRecords.reverse();
                 setNftList(reversedRecords)
             } catch (e) {

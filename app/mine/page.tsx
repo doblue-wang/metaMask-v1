@@ -38,8 +38,6 @@ export default function Mine () {
     setShow(false)
   }
   useEffect(() => {
-    console.log(i18n.language);
-
     fetchGetMineSource()
   }, [])
   //接口授权
