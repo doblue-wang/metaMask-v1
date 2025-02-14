@@ -19,7 +19,7 @@ export default function Face () {
   const isMountedRef = useRef(false);
   const handlePlayRef = useRef<(() => void) | null>(null);
   const streamRef = useRef<MediaStream | null>(null); // 用于保存摄像头流
-
+  const [face, setFace] = useState(false);
   useEffect(() => {
     isMountedRef.current = true;
     const script = document.createElement('script');
@@ -133,10 +133,12 @@ export default function Face () {
       if (detection) {
         if (overlay) overlay.style.borderColor = '#28a745';
         updateStatus('检测到有效人脸');
+        setFace(true)
         return detection.descriptor;
       } else {
         if (overlay) overlay.style.borderColor = '#dc3545';
         updateStatus('等待人脸...');
+        setFace(false)
         return null;
       }
     } catch (err) {
@@ -154,6 +156,12 @@ export default function Face () {
     }
   };
   const register = async () => {
+    if (!face) {
+      setVisible1(true);
+      const ms = t('未识别到有效人脸')
+      setMessage(ms)
+      return
+    }
     const descriptor = await detectFace();
     if (!descriptor) return;
     const descriptorJson = JSON.stringify(descriptor);

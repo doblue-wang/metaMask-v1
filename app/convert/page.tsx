@@ -11,6 +11,7 @@ import { ERC20_ABI } from "../../ERC20ABI";
 import { StakingABI } from "../../StakingABI";
 import { t } from "i18next";
 import NewLoading from "@/components/Loading";
+import { px2rem } from "@/utils/pxToRem";
 export default function Convert () {
   useEffect(() => {
     document.title = `${t("兑换")}`;
@@ -168,12 +169,12 @@ export default function Convert () {
       <div className={styles.nav}>
         <div className={styles.navTitle}>{t('Earnings.Exchange')}</div>
         <div className={styles.navIcon} onClick={() => handleRecord()}>
-          <Image lazy className={styles.navIconImg} src="/convert/record.png" />
+          <Image width={px2rem(24)} height={px2rem(24)} fit="cover" className={styles.navIconImg} src="/convert/record.png" />
         </div>
       </div>
       <div className={styles.purse}>
         <div className={styles.purseicon}>
-          <Image lazy className={styles.purseIconImg} src="/convert/purse.png" />
+          <Image fit="cover" className={styles.purseIconImg} src="/convert/purse.png" />
         </div>
         <div className={styles.price}>{moneySource}</div>
       </div>
@@ -181,7 +182,7 @@ export default function Convert () {
         <div className={styles.exchange}>
           <div className={styles.left}>
             <div className={styles.icon}>
-              <Image lazy className={styles.iconImg} src="/convert/exchangeUSDT.png" />
+              <Image fit="cover" className={styles.iconImg} src="/convert/exchangeUSDT.png" />
             </div>
             <div className={styles.text}>USDT</div>
           </div>
@@ -203,7 +204,7 @@ export default function Convert () {
         <div className={styles.exchange}>
           <div className={styles.left}>
             <div className={styles.icon}>
-              <Image lazy className={styles.iconImg} src="/convert/exchangeDTV.png" />
+              <Image className={styles.iconImg} src="/convert/exchangeDTV.png" />
             </div>
             <div className={styles.text}>DTV</div>
           </div>
@@ -223,7 +224,7 @@ export default function Convert () {
           </div>
         </div>
         <div className={styles.arrow}>
-          <Image lazy className={styles.arrowImg} src="/convert/exchangeArrow.png" />
+          <Image width={px2rem(30)} height={px2rem(30)} fit="cover" className={styles.arrowImg} src="/convert/exchangeArrow.png" />
         </div>
       </div>
       <div className={styles.subscription}>{scale}DTV - 1USDT</div>

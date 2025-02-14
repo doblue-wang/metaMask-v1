@@ -139,3 +139,19 @@ export async function BindingRelationship (body: object) {
     body,
   });
 }
+
+//获取NFT可售状态
+export async function GetObtainNftSellableStatus (params: object) {
+  return request("/api/DeclarationForm/DxMiningPool/GetObtainNftSellableStatus", {
+    method: "GET",
+    params,
+  });
+}
+
+//更新NFT在售数量
+export async function UpdateNftOnSaleQuantity (body: object) {
+  return request("/api/DeclarationForm/DxMiningPool/UpdateNftOnSaleQuantity", {
+    method: "POST",
+    body,
+  });
+}

@@ -4,7 +4,7 @@ import { Image, Button, Popup } from 'antd-mobile'
 import React, { useRef, useState, useEffect, } from 'react'
 import { useRouter } from "next/navigation";
 import BottomNav from "@/components/Tabbar";
-import { UpdateAllFixedAssets, fetchGetGetQuantumTypeList, fetchGetMiningPool } from "@/api/home";
+import { GetObtainNftSellableStatus, UpdateAllFixedAssets, UpdateNftOnSaleQuantity, fetchGetGetQuantumTypeList, fetchGetMiningPool } from "@/api/home";
 import CountUp from "react-countup";
 import { ethers, parseUnits } from "ethers";
 import { ERC20_ABI } from "../../ERC20ABI";
@@ -13,6 +13,7 @@ import { t } from "i18next";
 import CustomAlert from "@/components/Toast";
 import NewLoading from "@/components/Loading";
 import { NFT_ABI } from "@/NFT";
+import { px2rem } from "@/utils/pxToRem";
 export default function Pool () {
   useEffect(() => {
     document.title = `${t("矿池")}`;
@@ -28,6 +29,8 @@ export default function Pool () {
   const [message, setMessage] = useState('')
   const [isstaking, setIsstaking] = useState(false)
   const NFT_CONTRACT_ADDRESS = '0x4Df31fBA8EEB438604c4c489dE14AA8cdaaEe0e9';//nft测试合约地址
+  const [canStaking, setCanStaking] = useState(true)
+
   const tabs = [
     { id: 0, label: `${t('Miner')}` },
     { id: 1, label: 'NFT' },
@@ -35,6 +38,7 @@ export default function Pool () {
   useEffect(() => {
     getSource()
     UpdateAllFixedAssetss()
+    status()
   }, [])
   const getSource = () => {
     const AccountId = localStorage.getItem('AccountId')
@@ -107,15 +111,14 @@ export default function Pool () {
           setVisble1(true)
           return
         }
-
         const tx = await USDTcontract.approve(Contract_address, BigInt(appunmu), options);
         // 等待授权交易完成
         await tx.wait();
         const walletAddress = localStorage.getItem('accounts')
         // 授权完成后，执行质押操作
-        const amountInUnits = parseUnits(itemSource?.MappingValue === 6 ? defults.Price.toString() : itemSource.Staking.toString(), 18);  // 转换为最小单位
-        const amountInUnitsStr = amountInUnits.toString();
-        await stakeTokens(walletAddress, itemSource.MappingValue, amountInUnitsStr);
+        // const amountInUnits = parseUnits( itemSource?.MappingValue === 6 ? defults.Price.toString() : itemSource.Staking.toString(), 18);  // 转换为最小单位
+        // const amountInUnitsStr = amountInUnits.toString();
+        await stakeTokens(walletAddress, itemSource.MappingValue, BigInt(appunmu));
       } catch (e) {
         setShow(false)
         console.log("授权失败", e);
@@ -205,8 +208,7 @@ export default function Pool () {
           return
         }
         if (Object.keys(itemSource).length) {
-          console.log(itemSource);
-          const num = itemSource.Staking;
+          const num = itemSource?.MappingValue === 6 ? defults.Price : itemSource.Staking;
           const amountInUnits = parseUnits(num.toString(), 18);  // 转换为最小单位
           const amountInUnitsStr = amountInUnits.toString();  // 转换为字符串
           await approveToken(amountInUnitsStr)
@@ -241,6 +243,7 @@ export default function Pool () {
     if (!window.ethereum) {
       return;
     }
+    update(0)
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
     try {
@@ -255,12 +258,18 @@ export default function Pool () {
         const ms = t('BNB金额不足')
         setMessage(ms)
         setVisble1(true)
+        update(1)
         return
       }
       const USDTcontract = new ethers.Contract(USDT_address, ERC20_ABI, signer);
       const tx = await USDTcontract.approve(Contract_address, BigInt(_amount), options);
       setShow(true)
-      await tx.wait();
+      try {
+        await tx.wait();
+      } catch (error) {
+        update(1)
+      }
+
       // 3. 连接 NFT 兑换合约
       const nftContract = new ethers.Contract(Contract_address, StakingABI, signer);
       // 4. 兑换 NFT
@@ -275,6 +284,7 @@ export default function Pool () {
         const ms = t('BNB金额不足')
         setMessage(ms)
         setVisble1(true)
+        update(1)
         return
       }
 
@@ -288,6 +298,7 @@ export default function Pool () {
       getIds()
       // 解析 Transfer 事件，找到 NFT Token ID
     } catch (error) {
+      update(1)
       setShow(false)
       setVisble1(true)
       const ms = t('铸造失败')
@@ -305,6 +316,32 @@ export default function Pool () {
         console.log(e);
       });
   }
+
+  const status = async () => {
+    GetObtainNftSellableStatus({}).then(({ data }) => {
+      console.log(data);
+      setCanStaking(data);
+      if (!data) {
+        setVisble1(true)
+        const ms = t('本期铸造已结束')
+        setMessage(ms)
+      }
+    })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
+  const update = (type: any) => {
+    UpdateNftOnSaleQuantity({ OperationType: type }).then(({ data }) => {
+      console.log(data);
+      setCanStaking(data);
+    })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
   return (
     <div className={styles.page}>
       <div className={`${styles.funbox} ${selectedTab == 1 ? styles.bg : ''}`}>
@@ -386,12 +423,12 @@ export default function Pool () {
             {
               !isstaking && !source?.IsNFTIlluminate ? <div className={styles.nftbox}>
                 <div className={styles.imagebox}>
-                  <Image lazy className={styles.img} src='/pool/poolNFT.png' />
+                  <Image width={px2rem(80)} height={px2rem(87)} lazy className={styles.img} src='/pool/poolNFT.png' />
                 </div>
                 <div className={styles.price}>{source?.NFTType.Price}U</div>
               </div> : <div className={styles.nftbox}>
                 <div className={styles.imagebox}>
-                  <Image lazy className={styles.img} src='/pool/poolNFT.png' />
+                  <Image width={px2rem(80)} height={px2rem(87)} lazy className={styles.img} src='/pool/poolNFT.png' />
                 </div>
                 <div className={styles.price}>{source?.NFTType.Price || 0}U</div>
                 <div className={styles.row}>
@@ -426,13 +463,16 @@ export default function Pool () {
                       setMessage(ms)
                       return
                     }
+                    if (!canStaking) {
+                      return
+                    }
                     const num = source?.NFTType.Price
                     const amountInUnits = parseUnits(num.toString(), 18);  // 转换为最小单位
                     const amountInUnitsStr = amountInUnits.toString();
                     await exchangeNFT(amountInUnitsStr)
                   }} className={styles.btn} >
                     <div className={styles.btnlist}>
-                      <span className={styles.btnText}>铸造</span>
+                      <span className={styles.btnText}>{t("Staking_Redemption_Minting.Minting")}</span>
                       <Image lazy className={styles.img} src='/pool/casting.png' />
                     </div>
                   </Button> :
