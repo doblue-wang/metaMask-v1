@@ -278,7 +278,10 @@
         }
 
         .item_name {
-          font-family: PingFang SC, PingFang SC;
+          width: 100%;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
           font-weight: 400;
           font-size: 14px;
           color: #FFFFFF;

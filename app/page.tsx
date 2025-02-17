@@ -285,7 +285,7 @@ export default function Home () {
             }} key={item.id} className={styles.drama_item}>
               <div className={styles.top}>
                 <Image lazy className={styles.img} src={item?.pic[0]?.url} fit='fill' />
-                <div className={styles.item_num}>更新至30集</div>
+                <div className={styles.item_num}>{item?.description || "--"}</div>
               </div>
               <div className={styles.item_name}>{item?.title || ""}</div>
               <div className={styles.item_txt}>{item?.subtitle || ""}</div>
