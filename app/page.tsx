@@ -311,7 +311,6 @@ export default function Home () {
         className="modal"
         visible={show}
         title="请输入邀请码"
-        closeOnMaskClick
         content={
           <div className={styles.modals}>
             <div className={styles.inputContainer}>
