@@ -10,6 +10,7 @@ import BottomNav from "@/components/Tabbar";
 import { BindingRelationship, fetchGetHome, fetchGetSpeedOfProgress, fetchLogin } from "@/api/home";
 import { useTranslation } from "react-i18next";
 import CustomAlert from "@/components/Toast";
+import { ethers } from "ethers";
 export default function Home () {
   useEffect(() => {
     document.title = `${t("首页")}`;
@@ -59,7 +60,7 @@ export default function Home () {
         }
         //不识别
         if (data.IsNeedFacialRecognition === 0) {
-          localStorage.setItem('show', "1");
+          localStorage.setItem('show', "0");
         } else {
           //未认证
           if (data.Verification === 0) {
@@ -80,6 +81,23 @@ export default function Home () {
   };
   //metamask 授权
   const connectMetaMask = async () => {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const { chainId } = await provider.getNetwork()
+    console.log(ethers.formatUnits(chainId, 0));
+    const BSC = ethers.formatUnits(chainId, 0)
+    if (process.env.NODE_ENV === 'development') {
+      if (Number(BSC) !== 97) {
+        setVisble1(true)
+        setMessage("请切换主网")
+        return
+      }
+    } else {
+      if (Number(BSC) !== 56) {
+        setVisble1(true)
+        setMessage("请切换主网")
+        return
+      }
+    }
     try {
       // 请求用户连接 MetaMask
       const accounts = await window.ethereum.request({

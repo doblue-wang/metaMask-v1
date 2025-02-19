@@ -83,6 +83,10 @@
                 }
 
                 .share {
+                    width: 100%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                     font-weight: 400;
                     font-size: 12px;
                     color: #C9CDD4;

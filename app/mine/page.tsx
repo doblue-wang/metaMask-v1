@@ -10,9 +10,17 @@ import { MyInformationUploadImage, fetchGetMine } from '@/api/home';
 import CustomAlert from '@/components/Toast';
 import { px2rem } from '@/utils/pxToRem';
 export default function Mine () {
+  const [show1, setShow1] = useState(false);
   useEffect(() => {
     document.title = `${t("我的")}`;
+    if (localStorage.getItem("show") === "0") {
+      setShow1(false);
+    } else {
+      setShow1(true);
+    }
   }, []);
+
+
   const router = useRouter();
   const [visible1, setVisble1] = useState(false)
   const [message, setMessage] = useState('')
@@ -64,22 +72,36 @@ export default function Mine () {
   };
   return (
     <div className='mine'>
-      <div className="userInfo" onClick={() => router.push('/mine/face')}>
+      <div className="userInfo" onClick={() => {
+        if (!show1) {
+          return
+        }
+        router.push('/mine/face')
+      }}>
         <div className="left">
           <Image fit="cover" className='avatr' alt='' src={source?.AccountImg} />
           <div className="nameRow">
             <div className="top">
               <div className="name">{source?.AccountName || '--'}</div>
               {
-                source?.AccountState === 1 ? <div className="status">{t('Face_Authentication.Face_Authenticated')}</div> : <div className="statusNomal">
-                  <Image fit="cover" className='idcard' src="/mine/idcard.png" alt="" />
-                  {t('Face_Authentication.Face_Not_Authenticated')}</div>
+                !show1 ? null : <>
+                  {
+                    source?.AccountState === 1 ? <div className="status">{t('Face_Authentication.Face_Authenticated')}</div> : <div className="statusNomal">
+                      <Image fit="cover" className='idcard' src="/mine/idcard.png" alt="" />
+                      {t('Face_Authentication.Face_Not_Authenticated')}</div>
+                  }
+                </>
               }
+
+
             </div>
             <div className="share">{t('上级分享人')}{source?.SuperiorSharer || '--'}</div>
           </div>
         </div>
-        <div className="arrow"></div>
+        {
+          !show1 ? null : <div className="arrow"></div>
+        }
+
       </div>
       {/* 资产  */}
       <div className="assets">

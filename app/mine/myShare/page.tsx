@@ -12,7 +12,7 @@ export default function MyShare () {
     const [visible, setVisble] = useState(false)
     const [message, setMessage] = useState('')
     const handleCopy = async () => {
-        copyToClipboard(`https://test.demedia.tv:9940?code=${source?.ShareLinkAddress}`)
+        copyToClipboard(`https://dao.demedia.tv/?code=${source?.ShareLinkAddress}`)
         const ms = t('复制成功')
         setMessage(ms)
         setVisble(true)
@@ -59,7 +59,7 @@ export default function MyShare () {
 
                 </div>
                 <div className={styles.promotioncode}>{source?.ShareLinkAddress || "--"}</div>
-                <div onClick={() => handleCopy()} className={styles.joinbtn}>{t("立即加入")}</div>
+                <div onClick={() => handleCopy()} className={styles.joinbtn}>{t("复制邀请链接")}</div>
             </div>
             <CustomAlert visible={visible} message={message} setVisible={setVisble} />
         </div>
