@@ -191,7 +191,7 @@ export default function Pool () {
     //自定义跳转页面type  1，矿池赎回，2，NFT质押，3，NFT赎回
     if (selectedTab == 0) {
       if (index == 0) {
-        if (localStorage.getItem("show") === "0") {
+        if (localStorage.getItem("show") !== "0") {
           setVisble1(true)
           const ms = t('请进行人脸识别')
           setMessage(ms)
@@ -355,7 +355,7 @@ export default function Pool () {
                   <div key={index} className={styles.item} onClick={() => handleClick(item, index)}>
                     <div className={`${styles.topbox} ${selectedItemIndex == index ? styles.selected : ''}`}>
                       <div className={styles.imgbox}>
-                        <Image lazy className={styles.img} src='/pool/quantum.png  ' />
+                        <Image lazy className={styles.img} src='/pool/quantum.png' />
                       </div>
                     </div>
                     <div className={`${styles.itemTitle} ${selectedItemIndex == index ? styles.selected : ''}`}>{item.Name}</div>
@@ -441,7 +441,7 @@ export default function Pool () {
               {
                 !isstaking && !source?.IsNFTIlluminate ?
                   <Button onClick={async () => {
-                    if (localStorage.getItem("show") === "0") {
+                    if (localStorage.getItem("show") !== "0") {
                       setVisble1(true)
                       const ms = t('请进行人脸识别')
                       setMessage(ms)
@@ -529,7 +529,7 @@ export default function Pool () {
         bodyStyle={{ height: '575px', borderTopLeftRadius: '8px', borderTopRightRadius: '8px', backgroundColor: '#17161b', padding: '38px 14px', overflow: 'hidden' }}
         bodyClassName={styles.popbox}
       >
-        <div className={styles.poptitle}>选择DTV
+        <div className={styles.poptitle}>{t('选择')}DTV
         </div>
         <div className={styles.poplistbox}>
           {

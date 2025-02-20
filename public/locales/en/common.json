@@ -154,5 +154,9 @@
     "敬请期待": "Stay tuned",
     "本期铸造已结束": "This Round's Minting Has Ended",
     "未识别到有效人脸": "Valid face not detected",
-    "复制邀请链接": "Copy invitation link"
+    "复制邀请链接": "Copy invitation link",
+    "请切换主网": "Please switch to the main network.",
+    "选择": "Select",
+    "详情": "Detail",
+    "请输入邀请码": "invitation code"
 }

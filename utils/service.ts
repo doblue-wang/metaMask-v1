@@ -96,7 +96,7 @@ const checkStatus = (response: Response, newOptions: any) => {
  */
 export default function request (url: string, option: any) {
   if (process.env.NODE_ENV === "production") {
-    url = "https://api_test.demedia.tv:185" + url;
+    url = "https://api.demedia.tv:185" + url;
   }
   const options = {
     ...option,

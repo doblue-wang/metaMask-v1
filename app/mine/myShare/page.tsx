@@ -38,7 +38,7 @@ export default function MyShare () {
         <div className={styles.page}>
             <div className={styles.navbar}>
                 <div className={styles.navbar__logo} onClick={() => handleBack()}>
-                    <Image lazy className={styles.navbar__logo_img} src="/images/recordArrow.png" />
+                    <Image lazy className={styles.navbar__logo_img} src="/images/jiantou.png" />
                 </div>
                 <div className={styles.navbar__title}>{t('Share')}</div>
                 <div className={styles.navbar__links}></div>

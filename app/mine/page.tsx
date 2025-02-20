@@ -95,7 +95,7 @@ export default function Mine () {
 
 
             </div>
-            <div className="share">{t('上级分享人')}{source?.SuperiorSharer || '--'}</div>
+            <div className="share">{t('上级分享人')}:{source?.SuperiorSharer || 'asdkjasdkajndkjahdjhadjhabdjhabdsjhbajhsdbajhsdbaiusdhiuqoiqjeoiqjweoiqjweoiquoei'}</div>
           </div>
         </div>
         {
@@ -231,6 +231,7 @@ export default function Mine () {
           }
         </div>
       </Popup>
+
       <CustomAlert visible={visible1} message={message} setVisible={setVisble1} />
     </div>
   );

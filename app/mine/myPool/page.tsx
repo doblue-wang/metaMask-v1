@@ -1,7 +1,8 @@
 'use client';
-import { Image, ProgressCircle } from 'antd-mobile'
+import { ProgressCircle } from 'antd-mobile'
 import styles from './page.module.scss'
 import React, { useRef, useState, useEffect, } from 'react'
+import Image from 'next/image';
 // import NavBar from '@/components/NavBar/page';
 import { useRouter } from 'next/navigation';
 import { fetchGetMyMaxeralPoolList, fetchGetMyMineralPoolSummary } from '@/api/home';
@@ -109,7 +110,7 @@ export default function MyPool () {
             <div className={`${styles.top} ${selectedTab === 0 ? styles.active : ''}`}>
                 <div className={styles.navbar}>
                     <div className={styles.navbar__logo} onClick={() => handleBack()}>
-                        <Image lazy className={styles.navbar__logo_img} src="/images/recordArrow.png" />
+                        <Image width={14} height={14} alt="" className={styles.navbar__logo_img} src="/images/recordArrow.png" />
                     </div>
                     <div className={styles.navbar__title}>我的矿池</div>
                     <div className={styles.navbar__links}></div>
@@ -144,7 +145,7 @@ export default function MyPool () {
                                 <div className={styles.detail_left_content}>POS：{source?.MinerType?.Hashrate || 0}</div>
                             </div>
                             <div className={styles.detail_right}>
-                                <Image lazy className={styles.detail_right_img} src="/pool/leave.png" />
+                                <Image width={32} height={32} alt='' className={styles.detail_right_img} src="/pool/leave.png" />
                                 <div className={styles.detail_right_title}>{source?.MinerType?.Name || '--'}</div>
                             </div>
                         </div>
@@ -243,7 +244,7 @@ export default function MyPool () {
                                     list.map((item: any, index: any) => <div key={index} className={item?.MiningPoolSpeedOfProgress >= 1 ? styles.listitem : styles.listitem1}>
                                         <div className={styles.userbox}>
                                             <div className={styles.userleft}>
-                                                <Image lazy className={styles.userimg} src={item?.AccountImg || null} alt="" />
+                                                <Image width={48} height={48} className={styles.userimg} src={item?.AccountImg || null} alt="" />
                                                 <div className={styles.usernamebox}>
                                                     <div className={styles.username}>{item.AccountName || ''}</div>
                                                     {

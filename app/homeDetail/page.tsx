@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Image } from 'antd-mobile'
 import NavBar from "@/components/NavBar/page";
 import { fetchGetHome } from "@/api/home";
+import { t } from "i18next";
 export default function HomeDetail () {
     const [source, setSource] = useState({} as any);
     useEffect(() => {
@@ -19,7 +20,7 @@ export default function HomeDetail () {
     }, [])
     return (
         <div className={styles.page}>
-            <NavBar title="详情" />
+            <NavBar title={t('详情')} />
             <div className={styles.titbox}>
                 <Image lazy alt="" className={styles.head} src={source?.MembersData?.Pic} />
                 <div className={styles.namebox}>

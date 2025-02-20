@@ -29,7 +29,7 @@ export default function Exchange () {
             });
     }
     const exchange = () => {
-        if (localStorage.getItem("show") === "0") {
+        if (localStorage.getItem("show") !== "0") {
             setVisble1(true)
             const ms = t('请进行人脸识别')
             setMessage(ms)

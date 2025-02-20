@@ -107,7 +107,7 @@ export default function Convert () {
   };
   //兑换
   const exchangeTokens = async () => {
-    if (localStorage.getItem("show") === "0") {
+    if (localStorage.getItem("show") !== "0") {
       setVisble(true)
       const ms = t('请进行人脸识别')
       setMessage(ms)

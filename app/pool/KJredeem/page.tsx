@@ -53,7 +53,7 @@ export default function KJredeem () {
     }
     //矿机赎回
     const withdrawTokens = async (_address: any, _product: number, _amount: any) => {
-        if (localStorage.getItem("show") === "0") {
+        if (localStorage.getItem("show") !== "0") {
             setAlart(true)
             const ms = t('请进行人脸识别')
             setMessage(ms)
@@ -114,7 +114,7 @@ export default function KJredeem () {
     const router = useRouter();
     //nft 质押
     const stakeNFT = async (_tokenid: number) => {
-        if (localStorage.getItem("show") === "0") {
+        if (localStorage.getItem("show") !== "0") {
             setAlart(true)
             const ms = t('请进行人脸识别')
             setMessage(ms)
@@ -185,7 +185,7 @@ export default function KJredeem () {
         if (!window.ethereum) {
             return;
         }
-        if (localStorage.getItem("show") === "0") {
+        if (localStorage.getItem("show") !== "0") {
             setAlart(true)
             const ms = t('请进行人脸识别')
             setMessage(ms)
