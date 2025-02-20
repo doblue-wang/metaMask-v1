@@ -13,7 +13,7 @@ import NewLoading from "@/components/Loading";
 export default function Receive () {
     const [visible, setVisble] = useState(false)
     const [message, setMessage] = useState('')
-    const Contract_address = '0x1E5F7963B774F2e5ceC16d4d761A314Cbfaf1F08';//测试合约地址
+    const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
     const [list, setList] = useState<any>([])
     const [show, setShow] = useState(false)
     const [source, setSource] = useState({} as any)
