@@ -20,21 +20,7 @@ export default function Home () {
       setCode(data.split(''))
     }
   }, []);
-  const [loading, setLoading] = useState(false);
-  const [firstLoad, setFirstLoad] = useState<boolean>(false);
-  useEffect(() => {
-    console.log(localStorage.getItem('load'), "afei-----");
-    if (!localStorage.getItem('load')) {
-      setFirstLoad(true)
-      setLoading(true)
-      console.log(localStorage.getItem('load'));
-
-      localStorage.setItem('load', "true")
-    } else {
-      setFirstLoad(false)
-    }
-  }, [])
-
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [source, setSource] = useState({} as any);
   const [progress, setProgress] = useState({} as any);
@@ -225,7 +211,7 @@ export default function Home () {
   return (
     <>
       {
-        firstLoad && loading ? <>
+        loading ? <>
           <PageLoading />
           <Modal
             className="modal"

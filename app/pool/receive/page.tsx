@@ -60,10 +60,11 @@ export default function Receive () {
                 };
                 const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
                 const BNBbalance = ethers.formatUnits(balance, 18)
-                if (Number(BNBbalance) <= 0.001) {
+                if (Number(BNBbalance) <= 0.00005) {
                     const ms = t('BNB金额不足')
                     setMessage(ms)
                     setVisble(true)
+                    setShow(false)
                     return
                 }
                 // 调用合约的 withdrawcoming 方法提取收益

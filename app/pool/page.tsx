@@ -102,10 +102,11 @@ export default function Pool () {
 
         const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
         const BNBbalance = ethers.formatUnits(balance, 18)
-        if (Number(BNBbalance) <= 0.001) {
+        if (Number(BNBbalance) <= 0.00005) {
           const ms = t('BNB金额不足')
           setMessage(ms)
           setVisble1(true)
+          setShow(false)
           return
         }
         const tx = await USDTcontract.approve(Contract_address, BigInt(appunmu), options);
@@ -140,10 +141,11 @@ export default function Pool () {
       };
       const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
       const BNBbalance = ethers.formatUnits(balance, 18)
-      if (Number(BNBbalance) <= 0.001) {
+      if (Number(BNBbalance) <= 0.00005) {
         const ms = t('BNB金额不足')
         setMessage(ms)
         setVisble1(true)
+        setShow(false)
         return
       }
       // 执行质押操作
@@ -243,10 +245,11 @@ export default function Pool () {
       };
       const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
       const BNBbalance = ethers.formatUnits(balance, 18)
-      if (Number(BNBbalance) <= 0.001) {
+      if (Number(BNBbalance) <= 0.00005) {
         const ms = t('BNB金额不足')
         setMessage(ms)
         setVisble1(true)
+        setShow(false)
         update(1)
         return
       }
@@ -268,10 +271,11 @@ export default function Pool () {
       //bnb
       const balance1 = await provider.getBalance(localStorage.getItem("accounts") as any);
       const BNBbalance1 = ethers.formatUnits(balance, 18)
-      if (Number(BNBbalance1) <= 0.001) {
+      if (Number(BNBbalance1) <= 0.00005) {
         const ms = t('BNB金额不足')
         setMessage(ms)
         setVisble1(true)
+        setShow(false)
         update(1)
         return
       }
@@ -306,11 +310,6 @@ export default function Pool () {
   const status = async () => {
     GetObtainNftSellableStatus({}).then(({ data }) => {
       setCanStaking(data);
-      if (!data) {
-        setVisble1(true)
-        const ms = t('本期铸造已结束')
-        setMessage(ms)
-      }
     })
       .catch((e) => {
         console.log(e);
@@ -448,6 +447,9 @@ export default function Pool () {
                       return
                     }
                     if (!canStaking) {
+                      setVisble1(true)
+                      const ms = t('本期铸造已结束')
+                      setMessage(ms)
                       return
                     }
                     const num = source?.NFTType.Price

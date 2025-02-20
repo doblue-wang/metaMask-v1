@@ -89,10 +89,11 @@ export default function Convert () {
         setShow(true)
         const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
         const BNBbalance = ethers.formatUnits(balance, 18)
-        if (Number(BNBbalance) <= 0.001) {
+        if (Number(BNBbalance) <= 0.00005) {
           const ms = t('BNB金额不足')
           setMessage(ms)
           setVisble(true)
+          setShow(false)
           return
         }
 
@@ -137,10 +138,11 @@ export default function Convert () {
 
       const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
       const BNBbalance = ethers.formatUnits(balance, 18)
-      if (Number(BNBbalance) <= 0.001) {
+      if (Number(BNBbalance) <= 0.00005) {
         const ms = t('BNB金额不足')
         setMessage(ms)
         setVisble(true)
+        setShow(false)
         return
       }
 
