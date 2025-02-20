@@ -55,6 +55,7 @@ export default function Home () {
         localStorage.setItem('token', data.token);
         localStorage.setItem('AccountId', data.AccountId);
         i18n.changeLanguage(data.Languages);
+        localStorage.setItem('languages', data.Languages);
         if (data.IsWhetherToBindOnlineOrNot) {
           setShow(true)
         } else {

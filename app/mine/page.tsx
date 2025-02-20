@@ -61,6 +61,7 @@ export default function Mine () {
   };
   //语言
   const fetchLanguage = async (val: any) => {
+    localStorage.setItem('languages', val);
     const AccountId = localStorage.getItem('AccountId')
     MyInformationUploadImage({ AccountId, Languages: val })
       .then(({ data }) => {
