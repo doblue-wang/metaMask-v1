@@ -11,7 +11,7 @@ i18next
       en: { translation: enTranslation },
       zh: { translation: zhTranslation },
     },
-    lng: localStorage.getItem('languages') || 'en', // 默认语言
+    lng: 'en', // 默认语言
     fallbackLng: 'en', // 后备语言
     interpolation: {
       escapeValue: false, // XSS 安全

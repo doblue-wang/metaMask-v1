@@ -80,7 +80,7 @@ export default function Convert () {
     if (typeof window !== 'undefined' && window.ethereum) {
       const provider = new ethers.BrowserProvider(window.ethereum)
       try {
-        const gasPrice = Number((await provider.getFeeData()).gasPrice);
+        const gasPrice = Number((await provider.getFeeData()).gasPrice) * 2;
         const options = {
           gasPrice
         };
@@ -131,7 +131,7 @@ export default function Convert () {
       // 你的兑换合约地址，确认该地址是正确的
       const exchangeContract = new ethers.Contract(Contract_address, StakingABI, signer);
       // 获取当前 Gas 费用数据
-      const gasPrice = Number((await provider.getFeeData()).gasPrice);
+      const gasPrice = Number((await provider.getFeeData()).gasPrice) * 2;
       const options = {
         gasPrice,
       };

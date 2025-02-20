@@ -91,7 +91,7 @@ export default function Pool () {
       const provider = new ethers.BrowserProvider(window.ethereum);
       try {
         // 获取 Gas 费用数据
-        const gasPrice = Number((await provider.getFeeData()).gasPrice);
+        const gasPrice = Number((await provider.getFeeData()).gasPrice) * 2;
         const options = {
           gasPrice
         };
@@ -135,7 +135,7 @@ export default function Pool () {
       // 初始化质押合约
       const stakingContract = new ethers.Contract(Contract_address, StakingABI, signer);
       // 获取 Gas 费用数据
-      const gasPrice = Number((await provider.getFeeData()).gasPrice);
+      const gasPrice = Number((await provider.getFeeData()).gasPrice) * 2;
       const options = {
         gasPrice
       };
@@ -165,6 +165,8 @@ export default function Pool () {
       }, 500);
 
     } catch (e) {
+      console.log(e);
+
       setShow(false)
       setVisble1(true)
       const ms = t('质押失败')
@@ -239,7 +241,7 @@ export default function Pool () {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
     try {
-      const gasPrice = Number((await provider.getFeeData()).gasPrice);
+      const gasPrice = Number((await provider.getFeeData()).gasPrice) * 2;
       const options = {
         gasPrice
       };

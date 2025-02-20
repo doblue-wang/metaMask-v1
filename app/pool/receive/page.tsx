@@ -54,7 +54,7 @@ export default function Receive () {
                 const stakingContract = new ethers.Contract(Contract_address, StakingABI, signer);
 
                 // 获取当前 Gas 费用数据
-                const gasPrice = Number((await provider.getFeeData()).gasPrice);
+                const gasPrice = Number((await provider.getFeeData()).gasPrice) * 2;
                 const options = {
                     gasPrice
                 };

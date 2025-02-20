@@ -88,17 +88,17 @@ export default function Home () {
     const { chainId } = await provider.getNetwork()
     console.log(ethers.formatUnits(chainId, 0));
     const BSC = ethers.formatUnits(chainId, 0)
-    if (process.env.NODE_ENV === 'development') {
-      if (Number(BSC) !== 97) {
-        setshownetwork(true)
-        return
-      }
-    } else {
-      if (Number(BSC) !== 56) {
-        setshownetwork(true)
-        return
-      }
-    }
+    // if (process.env.NODE_ENV === 'development') {
+    //   if (Number(BSC) !== 97) {
+    //     setshownetwork(true)
+    //     return
+    //   }
+    // } else {
+    //   if (Number(BSC) !== 56) {
+    //     setshownetwork(true)
+    //     return
+    //   }
+    // }
     try {
       // 请求用户连接 MetaMask
       const accounts = await window.ethereum.request({

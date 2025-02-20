@@ -67,7 +67,7 @@ export default function KJredeem () {
             const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
             const stakingContract = new ethers.Contract(Contract_address, StakingABI, signer);
             // 获取当前 Gas 费用数据
-            const gasPrice = Number((await provider.getFeeData()).gasPrice);
+            const gasPrice = Number((await provider.getFeeData()).gasPrice) * 2;
 
             const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
             const BNBbalance = ethers.formatUnits(balance, 18)
@@ -126,7 +126,7 @@ export default function KJredeem () {
         }
         const provider = new ethers.BrowserProvider(window.ethereum)
         const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
-        const gasPrice = Number((await provider.getFeeData()).gasPrice);
+        const gasPrice = Number((await provider.getFeeData()).gasPrice) * 2;
         const options = {
             gasPrice
         };
@@ -195,7 +195,7 @@ export default function KJredeem () {
         }
         const provider = new ethers.BrowserProvider(window.ethereum)
         const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
-        const gasPrice = Number((await provider.getFeeData()).gasPrice);
+        const gasPrice = Number((await provider.getFeeData()).gasPrice) * 2;
         const options = {
             gasPrice
         };
