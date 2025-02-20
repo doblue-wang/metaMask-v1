@@ -373,7 +373,7 @@ export default function Home () {
                   ))}
                   <CustomAlert visible={visible1} message={message} setVisible={setVisble1} />
                 </div>
-                <div onClick={handleSubmit} className={styles.check}>确认</div>
+                <div onClick={handleSubmit} className={styles.check}>{t("确认")}</div>
               </div>
             }
             closeOnAction
