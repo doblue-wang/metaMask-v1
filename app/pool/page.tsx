@@ -272,7 +272,7 @@ export default function Pool () {
       const amountInUnitsStr = amountInUnits.toString();
       //bnb
       const balance1 = await provider.getBalance(localStorage.getItem("accounts") as any);
-      const BNBbalance1 = ethers.formatUnits(balance, 18)
+      const BNBbalance1 = ethers.formatUnits(balance1, 18)
       if (Number(BNBbalance1) <= 0.00005) {
         const ms = t('BNB金额不足')
         setMessage(ms)
