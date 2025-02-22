@@ -93,7 +93,7 @@ export default function Home () {
         return
       }
     } else {
-      if (Number(BSC) !== 56) {
+      if (Number(BSC) !== 97) {
         setshownetwork(true)
         return
       }
