@@ -31,6 +31,7 @@ export default function KJredeem () {
     useEffect(() => {
         getSource()
         if (paramValue === "1") {
+            console.log("ffff");
             const titiles = t("Miner")
             setTitle(titiles)
             getComingList(localStorage.getItem('accounts'))
@@ -248,7 +249,9 @@ export default function KJredeem () {
                 const parsedRecords = parseRecords(records);
                 const reversedRecords = parsedRecords.reverse();
                 setList(reversedRecords)
+                console.log(reversedRecords);
             } catch (e) {
+                setList([])
                 console.log("获取记录失败", e);
             }
         }
@@ -267,6 +270,7 @@ export default function KJredeem () {
                 setNftList(reversedRecords)
             } catch (e) {
                 console.log("获取记录失败", e);
+                setNftList([])
             }
         }
 
