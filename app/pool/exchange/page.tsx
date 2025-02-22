@@ -8,11 +8,15 @@ import Empty from "@/components/empty/page";
 import { t } from "i18next";
 import { ExchangeDtv, ExchangeDtvRecord, fetchGetMiningPool } from "@/api/home";
 import CustomAlert from "@/components/Toast";
+import { ethers, parseUnits } from "ethers";
+import { StakingABI } from "@/StakingABI";
 export default function Exchange () {
     const [visible1, setVisble1] = useState(false)
     const [message, setMessage] = useState('')
     const [source, setSource] = useState({} as any)
     const [list, setList] = useState([] as any)
+    const Contract_address = '0xC9F278a1102FDC3795E29205e554a93f23CFb089';//测试合约地址
+    const [gas, setGas] = useState("")
     useEffect(() => {
         Record()
         getSource()
@@ -29,15 +33,10 @@ export default function Exchange () {
             });
     }
     const exchange = () => {
-        if (localStorage.getItem("show") !== "0") {
-            setVisble1(true)
-            const ms = t('请进行人脸识别')
-            setMessage(ms)
-            return
-        }
         const AccountId = localStorage.getItem('AccountId')
         ExchangeDtv({
-            AccountId
+            AccountId,
+            ServiceCharge: gas
         })
             .then(({ data, code, msg }) => {
                 if (code === 200) {
@@ -65,6 +64,45 @@ export default function Exchange () {
                 console.log(e);
             });
     }
+
+    const generateMoney = async () => {
+        if (localStorage.getItem("show") !== "0") {
+            setVisble1(true)
+            const ms = t('请进行人脸识别')
+            setMessage(ms)
+            return
+        }
+        const provider = new ethers.BrowserProvider(window.ethereum)
+        const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
+        const gasPrice = Number((await provider.getFeeData()).gasPrice);
+        const options = {
+            gasPrice
+        };
+        const contract = new ethers.Contract(Contract_address, StakingABI, signer);
+        const amountInUnits = parseUnits((source?.ConvertibleDTV).toString(), 18);  // 转换为最小单位
+        const amountInUnitsStr = amountInUnits.toString();  // 转换为字符串
+        // 发送交易
+        const tx = await contract.addcoming(localStorage.getItem("accounts") as any, amountInUnitsStr, options);
+        console.log("交易已发送:", tx.hash);
+        // 等待交易确认
+        try {
+            await tx.wait();
+            console.log(ethers.formatUnits(gasPrice, 18));
+            const num = ethers.formatUnits(gasPrice, 18)
+            setGas(num)
+            console.log(gasPrice, "--------");
+            console.log("交易已确认");
+            exchange()
+        } catch (error) {
+            console.log(error);
+            console.log("交易失败");
+        }
+
+
+    }
+
+
+
     return (
         <div className={styles.page}>
             <NavBar title={`DTVC ${t('Earnings.Exchange')}`} />
@@ -79,7 +117,7 @@ export default function Exchange () {
 
                     </div>
                 </div>
-                <div onClick={() => exchange()} className={styles.c_con}>
+                <div onClick={() => generateMoney()} className={styles.c_con}>
                     <Image lazy className={styles.img} src="/pool/left_arrow.png" />
                     <div className={styles.txt}>{t('Earnings.Exchange')}</div>
                 </div>
