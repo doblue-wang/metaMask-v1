@@ -55,7 +55,6 @@ export default function Home () {
         localStorage.setItem('token', data.token);
         localStorage.setItem('AccountId', data.AccountId);
         i18n.changeLanguage(data.Languages);
-        localStorage.setItem('languages', data.Languages);
         if (data.IsWhetherToBindOnlineOrNot) {
           setShow(true)
         } else {
@@ -86,19 +85,18 @@ export default function Home () {
   const connectMetaMask = async () => {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const { chainId } = await provider.getNetwork()
-    console.log(ethers.formatUnits(chainId, 0));
     const BSC = ethers.formatUnits(chainId, 0)
-    // if (process.env.NODE_ENV === 'development') {
-    //   if (Number(BSC) !== 97) {
-    //     setshownetwork(true)
-    //     return
-    //   }
-    // } else {
-    //   if (Number(BSC) !== 56) {
-    //     setshownetwork(true)
-    //     return
-    //   }
-    // }
+    if (process.env.NODE_ENV === 'development') {
+      if (Number(BSC) !== 97) {
+        setshownetwork(true)
+        return
+      }
+    } else {
+      if (Number(BSC) !== 56) {
+        setshownetwork(true)
+        return
+      }
+    }
     try {
       // 请求用户连接 MetaMask
       const accounts = await window.ethereum.request({
@@ -162,7 +160,7 @@ export default function Home () {
       ParentCode: inviteCode
     }).then(({ data, code, msg }) => {
       if (code !== 200) {
-        setShow(false)
+        setShow(true)
         setMessage(msg)
         setVisble1(true)
       } else {
@@ -374,7 +372,7 @@ export default function Home () {
                   ))}
                   <CustomAlert visible={visible1} message={message} setVisible={setVisble1} />
                 </div>
-                <div onClick={handleSubmit} className={styles.check}>{t("确认")}</div>
+                <div onClick={handleSubmit} className={styles.check}>确认</div>
               </div>
             }
             closeOnAction
