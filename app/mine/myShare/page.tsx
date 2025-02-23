@@ -7,9 +7,11 @@ import { fetchGetGetMyShare } from '@/api/home';
 import { t } from 'i18next';
 import useClipboard from '@/utils/useClipboard';
 import CustomAlert from '@/components/Toast';
+import { useTranslation } from 'react-i18next';
 export default function MyShare () {
     const { copyToClipboard } = useClipboard();
     const [visible, setVisble] = useState(false)
+    const { i18n } = useTranslation();
     const [message, setMessage] = useState('')
     const handleCopy = async () => {
         copyToClipboard(`https://dao.demedia.tv/?code=${source?.ShareLinkAddress}`)
@@ -33,6 +35,7 @@ export default function MyShare () {
     }
     useEffect(() => {
         getSource()
+        i18n.changeLanguage(localStorage.getItem('languages') as any);
     }, [])
     return (
         <div className={styles.page}>

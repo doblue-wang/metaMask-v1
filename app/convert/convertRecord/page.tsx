@@ -20,12 +20,14 @@ export default function ConvertRecord () {
     const router = useRouter();
     const [visible1, setVisble1] = useState(false)
     const [message, setMessage] = useState('')
+    const { i18n } = useTranslation();
     const handleDetail = (data: any) => {
         const encodedData = encodeURIComponent(JSON.stringify(data));
         // 将数据以 JSON 字符串的形式传递
         router.push(`/convert/convertDetails?data=${encodedData}`);
     }
     useEffect(() => {
+        i18n.changeLanguage(localStorage.getItem('languages') as any);
         getExchangeList()
     }, [])
 

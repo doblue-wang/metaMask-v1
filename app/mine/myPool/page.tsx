@@ -7,23 +7,32 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { fetchGetMyMaxeralPoolList, fetchGetMyMineralPoolSummary } from '@/api/home';
 import Empty from "@/components/empty/page";
+import { getObfuscatedAccount } from '@/utils/pxToRem';
+import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
 export default function MyPool () {
+    const { i18n } = useTranslation();
     const [selectedTab, setSelectedTab] = useState(0);
     const [source, setSource] = useState({} as any);
     const [list, setList] = useState<any[]>([]);
     const tabs = [
-        { id: 0, label: '矿池汇总' },
-        { id: 1, label: '矿池列表' },
+        { id: 0, label: t('矿池汇总') },
+        { id: 1, label: t('矿池列表') },
     ];
     const sortList = [
-        { id: 0, label: 'POS总算力' },
-        { id: 1, label: '注册时间' },
+        { id: 0, label: `POS${t('总算力')}` },
+        { id: 1, label: t('Mining_Pool_List.Registration_Time') },
     ]
     const [sort, setSort] = useState(-1)
     const [selectedSort, setSelectedSort] = useState<number[]>([]); // 存储选中的排序项索引
     const [sortOrder, setSortOrder] = useState<{ [key: number]: 'ASC' | 'desc' }>({}); // 存储每个排序项的顺序
 
     const router = useRouter()
+
+    useEffect(() => {
+        i18n.changeLanguage(localStorage.getItem('languages') as any);
+    }, [])
+
 
     const handleBack = () => {
         router.back()
@@ -112,7 +121,7 @@ export default function MyPool () {
                     <div className={styles.navbar__logo} onClick={() => handleBack()}>
                         <Image width={14} height={14} alt="" className={styles.navbar__logo_img} src="/images/recordArrow.png" />
                     </div>
-                    <div className={styles.navbar__title}>我的矿池</div>
+                    <div className={styles.navbar__title}>{t('My_Mining_Pool')}</div>
                     <div className={styles.navbar__links}></div>
                 </div>
                 <div className={styles.tabbox}>
@@ -137,7 +146,7 @@ export default function MyPool () {
                 <div className={styles.content}>
                     <div className={styles.myMachine}>
                         <div className={styles.titlebox}>
-                            <div className={styles.title}>我的矿机</div>
+                            <div className={styles.title}>{t('Mining_Pool_Summary.My_Min_ers')}</div>
                         </div>
                         <div className={styles.machinedetail}>
                             <div className={styles.detail_left}>
@@ -153,14 +162,16 @@ export default function MyPool () {
                     <div className={styles.myMachine}>
                         <div className={styles.titlebox}>
                             <div className={styles.title}>
-                                合格矿池
+                                {t('Mining_Pool_Summary.Qualified_Mining_Pools')}
                                 <div className={styles.txt}>POP：{source?.QualifiedPOPSummary || 0}</div>
                             </div>
                         </div>
                         <div className={styles.listbox}>
                             <div className={styles.listlabel}>
-                                <div className={styles.txt}>矿池名称</div>
-                                <div className={styles.txt}>完成时间</div>
+                                <div className={styles.txt}>{
+                                    t('Mining_Pool_Summary.Mining_Pool_Name')
+                                }</div>
+                                <div className={styles.txt}>{t('Mining_Pool_Summary.Completion_Time')}</div>
                             </div>
                             {
                                 (source?.QualifiedMiningPoolList || []).length > 0 ? <>
@@ -177,14 +188,14 @@ export default function MyPool () {
                     <div className={styles.myMachine}>
                         <div className={styles.titlebox}>
                             <div className={styles.title}>
-                                预备矿池
+                                {t('Mining_Pool_Summary.Reserve_Mining_Pools')}
                                 <div className={styles.txt}>POP：{source?.PreparationPOPSummary || 0}</div>
                             </div>
                         </div>
                         <div className={styles.listbox}>
                             <div className={styles.listlabel}>
-                                <div className={styles.txt}>矿池名称</div>
-                                <div className={styles.txt}>完成度</div>
+                                <div className={styles.txt}>{t('Mining_Pool_Summary.Mining_Pool_Name')}</div>
+                                <div className={styles.txt}>{t('Mining_Pool_Summary.Completion_Rate')}</div>
                             </div>
                             {
                                 (source?.PreparationMiningPoolList || []).length > 0 ?
@@ -246,7 +257,7 @@ export default function MyPool () {
                                             <div className={styles.userleft}>
                                                 <Image width={48} height={48} className={styles.userimg} src={item?.AccountImg || null} alt="" />
                                                 <div className={styles.usernamebox}>
-                                                    <div className={styles.username}>{item.AccountName || ''}</div>
+                                                    <div className={styles.username}>{getObfuscatedAccount(item.AccountName)}</div>
                                                     {
                                                         item.MiningPoolSpeedOfProgress < 1 ? <div className={styles.Circlebox}>
                                                             <ProgressCircle percent={item.MiningPoolSpeedOfProgress * 100} style={{ '--track-width': '4px', '--track-color': 'rgba(255,110,145,0.1)', '--fill-color': '#FF6E91', '--size': '18px' }} />
@@ -254,7 +265,7 @@ export default function MyPool () {
                                                         </div> : null
                                                     }
                                                     {
-                                                        item?.MiningPoolSpeedOfProgress >= 1 ? <div className={styles.tag}>算力达标</div> : null
+                                                        item?.MiningPoolSpeedOfProgress >= 1 ? <div className={styles.tag}>{t('算力达标')}</div> : null
                                                     }
 
                                                 </div>
@@ -278,15 +289,15 @@ export default function MyPool () {
                                         </div>
                                         <div className={styles.contentbox}>
                                             <div className={styles.item}>
-                                                <div className={styles.label}>矿机数量：</div>
+                                                <div className={styles.label}>{t('矿机数量')}：</div>
                                                 <div className={styles.value}>{item.NumberOfMiningMachines || 0}</div>
                                             </div>
                                             <div className={styles.item1}>
-                                                <div className={styles.label}>POS总算力：</div>
+                                                <div className={styles.label}>POS{t('总算力')}：</div>
                                                 <div className={styles.value}>{item.POSSummary || 0}</div>
                                             </div>
                                             <div className={styles.item}>
-                                                <div className={styles.label}>备注：</div>
+                                                <div className={styles.label}>{t('Mining_Pool_List.Remarks')}：</div>
                                                 <div className={styles.value}>{item.Description || "--"}</div>
                                             </div>
                                         </div>

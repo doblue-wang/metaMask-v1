@@ -12,6 +12,7 @@ import { StakingABI } from "../../StakingABI";
 import { t } from "i18next";
 import NewLoading from "@/components/Loading";
 import { px2rem } from "@/utils/pxToRem";
+import { useTranslation } from "react-i18next";
 export default function Convert () {
   useEffect(() => {
     document.title = `${t("兑换")}`;
@@ -19,6 +20,7 @@ export default function Convert () {
   const [USDTValue, setUSDTValue] = useState(''); // USDT 输入框的值
   const [DTVValue, setDTVValue] = useState('');   // DTV 输入框的值
   const [scale, setScale] = useState(0);
+  const { i18n } = useTranslation();
   const [visible, setVisble] = useState(false)
   const [message, setMessage] = useState('')
   const [show, setShow] = useState(false)
@@ -59,11 +61,12 @@ export default function Convert () {
       });
   }
   useEffect(() => {
+    i18n.changeLanguage(localStorage.getItem('languages') as any);
     fetchGetDivaSource()
     money()
   }, [])
   //授权
-  const USDT_address = '0x55d398326f99059fF775485246999027B3197955';//usdt 合约
+  const USDT_address = '0xeC426Efc424C85bC2044C799F58CCa86e4E03415';//usdt 合约
   const Contract_address = '0x1E5F7963B774F2e5ceC16d4d761A314Cbfaf1F08';//测试合约地址
   const money = async () => {
     const provider = new ethers.BrowserProvider(window.ethereum)

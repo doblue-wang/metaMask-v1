@@ -12,6 +12,7 @@ import NewLoading from "@/components/Loading";
 import CustomAlert from "@/components/Toast";
 import { UpdateAllFixedAssets, fetchGetMiningPool } from "@/api/home";
 import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 export default function KJredeem () {
     const [title, setTitle] = useState("")
@@ -28,6 +29,10 @@ export default function KJredeem () {
     const day = currentDate.getDate();
     const hours = currentDate.getHours();
     const minutes = currentDate.getMinutes();
+    const { i18n } = useTranslation();
+    useEffect(() => {
+        i18n.changeLanguage(localStorage.getItem('languages') as any);
+    }, [])
     useEffect(() => {
         getSource()
         if (paramValue === "1") {

@@ -1,6 +1,6 @@
 'use client';
 import styles from "./page.module.scss";
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image } from 'antd-mobile'
 import NavBar from "@/components/NavBar/page";
 import useClipboard from '@/utils/useClipboard'
@@ -8,7 +8,11 @@ import { useSearchParams } from 'next/navigation';
 import CustomAlert from "@/components/Toast";
 import { useTranslation } from "react-i18next";
 export default function ConvertDetails () {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  useEffect(() => {
+    i18n.changeLanguage(localStorage.getItem('languages') as any);
+  }, [])
+
   const { copyToClipboard } = useClipboard();
   const Contract_address = '0x1E5F7963B774F2e5ceC16d4d761A314Cbfaf1F08';//测试合约地址
   const handleCopy = (text: any) => {

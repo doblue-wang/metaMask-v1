@@ -14,11 +14,13 @@ import CustomAlert from "@/components/Toast";
 import NewLoading from "@/components/Loading";
 import { NFT_ABI } from "@/NFT";
 import { px2rem } from "@/utils/pxToRem";
+import { useTranslation } from "react-i18next";
 export default function Pool () {
   useEffect(() => {
     document.title = `${t("矿池")}`;
   }, []);
   const [selectedTab, setSelectedTab] = useState(0);
+  const { i18n } = useTranslation();
   const [visible, setVisible] = useState(false);
   const [source, setSource] = useState({} as any)
   const [itemSource, setItemSource] = useState({} as any)
@@ -31,7 +33,7 @@ export default function Pool () {
   const NFT_CONTRACT_ADDRESS = '0x63367C35b647C0275188cEcC06F9cCD68d1C6fe6';//nft测试合约地址
   const Contract_address = '0x1E5F7963B774F2e5ceC16d4d761A314Cbfaf1F08';//测试合约地址
   const STAKING_CONTRACT_ADDRESS = '0x28E053Ce4C6d94E3B6f70C0feB3684A6686d6fF3'// dtv 合约
-  const USDT_address = '0x55d398326f99059fF775485246999027B3197955';//usdt 合约
+  const USDT_address = '0xeC426Efc424C85bC2044C799F58CCa86e4E03415';//usdt 合约
   const [canStaking, setCanStaking] = useState(true)
 
   const tabs = [
@@ -230,6 +232,7 @@ export default function Pool () {
     }
   }
   useEffect(() => {
+    i18n.changeLanguage(localStorage.getItem('languages') as any);
     getfilterList()
     getIds()
   }, [])
@@ -417,8 +420,8 @@ export default function Pool () {
                 </div>
                 <div className={styles.price}>{source?.NFTType.Price || 0}U</div>
                 <div className={styles.row}>
-                  <div className={styles.pos}>{t('POS_Bonus')}{source?.NFTType.IncreasePos || 0}</div>
-                  <div className={styles.pop}>{t('POP_Bonus')}{source?.NFTType.IncreasePop || 0}</div>
+                  <div className={styles.pos}>{t('POS_Bonus')}{source?.NFTType.IncreasePos || 0}%</div>
+                  <div className={styles.pop}>{t('POP_Bonus')}{source?.NFTType.IncreasePop || 0}%</div>
                 </div>
               </div>
             }

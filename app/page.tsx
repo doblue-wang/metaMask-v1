@@ -12,6 +12,8 @@ import { useTranslation } from "react-i18next";
 import CustomAlert from "@/components/Toast";
 import { ethers } from "ethers";
 import PageLoading from "@/components/PageLoading";
+import { useAtom } from "jotai";
+import { nameAtom } from "../atoms"; // 导入原子
 export default function Home () {
   useEffect(() => {
     document.title = `${t("首页")}`;
@@ -32,6 +34,7 @@ export default function Home () {
   const [show, setShow] = useState(false);
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef([]) as any;
+  const [name, setName] = useAtom(nameAtom);
   const items = (source?.RotationData || []).map((item: any, index: any) => (
     <Swiper.Item onClick={() => {
       if (item.url) {
@@ -54,6 +57,8 @@ export default function Home () {
       .then(({ data }) => {
         localStorage.setItem('token', data.token);
         localStorage.setItem('AccountId', data.AccountId);
+        localStorage.setItem('languages', data.Languages)
+        setName(data.Languages)
         i18n.changeLanguage(data.Languages);
         if (data.IsWhetherToBindOnlineOrNot) {
           setShow(true)
@@ -87,7 +92,7 @@ export default function Home () {
     const { chainId } = await provider.getNetwork()
     const BSC = ethers.formatUnits(chainId, 0)
     if (process.env.NODE_ENV === 'development') {
-      if (Number(BSC) !== 97) {
+      if (Number(BSC) !== 56) {
         setshownetwork(true)
         return
       }

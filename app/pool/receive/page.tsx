@@ -10,6 +10,7 @@ import CustomAlert from "@/components/Toast";
 import { t } from "i18next";
 import { ClaimIncome, fetchGetMiningPool } from "@/api/home";
 import NewLoading from "@/components/Loading";
+import { useTranslation } from "react-i18next";
 export default function Receive () {
     const [visible, setVisble] = useState(false)
     const [message, setMessage] = useState('')
@@ -17,7 +18,9 @@ export default function Receive () {
     const [list, setList] = useState<any>([])
     const [show, setShow] = useState(false)
     const [source, setSource] = useState({} as any)
+    const { i18n } = useTranslation();
     useEffect(() => {
+        i18n.changeLanguage(localStorage.getItem('languages') as any);
         getComingList(localStorage.getItem('accounts'))
         getSource()
     }, [])

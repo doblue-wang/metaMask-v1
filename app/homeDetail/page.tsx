@@ -5,9 +5,12 @@ import { Image } from 'antd-mobile'
 import NavBar from "@/components/NavBar/page";
 import { fetchGetHome } from "@/api/home";
 import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 export default function HomeDetail () {
     const [source, setSource] = useState({} as any);
+    const { i18n } = useTranslation();
     useEffect(() => {
+        i18n.changeLanguage(localStorage.getItem('languages') as any);
         // 首页数据
         fetchGetHome({
             AccountId: localStorage.getItem('AccountId')

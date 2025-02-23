@@ -8,16 +8,20 @@ import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
 import { MyInformationUploadImage, fetchGetMine } from '@/api/home';
 import CustomAlert from '@/components/Toast';
-import { px2rem } from '@/utils/pxToRem';
+import { getObfuscatedAccount, px2rem } from '@/utils/pxToRem';
 export default function Mine () {
   const [show1, setShow1] = useState(false);
   useEffect(() => {
+    i18n.changeLanguage(localStorage.getItem('languages') as any);
+    setType(localStorage.getItem('languages') as any)
     document.title = `${t("我的")}`;
     if (localStorage.getItem("show") === "0") {
       setShow1(false);
     } else {
       setShow1(true);
     }
+    console.log(i18n.language);
+
   }, []);
 
 
@@ -61,7 +65,7 @@ export default function Mine () {
   };
   //语言
   const fetchLanguage = async (val: any) => {
-    localStorage.setItem('languages', val);
+    localStorage.setItem('languages', val)
     const AccountId = localStorage.getItem('AccountId')
     MyInformationUploadImage({ AccountId, Languages: val })
       .then(({ data }) => {
@@ -96,7 +100,7 @@ export default function Mine () {
 
 
             </div>
-            <div className="share">{t('上级分享人')}:{source?.SuperiorSharer || 'asdkjasdkajndkjahdjhadjhabdjhabdsjhbajhsdbajhsdbaiusdhiuqoiqjeoiqjweoiqjweoiquoei'}</div>
+            <div className="share">{t('上级分享人')}:{getObfuscatedAccount(source?.SuperiorSharer)}</div>
           </div>
         </div>
         {

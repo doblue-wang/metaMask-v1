@@ -9,6 +9,7 @@ import { UpdateAuthenticationStatus } from '@/api/home';
 import CustomAlert from '@/components/Toast';
 import { useRouter } from 'next/navigation';
 import { t } from "i18next";
+import { useTranslation } from 'react-i18next';
 export default function Face () {
   const [isProcessing, setIsProcessing] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -20,7 +21,10 @@ export default function Face () {
   const handlePlayRef = useRef<(() => void) | null>(null);
   const streamRef = useRef<MediaStream | null>(null); // 用于保存摄像头流
   const [face, setFace] = useState(false);
+  const { i18n } = useTranslation();
   useEffect(() => {
+    i18n.changeLanguage(localStorage.getItem('languages') as any);
+
     isMountedRef.current = true;
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js';

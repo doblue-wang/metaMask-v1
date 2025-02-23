@@ -10,14 +10,18 @@ import { ExchangeDtv, ExchangeDtvRecord, fetchGetMiningPool } from "@/api/home";
 import CustomAlert from "@/components/Toast";
 import { ethers, parseUnits } from "ethers";
 import { StakingABI } from "@/StakingABI";
+import { useTranslation } from "react-i18next";
 export default function Exchange () {
     const [visible1, setVisble1] = useState(false)
     const [message, setMessage] = useState('')
     const [source, setSource] = useState({} as any)
     const [list, setList] = useState([] as any)
     const [gas, setGas] = useState('')
+    const { i18n } = useTranslation();
     const Contract_address = '0x1E5F7963B774F2e5ceC16d4d761A314Cbfaf1F08';//测试合约地址
     useEffect(() => {
+        i18n.changeLanguage(localStorage.getItem('languages') as any);
+
         Record()
         getSource()
     }, [])
