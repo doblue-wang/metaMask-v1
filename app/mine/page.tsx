@@ -20,8 +20,6 @@ export default function Mine () {
     } else {
       setShow1(true);
     }
-    console.log(i18n.language);
-
   }, []);
 
 
