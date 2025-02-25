@@ -324,7 +324,7 @@ export default function Home () {
             <div className={styles.drama_list}>
               {
                 (source?.HotDramaData || []).map((item: any) => <div onClick={() => {
-                  location.href = "https://data.demedia.tv/page/download.html"
+                  location.href = item.url
                 }} key={item.id} className={styles.drama_item}>
                   <div className={styles.top}>
                     <Image lazy className={styles.img} src={item?.pic[0]?.url} fit='fill' />
