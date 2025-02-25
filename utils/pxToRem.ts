@@ -10,5 +10,5 @@ export const getObfuscatedAccount = (account: string | null) => {
   const start = account.slice(0, 6);  // 获取前四个字符
   const end = account.slice(-4);      // 获取后四个字符
 
-  return `${start}************${end}`;  // 拼接成：前4个字符 + **** + 后4个字符
+  return `${start}******${end}`;  // 拼接成：前4个字符 + **** + 后4个字符
 };

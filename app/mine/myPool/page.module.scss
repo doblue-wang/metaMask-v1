@@ -342,9 +342,6 @@
 
                             .username {
                                 width: 160px;
-                                overflow: hidden;
-                                text-overflow: ellipsis;
-                                white-space: nowrap;
                                 font-weight: 500;
                                 font-size: 16px;
                                 color: #ffffff;
@@ -369,14 +366,10 @@
                             }
 
                             .tag {
-                                width: 48px;
                                 height: 18px;
                                 margin-top: 4px;
                                 background: linear-gradient(90deg, #ef5a80 0%, #e5154c 100%);
                                 border-radius: 4px 4px 4px 4px;
-                                font-family:
-                                    PingFang SC,
-                                    PingFang SC;
                                 font-weight: 500;
                                 font-size: 10px;
                                 color: #ffffff;

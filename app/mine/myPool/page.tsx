@@ -255,7 +255,7 @@ export default function MyPool () {
                                     list.map((item: any, index: any) => <div key={index} className={item?.MiningPoolSpeedOfProgress >= 1 ? styles.listitem : styles.listitem1}>
                                         <div className={styles.userbox}>
                                             <div className={styles.userleft}>
-                                                <Image width={48} height={48} className={styles.userimg} src={item?.AccountImg || null} alt="" />
+                                                <img width={48} height={48} className={styles.userimg} src={item?.AccountImg} alt="" />
                                                 <div className={styles.usernamebox}>
                                                     <div className={styles.username}>{getObfuscatedAccount(item.AccountName)}</div>
                                                     {
