@@ -71,3 +71,21 @@ export const filterKeys = (json: any) => {
   }
   return result;
 };
+
+
+
+export const convertUTCToLocal = (utcTimestamp: number) => {
+  // Create a Date object from the UTC timestamp
+  const utcDate = new Date(utcTimestamp);
+
+  // Convert to local time by adjusting the time zone (UTC+8)
+  const localDate = new Date(utcDate.getTime() + 8 * 60 * 60 * 1000); // Adding 8 hours in milliseconds
+
+  // Format the date to 'YYYY-MM-DD'
+  const date = localDate.toISOString().split('T')[0];
+
+  // Format the time to 'HH:mm:ss'
+  const time = localDate.toISOString().split('T')[1].substring(0, 8);
+
+  return { date, time };
+}

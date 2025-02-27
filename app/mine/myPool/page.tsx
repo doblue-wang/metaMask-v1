@@ -10,6 +10,7 @@ import Empty from "@/components/empty/page";
 import { getObfuscatedAccount } from '@/utils/pxToRem';
 import { t } from 'i18next';
 import { useTranslation } from 'react-i18next';
+import { convertUTCToLocal } from '@/utils/utils';
 export default function MyPool () {
     const { i18n } = useTranslation();
     const [selectedTab, setSelectedTab] = useState(0);
@@ -273,14 +274,10 @@ export default function MyPool () {
                                             <div className={styles.usertime}>
                                                 {
                                                     (() => {
-                                                        const timestamp = item.CompletionTime; // 假设是一个时间戳
-                                                        const date = new Date(timestamp); // 将时间戳转为 Date 对象
-                                                        // 格式化为可读的日期格式
-                                                        const formattedDate = date.toLocaleDateString(); // 格式化日期
-                                                        const formattedTime = date.toLocaleTimeString(); // 格式化时间
+                                                        const { date, time } = convertUTCToLocal(item.CompletionTime);
                                                         return <>
-                                                            <span> {formattedDate}</span>
-                                                            <p> {formattedTime}</p>
+                                                            <span> {date}</span>
+                                                            <p> {time}</p>
                                                         </>
                                                     })()
                                                 }

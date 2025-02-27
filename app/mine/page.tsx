@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { MyInformationUploadImage, fetchGetMine } from '@/api/home';
 import CustomAlert from '@/components/Toast';
 import { getObfuscatedAccount, px2rem } from '@/utils/pxToRem';
+import { convertUTCToLocal } from '@/utils/utils';
 export default function Mine () {
   const [show1, setShow1] = useState(false);
   useEffect(() => {
@@ -168,11 +169,9 @@ export default function Mine () {
                 <>
                   {
                     (() => {
-                      const timestamp = source?.CastingDateTime; // 假设是一个时间戳
-                      const date = new Date(timestamp); // 将时间戳转为 Date 对象
+                      const { date, time } = convertUTCToLocal(source?.CastingDateTime);
                       // 格式化为可读的日期格式
-                      const formattedDate = date.toLocaleString();
-                      return <span>{t('Staking_Redemption_Minting.Minting')}：{formattedDate}</span>
+                      return <span>{t('Staking_Redemption_Minting.Minting')}：{date}{time}</span>
                     })()
                   }
                 </>

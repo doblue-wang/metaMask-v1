@@ -11,6 +11,7 @@ import CustomAlert from "@/components/Toast";
 import { ethers, parseUnits } from "ethers";
 import { StakingABI } from "@/StakingABI";
 import { useTranslation } from "react-i18next";
+import { convertUTCToLocal } from "@/utils/utils";
 export default function Exchange () {
     const [visible1, setVisble1] = useState(false)
     const [message, setMessage] = useState('')
@@ -148,11 +149,9 @@ export default function Exchange () {
                                     </div>
                                     {
                                         (() => {
-                                            const timestamp = item?.RedemptionTime; // 假设是一个时间戳
-                                            const date = new Date(timestamp); // 将时间戳转为 Date 对象
+                                            const { date, time } = convertUTCToLocal(item?.RedemptionTime);
                                             // 格式化为可读的日期格式
-                                            const formattedDate = date.toLocaleString();
-                                            return <div className={styles.time}>{formattedDate}</div>
+                                            return <div className={styles.time}>{date}{time}</div>
                                         })()
                                     }
 

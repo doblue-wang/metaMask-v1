@@ -17,7 +17,11 @@ import { nameAtom } from "../atoms"; // 导入原子
 export default function Home () {
   useEffect(() => {
     document.title = `${t("首页")}`;
-    connectMetaMask();
+    const init = async () => {
+      setLoading(true);
+      await connectMetaMask();
+    };
+    init();
     if (data) {
       setCode(data.split(''))
     }
@@ -109,7 +113,7 @@ export default function Home () {
       });
       localStorage.setItem('accounts', accounts[0]);
 
-      getGoodsNineTrans({ WalletAddress: accounts[0] })
+      await getGoodsNineTrans({ WalletAddress: accounts[0] })
     } catch (error: any) {
       setLoading(false)
       if (error.code === 4001) {
