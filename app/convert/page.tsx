@@ -25,6 +25,7 @@ export default function Convert () {
   const [message, setMessage] = useState('')
   const [show, setShow] = useState(false)
   const [moneySource, setMoney] = useState("")
+
   const router = useRouter();
   const handleRecord = () => {
     router.push('/convert/convertRecord');
@@ -66,8 +67,8 @@ export default function Convert () {
     money()
   }, [])
   //授权
-  const USDT_address = '0xeC426Efc424C85bC2044C799F58CCa86e4E03415';//usdt 合约
-  const Contract_address = '0x1E5F7963B774F2e5ceC16d4d761A314Cbfaf1F08';//测试合约地址
+  const USDT_address = '0x55d398326f99059fF775485246999027B3197955';//usdt 合约
+  const Contract_address = '0xc182E6C5145CbFccC18f822Bc03953484947fFcD';//测试合约地址
   const money = async () => {
     const provider = new ethers.BrowserProvider(window.ethereum)
     const signer = await provider.getSigner(); // 获取签名者（即用户钱包）
@@ -92,7 +93,7 @@ export default function Convert () {
         setShow(true)
         const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
         const BNBbalance = ethers.formatUnits(balance, 18)
-        if (Number(BNBbalance) <= 0.00005) {
+        if (Number(BNBbalance) <= 0.0003) {
           const ms = t('BNB金额不足')
           setMessage(ms)
           setVisble(true)
@@ -103,8 +104,10 @@ export default function Convert () {
         const tx = await USDTcontract.approve(Contract_address, BigInt(appunmu), options);
         await tx.wait();
         await change(appunmu)
+        await money()
         // await stakeTokens(getCookie('accounts'), product, appunmu)
       } catch (e) {
+        setShow(false)
         console.log('Error:', e);
       }
     }
@@ -141,7 +144,7 @@ export default function Convert () {
 
       const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
       const BNBbalance = ethers.formatUnits(balance, 18)
-      if (Number(BNBbalance) <= 0.00005) {
+      if (Number(BNBbalance) <= 0.0003) {
         const ms = t('BNB金额不足')
         setMessage(ms)
         setVisble(true)

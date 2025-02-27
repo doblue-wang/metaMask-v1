@@ -31,9 +31,9 @@ export default function Pool () {
   const [message, setMessage] = useState('')
   const [isstaking, setIsstaking] = useState(false)
   const NFT_CONTRACT_ADDRESS = '0x63367C35b647C0275188cEcC06F9cCD68d1C6fe6';//nft测试合约地址
-  const Contract_address = '0x1E5F7963B774F2e5ceC16d4d761A314Cbfaf1F08';//测试合约地址
-  const STAKING_CONTRACT_ADDRESS = '0x28E053Ce4C6d94E3B6f70C0feB3684A6686d6fF3'// dtv 合约
-  const USDT_address = '0xeC426Efc424C85bC2044C799F58CCa86e4E03415';//usdt 合约
+  const Contract_address = '0xc182E6C5145CbFccC18f822Bc03953484947fFcD';//测试合约地址
+  const STAKING_CONTRACT_ADDRESS = '0x04A4ece9543d01C48bdA2384211dC0DDA4F090B2'// dtv 合约
+  const USDT_address = '0x55d398326f99059fF775485246999027B3197955';//usdt 合约
   const [canStaking, setCanStaking] = useState(true)
 
   const tabs = [
@@ -104,7 +104,7 @@ export default function Pool () {
 
         const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
         const BNBbalance = ethers.formatUnits(balance, 18)
-        if (Number(BNBbalance) <= 0.00005) {
+        if (Number(BNBbalance) <= 0.0003) {
           const ms = t('BNB金额不足')
           setMessage(ms)
           setVisble1(true)
@@ -143,7 +143,7 @@ export default function Pool () {
       };
       const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
       const BNBbalance = ethers.formatUnits(balance, 18)
-      if (Number(BNBbalance) <= 0.00005) {
+      if (Number(BNBbalance) <= 0.0003) {
         const ms = t('BNB金额不足')
         setMessage(ms)
         setVisble1(true)
@@ -250,7 +250,7 @@ export default function Pool () {
       };
       const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
       const BNBbalance = ethers.formatUnits(balance, 18)
-      if (Number(BNBbalance) <= 0.00005) {
+      if (Number(BNBbalance) <= 0.0003) {
         const ms = t('BNB金额不足')
         setMessage(ms)
         setVisble1(true)
@@ -276,7 +276,7 @@ export default function Pool () {
       //bnb
       const balance1 = await provider.getBalance(localStorage.getItem("accounts") as any);
       const BNBbalance1 = ethers.formatUnits(balance1, 18)
-      if (Number(BNBbalance1) <= 0.00005) {
+      if (Number(BNBbalance1) <= 0.0003) {
         const ms = t('BNB金额不足')
         setMessage(ms)
         setVisble1(true)

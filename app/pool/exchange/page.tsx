@@ -18,7 +18,7 @@ export default function Exchange () {
     const [list, setList] = useState([] as any)
     const [gas, setGas] = useState('')
     const { i18n } = useTranslation();
-    const Contract_address = '0x1E5F7963B774F2e5ceC16d4d761A314Cbfaf1F08';//测试合约地址
+    const Contract_address = '0xc182E6C5145CbFccC18f822Bc03953484947fFcD';//测试合约地址
     useEffect(() => {
         i18n.changeLanguage(localStorage.getItem('languages') as any);
 

@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 export default function Receive () {
     const [visible, setVisble] = useState(false)
     const [message, setMessage] = useState('')
-    const Contract_address = '0x1E5F7963B774F2e5ceC16d4d761A314Cbfaf1F08';//测试合约地址
+    const Contract_address = '0xc182E6C5145CbFccC18f822Bc03953484947fFcD';//测试合约地址
     const [list, setList] = useState<any>([])
     const [show, setShow] = useState(false)
     const [source, setSource] = useState({} as any)
@@ -63,7 +63,7 @@ export default function Receive () {
                 };
                 const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
                 const BNBbalance = ethers.formatUnits(balance, 18)
-                if (Number(BNBbalance) <= 0.00005) {
+                if (Number(BNBbalance) <= 0.0003) {
                     const ms = t('BNB金额不足')
                     setMessage(ms)
                     setVisble(true)

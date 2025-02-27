@@ -19,7 +19,7 @@ export default function KJredeem () {
     const searchParams = useSearchParams();
     const paramValue = searchParams.get("type");
     const [source, setSource] = useState({} as any)
-    const Contract_address = '0x1E5F7963B774F2e5ceC16d4d761A314Cbfaf1F08';//测试合约地址
+    const Contract_address = '0xc182E6C5145CbFccC18f822Bc03953484947fFcD';//测试合约地址
     const NFT_CONTRACT_ADDRESS = '0x63367C35b647C0275188cEcC06F9cCD68d1C6fe6';//nft测试合约地址
     const [list, setList] = useState<any>([])
     const [nftlist, setNftList] = useState<any>([])
@@ -77,7 +77,7 @@ export default function KJredeem () {
 
             const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
             const BNBbalance = ethers.formatUnits(balance, 18)
-            if (Number(BNBbalance) <= 0.00005) {
+            if (Number(BNBbalance) <= 0.0003) {
                 const ms = t('BNB金额不足')
                 setMessage(ms)
                 setShow(false)
@@ -140,7 +140,7 @@ export default function KJredeem () {
 
         const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
         const BNBbalance = ethers.formatUnits(balance, 18)
-        if (Number(BNBbalance) <= 0.00005) {
+        if (Number(BNBbalance) <= 0.0003) {
             const ms = t('BNB金额不足')
             setMessage(ms)
             setAlart(true)
@@ -209,7 +209,7 @@ export default function KJredeem () {
 
         const balance = await provider.getBalance(localStorage.getItem("accounts") as any);
         const BNBbalance = ethers.formatUnits(balance, 18)
-        if (Number(BNBbalance) <= 0.00005) {
+        if (Number(BNBbalance) <= 0.0003) {
             const ms = t('BNB金额不足')
             setMessage(ms)
             setAlart(true)
