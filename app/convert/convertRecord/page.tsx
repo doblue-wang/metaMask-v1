@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next";
 export default function ConvertRecord () {
     const { t } = useTranslation();
     const title = `${t('兑换记录')}`;  // 假设我们要传递的 title 字符串
-    const Contract_address = '0xc182E6C5145CbFccC18f822Bc03953484947fFcD';//测试合约地址
+    const Contract_address = '0xB7be6749F3D248e68D24bf87c771FCa7daAFc8Ff';//测试合约地址
     const [list, setList] = useState<any>([])
     const router = useRouter();
     const [visible1, setVisble1] = useState(false)

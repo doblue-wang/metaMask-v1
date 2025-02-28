@@ -19,8 +19,8 @@ export default function KJredeem () {
     const searchParams = useSearchParams();
     const paramValue = searchParams.get("type");
     const [source, setSource] = useState({} as any)
-    const Contract_address = '0xc182E6C5145CbFccC18f822Bc03953484947fFcD';//测试合约地址
-    const NFT_CONTRACT_ADDRESS = '0x63367C35b647C0275188cEcC06F9cCD68d1C6fe6';//nft测试合约地址
+    const Contract_address = '0xB7be6749F3D248e68D24bf87c771FCa7daAFc8Ff';//测试合约地址
+    const NFT_CONTRACT_ADDRESS = '0x4Df31fBA8EEB438604c4c489dE14AA8cdaaEe0e9';//nft测试合约地址
     const [list, setList] = useState<any>([])
     const [nftlist, setNftList] = useState<any>([])
     const currentDate = new Date();

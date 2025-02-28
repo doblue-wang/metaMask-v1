@@ -96,12 +96,12 @@ export default function Home () {
     const { chainId } = await provider.getNetwork()
     const BSC = ethers.formatUnits(chainId, 0)
     if (process.env.NODE_ENV === 'development') {
-      if (Number(BSC) !== 56) {
+      if (Number(BSC) !== 97) {
         setshownetwork(true)
         return
       }
     } else {
-      if (Number(BSC) !== 56) {
+      if (Number(BSC) !== 97) {
         setshownetwork(true)
         return
       }
