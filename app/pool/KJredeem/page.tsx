@@ -380,7 +380,7 @@ export default function KJredeem () {
                             <div className={styles.listTitle}>{t("记录")}</div>
                             <div className={styles.list}>
                                 {
-                                    (list || []).length > 0 ? <>
+                                    (list.filter(((item: any) => item.inout === "出")) || []).length > 0 ? <>
                                         {
                                             list.filter(((item: any) => item.inout === "出")).map((item: any, index: any) => <div key={index} className={styles.listitem} >
                                                 <div className={styles.left}>

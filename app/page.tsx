@@ -3,7 +3,7 @@
 
 import styles from "./page.module.scss";
 import React, { useEffect, useRef, useState } from 'react'
-import { Image, Swiper, ProgressBar, Modal, Input } from 'antd-mobile'
+import { Swiper, ProgressBar, Modal, Input } from 'antd-mobile'
 import { useRouter, useSearchParams } from "next/navigation";
 import CountUp from "react-countup";
 import BottomNav from "@/components/Tabbar";
@@ -14,12 +14,15 @@ import { ethers } from "ethers";
 import PageLoading from "@/components/PageLoading";
 import { useAtom } from "jotai";
 import { nameAtom } from "../atoms"; // 导入原子
+import Image from 'next/image';
 export default function Home () {
   useEffect(() => {
     document.title = `${t("首页")}`;
     const init = async () => {
       setLoading(true);
       await connectMetaMask();
+      // 等待图片加载完成
+      setLoading(false);
     };
     init();
     if (data) {
@@ -45,11 +48,7 @@ export default function Home () {
         location.href = item.url
       }
     }} className={styles.item} key={index}>
-      <div
-        className={styles.content}
-      >
-        <Image lazy className={styles.img} src={item?.pic[0]?.url} fit='fill' />
-      </div>
+      <Image width={351} loading='lazy' layout="responsive" height={144} className={styles.img} src={item?.pic[0]?.url} alt='' />
     </Swiper.Item>
   ))
   const searchParams = useSearchParams();
@@ -228,166 +227,167 @@ export default function Home () {
               <div className={styles.tost}>{t('请切换主网')}</div>
             }
           />
-        </> : <div className={styles.page}>
-          <div className={styles.swiperbox}>
-            <Swiper className={styles.swiper} autoplay indicator={() => null}>
-              {items}
-            </Swiper>
-          </div>
-          <div className={styles.notice} onClick={() => router.push('/homeDetail')}>
-            <Image lazy className={styles.noticeimg} src='/home/notice.png' fit='fill' />
-            <div className={styles.noticebox}>
-              {t("公告")}：{source?.NoticeData?.title || ""}
+        </> :
+          <div className={styles.page}>
+            <div className={styles.swiperbox}>
+              <Swiper className={styles.swiper} autoplay indicator={() => null}>
+                {items}
+              </Swiper>
             </div>
-          </div>
-          <div className={styles.DTV}>
-            <div className={styles.title}>{t('DTV_Mining')}</div>
-            <div className={styles.progress}>
-              <ProgressBar percent={(progress?.TotalReleaseQty / progress?.TotalQty) * 86} text={formatProgressQty(progress?.TotalQty) || 0}
-                style={{
-                  '--fill-color': 'rgba(255, 110, 145, 0.20)', '--track-color': 'rgba(255,110,145,0.2)',
-                }}
-              />
-              {
-                progress?.TotalReleaseQty > 0 ?
-                  <div className={styles.progress_bubble} style={{ left: `${(progress?.TotalReleaseQty / progress?.TotalQty) * 86}%`, marginLeft: `-${12 / 2}px` }}>
-                    <div className={styles.bubble_content} > {formatProgressQty(progress?.TotalReleaseQty || 0)}1</div>
-                  </div> : null
-              }
+            <div className={styles.notice} onClick={() => router.push('/homeDetail')}>
+              <Image width={12} height={13} className={styles.noticeimg} src='/home/notice.png' alt='' />
+              <div className={styles.noticebox}>
+                {t("公告")}：{source?.NoticeData?.title || ""}
+              </div>
+            </div>
+            <div className={styles.DTV}>
+              <div className={styles.title}>{t('DTV_Mining')}</div>
+              <div className={styles.progress}>
+                <ProgressBar percent={(progress?.TotalReleaseQty / progress?.TotalQty) * 86} text={formatProgressQty(progress?.TotalQty) || 0}
+                  style={{
+                    '--fill-color': 'rgba(255, 110, 145, 0.20)', '--track-color': 'rgba(255,110,145,0.2)',
+                  }}
+                />
+                {
+                  progress?.TotalReleaseQty > 0 ?
+                    <div className={styles.progress_bubble} style={{ left: `${(progress?.TotalReleaseQty / progress?.TotalQty) * 86}%`, marginLeft: `-${12 / 2}px` }}>
+                      <div className={styles.bubble_content} > {formatProgressQty(progress?.TotalReleaseQty || 0)}1</div>
+                    </div> : null
+                }
 
-              <div className={styles.circle} style={{ left: `${(progress?.TotalReleaseQty / progress?.TotalQty) * 86}%`, marginLeft: `-${12 / 2}px` }}>
-                <div className={styles.circle_inner} ></div>
+                <div className={styles.circle} style={{ left: `${(progress?.TotalReleaseQty / progress?.TotalQty) * 86}%`, marginLeft: `-${12 / 2}px` }}>
+                  <div className={styles.circle_inner} ></div>
+                </div>
               </div>
-            </div>
-            <div className={styles.year}>
-              <div className={styles.year_num}>{progress?.StartYear || 0}{t('年')}</div>
-              <div className={styles.year_num}>{progress?.EndYear || 0}{t('年')}</div>
-            </div>
-            <div className={styles.title}>{t('DTV_Burning_Progress')}</div>
-            <div className={styles.progress}>
-              <ProgressBar percent={(progress?.AlreadyDestructionQty / progress?.DestructionTotalQty) * 100} text={formatProgressQty(progress?.DestructionTotalQty) || 0}
-                style={{
-                  '--fill-color': 'rgba(255, 110, 145, 0.20)', '--track-color': 'rgba(255,110,145,0.2)',
-                }} />
-              {
-                progress?.AlreadyDestructionQty > 0 ? <div className={styles.progress_bubble} style={{ left: `${(progress?.AlreadyDestructionQty / progress?.DestructionTotalQty) * 100}%`, marginLeft: `-${12 / 2}px` }}>
-                  <div className={styles.bubble_content} >{formatProgressQty(progress?.AlreadyDestructionQty || 0)}</div>
-                </div> : null
-              }
-              <div className={styles.circle} style={{ left: `${(progress?.AlreadyDestructionQty / progress?.DestructionTotalQty) * 100}%`, marginLeft: `-${12 / 2}px` }}>
-                <div className={styles.circle_inner} ></div>
+              <div className={styles.year}>
+                <div className={styles.year_num}>{progress?.StartYear || 0}{t('年')}</div>
+                <div className={styles.year_num}>{progress?.EndYear || 0}{t('年')}</div>
               </div>
-            </div>
-          </div>
-          <div className={styles.funbox}>
-            <div className={styles.funItem}>
-              <div className={styles.Item_title}>{t('Total_Network_POS_Hashrate')}</div>
-              <div className={styles.content}>
-                <div className={styles.num}> <CountUp start={0} end={progress?.TheEntireNetworkHashratePos} duration={3} /></div>
-                <div className={styles.icon}>
-                  <Image lazy className={styles.iconimg} src='/home/POS.png' fit='fill' />
+              <div className={styles.title}>{t('DTV_Burning_Progress')}</div>
+              <div className={styles.progress}>
+                <ProgressBar percent={(progress?.AlreadyDestructionQty / progress?.DestructionTotalQty) * 100} text={formatProgressQty(progress?.DestructionTotalQty) || 0}
+                  style={{
+                    '--fill-color': 'rgba(255, 110, 145, 0.20)', '--track-color': 'rgba(255,110,145,0.2)',
+                  }} />
+                {
+                  progress?.AlreadyDestructionQty > 0 ? <div className={styles.progress_bubble} style={{ left: `${(progress?.AlreadyDestructionQty / progress?.DestructionTotalQty) * 100}%`, marginLeft: `-${12 / 2}px` }}>
+                    <div className={styles.bubble_content} >{formatProgressQty(progress?.AlreadyDestructionQty || 0)}</div>
+                  </div> : null
+                }
+                <div className={styles.circle} style={{ left: `${(progress?.AlreadyDestructionQty / progress?.DestructionTotalQty) * 100}%`, marginLeft: `-${12 / 2}px` }}>
+                  <div className={styles.circle_inner} ></div>
                 </div>
               </div>
             </div>
-            <div className={styles.funItem}>
-              <div className={styles.Item_title}>{t('Total_Network_POP_Hashrate')}</div>
-              <div className={styles.content}>
-                <div className={styles.num}> <CountUp start={0} end={progress?.TheEntireNetworkHashratePop} duration={3} /></div>
-                <div className={styles.icon}>
-                  <Image lazy className={styles.iconimg} src='/home/POP.png' fit='fill' />
-                </div>
-              </div>
-            </div>
-            <div className={styles.funItem}>
-              <div className={styles.Item_title}>{t('Yesterday_Mining_Quantity')}</div>
-              <div className={styles.content}>
-                <div className={styles.num}>
-                  <span><CountUp start={0} end={progress?.MiningQty || 0} duration={3} /></span>
-                  <p className={styles.unit}>{progress?.DailyTotalQty || 0}</p>
-                </div>
-                <div className={styles.icon}>
-                  <Image lazy className={styles.iconimg} src='/home/mining.png' fit='fill' />
-                </div>
-              </div>
-            </div>
-            <div className={styles.funItem}>
-              <div className={styles.Item_title}>{t('Yesterday_Burned_Quantity')}</div>
-              <div className={styles.content}>
-                <div className={styles.num}>
-                  <span><CountUp start={0} end={progress?.DailyAlreadyDestructionQty || 0} duration={3} /></span>
-                  <p className={styles.unit}>{progress?.DailyDestructionQty || 0}</p>
-                </div>
-                <div className={styles.icon}>
-                  <Image lazy className={styles.iconimg} src='/home/destroy.png' fit='fill' />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className={styles.drama}>
-            <div className={styles.drama_title}>{t('Popular_Drama')}</div>
-            <div className={styles.drama_list}>
-              {
-                (source?.HotDramaData || []).map((item: any) => <div onClick={() => {
-                  location.href = item.url
-                }} key={item.id} className={styles.drama_item}>
-                  <div className={styles.top}>
-                    <Image lazy className={styles.img} src={item?.pic[0]?.url} fit='fill' />
-                    <div className={styles.item_num}>{item?.description || "--"}</div>
+            <div className={styles.funbox}>
+              <div className={styles.funItem}>
+                <div className={styles.Item_title}>{t('Total_Network_POS_Hashrate')}</div>
+                <div className={styles.content}>
+                  <div className={styles.num}> <CountUp start={0} end={progress?.TheEntireNetworkHashratePos} duration={3} /></div>
+                  <div className={styles.icon}>
+                    <Image width={24} height={24} className={styles.iconimg} src='/home/POS.png' alt='' />
                   </div>
-                  <div className={styles.item_name}>{item?.title || ""}</div>
-                  <div className={styles.item_txt}>{item?.subtitle || ""}</div>
+                </div>
+              </div>
+              <div className={styles.funItem}>
+                <div className={styles.Item_title}>{t('Total_Network_POP_Hashrate')}</div>
+                <div className={styles.content}>
+                  <div className={styles.num}> <CountUp start={0} end={progress?.TheEntireNetworkHashratePop} duration={3} /></div>
+                  <div className={styles.icon}>
+                    <Image width={24} height={24} className={styles.iconimg} src='/home/POP.png' alt='' />
+                  </div>
+                </div>
+              </div>
+              <div className={styles.funItem}>
+                <div className={styles.Item_title}>{t('Yesterday_Mining_Quantity')}</div>
+                <div className={styles.content}>
+                  <div className={styles.num}>
+                    <span><CountUp start={0} end={progress?.MiningQty || 0} duration={3} /></span>
+                    <p className={styles.unit}>{progress?.DailyTotalQty || 0}</p>
+                  </div>
+                  <div className={styles.icon}>
+                    <Image width={24} height={24} className={styles.iconimg} src='/home/mining.png' alt='' />
+                  </div>
+                </div>
+              </div>
+              <div className={styles.funItem}>
+                <div className={styles.Item_title}>{t('Yesterday_Burned_Quantity')}</div>
+                <div className={styles.content}>
+                  <div className={styles.num}>
+                    <span><CountUp start={0} end={progress?.DailyAlreadyDestructionQty || 0} duration={3} /></span>
+                    <p className={styles.unit}>{progress?.DailyDestructionQty || 0}</p>
+                  </div>
+                  <div className={styles.icon}>
+                    <Image width={24} height={24} className={styles.iconimg} src='/home/destroy.png' alt='' />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={styles.drama}>
+              <div className={styles.drama_title}>{t('Popular_Drama')}</div>
+              <div className={styles.drama_list}>
+                {
+                  (source?.HotDramaData || []).map((item: any) => <div onClick={() => {
+                    location.href = item.url
+                  }} key={item.id} className={styles.drama_item}>
+                    <div className={styles.top}>
+                      <Image width={155} height={155} className={styles.img} src={item?.pic[0]?.url} alt='' />
+                      <div className={styles.item_num}>{item?.description || "--"}</div>
+                    </div>
+                    <div className={styles.item_name}>{item?.title || ""}</div>
+                    <div className={styles.item_txt}>{item?.subtitle || ""}</div>
+                  </div>)
+                }
+              </div>
+            </div>
+            <div className={styles.linkbox}>
+              {
+                (source?.ExternalLinksData || []).map((item: any) => <div onClick={() => {
+                  location.href = item.url
+                }} key={item.id} className={styles.linkitem}>
+                  <div className={styles.icon}>
+                    <Image width={14} height={12} className={styles.iconimg} src={item?.pic[0]?.url} alt='' />
+                  </div>
+                  <div className={styles.title}>{item.title || ''}</div>
                 </div>)
               }
             </div>
-          </div>
-          <div className={styles.linkbox}>
-            {
-              (source?.ExternalLinksData || []).map((item: any) => <div onClick={() => {
-                location.href = item.url
-              }} key={item.id} className={styles.linkitem}>
-                <div className={styles.icon}>
-                  <Image lazy className={styles.iconimg} src={item?.pic[0]?.url} fit='fill' />
+            <BottomNav initialTab='/' />
+            <CustomAlert visible={visible1} message={message} setVisible={setVisble1} />
+            <Modal
+              className="modal"
+              visible={show}
+              title={t("请输入邀请码")}
+              content={
+                <div className={styles.modals}>
+                  <div className={styles.inputContainer}>
+                    {code.map((char, index) => (
+                      <Input
+                        key={index}
+                        ref={(el: any) => (inputRefs.current[index] = el)}
+                        className={styles.inputBox}
+                        value={char}
+                        style={{
+                          '--text-align': 'center',         // 文本右对齐
+                          '--color': '#FF6E91',
+                          caretColor: '#FF6E91',
+                          fontWeight: "blod",
+                          "--font-size": "28px",     // 光标颜色为红色
+                        }}
+                        onChange={(val) => handleChange(index, val)}
+                        onKeyDown={(e) => handleKeyDown(index, e)}
+                        maxLength={1} // 限制每个输入框只能输入一个字符
+                      />
+                    ))}
+                    <CustomAlert visible={visible1} message={message} setVisible={setVisble1} />
+                  </div>
+                  <div onClick={handleSubmit} className={styles.check}>确认</div>
                 </div>
-                <div className={styles.title}>{item.title || ''}</div>
-              </div>)
-            }
+              }
+              closeOnAction
+              onClose={() => setShow(false)}
+            />
           </div>
-          <BottomNav initialTab='/' />
-          <CustomAlert visible={visible1} message={message} setVisible={setVisble1} />
-          <Modal
-            className="modal"
-            visible={show}
-            title={t("请输入邀请码")}
-            content={
-              <div className={styles.modals}>
-                <div className={styles.inputContainer}>
-                  {code.map((char, index) => (
-                    <Input
-                      key={index}
-                      ref={(el: any) => (inputRefs.current[index] = el)}
-                      className={styles.inputBox}
-                      value={char}
-                      style={{
-                        '--text-align': 'center',         // 文本右对齐
-                        '--color': '#FF6E91',
-                        caretColor: '#FF6E91',
-                        fontWeight: "blod",
-                        "--font-size": "28px",     // 光标颜色为红色
-                      }}
-                      onChange={(val) => handleChange(index, val)}
-                      onKeyDown={(e) => handleKeyDown(index, e)}
-                      maxLength={1} // 限制每个输入框只能输入一个字符
-                    />
-                  ))}
-                  <CustomAlert visible={visible1} message={message} setVisible={setVisble1} />
-                </div>
-                <div onClick={handleSubmit} className={styles.check}>确认</div>
-              </div>
-            }
-            closeOnAction
-            onClose={() => setShow(false)}
-          />
-        </div>
       }
     </>
 

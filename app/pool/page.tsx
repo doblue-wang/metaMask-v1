@@ -56,9 +56,9 @@ export default function Pool () {
         console.log(e);
       });
   }
-  const UpdateAllFixedAssetss = () => {
+  const UpdateAllFixedAssetss = async () => {
     const AccountId = localStorage.getItem('AccountId')
-    UpdateAllFixedAssets({
+    await UpdateAllFixedAssets({
       AccountId
     }).then(({ code, data }) => {
       getSource()
@@ -162,8 +162,8 @@ export default function Pool () {
       setVisble1(true)
       const ms = t('质押成功')
       setMessage(ms)
-      setTimeout(() => {
-        UpdateAllFixedAssetss()
+      setTimeout(async () => {
+        await UpdateAllFixedAssetss()
       }, 500);
 
     } catch (e) {

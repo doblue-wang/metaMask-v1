@@ -23,4 +23,34 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+
+  .detv {
+    text-align: center;
+    font-size: 15px;
+    color: #ff6e91;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+
+    div {
+      margin: 5px;
+      animation: scaleUp 3s infinite;
+    }
+  }
+
+
+
+  @keyframes scaleUp {
+    0% {
+      transform: scale(1);
+    }
+
+    100% {
+      transform: scale(2);
+      /* 字母从小到大 */
+    }
+  }
+
 }
