@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
     ]
   },
   images: {
-    domains: ['api.demedia.tv'], // 允许从该域名加载图片
+    domains: ['api.demedia.tv', 'dao.demedia.tv'], // 允许从该域名加载图片
   },
   i18n,
   eslint: {

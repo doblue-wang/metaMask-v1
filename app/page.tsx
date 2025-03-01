@@ -38,7 +38,7 @@ export default function Home () {
         location.href = item.url
       }
     }} className={styles.item} key={index}>
-      <Image width={351} loading='lazy' layout="responsive" height={144} className={styles.img} src={item?.pic[0]?.url} alt='' />
+      <Image unoptimized width={351} loading='lazy' layout="responsive" height={144} className={styles.img} src={item?.pic[0]?.url} alt='' />
     </Swiper.Item>
   ))
   const searchParams = useSearchParams();
@@ -96,27 +96,29 @@ export default function Home () {
   };
   //metamask 授权
   const connectMetaMask = async () => {
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const { chainId } = await provider.getNetwork()
-    const BSC = ethers.formatUnits(chainId, 0)
-    if (process.env.NODE_ENV === 'development') {
-      if (Number(BSC) !== 56) {
-        setshownetwork(true)
-        return
-      }
-    } else {
-      if (Number(BSC) !== 56) {
-        setshownetwork(true)
-        return
-      }
-    }
     try {
-      // 请求用户连接 MetaMask
-      const accounts = await window.ethereum.request({
-        method: 'eth_requestAccounts',
-      });
+      let provider;
+      let accounts;
+      // 检查是否安装了币安钱包
+      if (window.BinanceChain) {
+        provider = window.BinanceChain;
+        accounts = await provider.request({ method: 'eth_requestAccounts' });
+      }
+      // 检查是否安装了 MetaMask
+      else if (window.ethereum) {
+        provider = new ethers.BrowserProvider(window.ethereum);
+        accounts = await window.ethereum.request({
+          method: 'eth_requestAccounts',
+        });
+      }
       localStorage.setItem('accounts', accounts[0]);
       setaccredit(true)
+      const { chainId } = await provider.getNetwork()
+      const BSC = ethers.formatUnits(chainId, 0)
+      if (Number(BSC) !== 56) {
+        setshownetwork(true)
+        return
+      }
       await getGoodsNineTrans({ WalletAddress: accounts[0] })
     } catch (error: any) {
       setaccredit(false)
@@ -127,7 +129,6 @@ export default function Home () {
       }
     }
   };
-
   // 首页数据
   const getHome = (AccountId?: any) => {
     fetchGetHome({
@@ -337,7 +338,7 @@ export default function Home () {
                     location.href = item.url
                   }} key={item.id} className={styles.drama_item}>
                     <div className={styles.top}>
-                      <Image width={155} height={155} className={styles.img} src={item?.pic[0]?.url} alt='' />
+                      <Image unoptimized width={155} height={155} className={styles.img} src={item?.pic[0]?.url} alt='' />
                       <div className={styles.item_num}>{item?.description || "--"}</div>
                     </div>
                     <div className={styles.item_name}>{item?.title || ""}</div>
@@ -352,7 +353,7 @@ export default function Home () {
                   location.href = item.url
                 }} key={item.id} className={styles.linkitem}>
                   <div className={styles.icon}>
-                    <Image width={14} height={12} className={styles.iconimg} src={item?.pic[0]?.url} alt='' />
+                    <Image unoptimized width={14} height={12} className={styles.iconimg} src={item?.pic[0]?.url} alt='' />
                   </div>
                   <div className={styles.title}>{item.title || ''}</div>
                 </div>)
@@ -392,6 +393,13 @@ export default function Home () {
               }
               closeOnAction
               onClose={() => setShow(false)}
+            />
+            <Modal
+              className="modal"
+              visible={shownetwork}
+              content={
+                <div className={styles.tost}>{t('请切换主网')}</div>
+              }
             />
             <Modal
               className="modal"
