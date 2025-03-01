@@ -274,7 +274,7 @@ export default function MyPool () {
                                             <div className={styles.usertime}>
                                                 {
                                                     (() => {
-                                                        const { date, time } = convertUTCToLocal(item.CompletionTime);
+                                                        const { date, time } = convertUTCToLocal(item.RegistrationTime);
                                                         return <>
                                                             <span> {date}</span>
                                                             <p> {time}</p>

@@ -16,19 +16,7 @@ import { useAtom } from "jotai";
 import { nameAtom } from "../atoms"; // 导入原子
 import Image from 'next/image';
 export default function Home () {
-  useEffect(() => {
-    document.title = `${t("首页")}`;
-    const init = async () => {
-      setLoading(true);
-      await connectMetaMask();
-      // 等待图片加载完成
-      setLoading(false);
-    };
-    init();
-    if (data) {
-      setCode(data.split(''))
-    }
-  }, []);
+
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [source, setSource] = useState({} as any);
@@ -42,6 +30,8 @@ export default function Home () {
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef([]) as any;
   const [name, setName] = useAtom(nameAtom);
+  /**是否授权 */
+  const [accredit, setaccredit] = useState(false)
   const items = (source?.RotationData || []).map((item: any, index: any) => (
     <Swiper.Item onClick={() => {
       if (item.url) {
@@ -54,6 +44,21 @@ export default function Home () {
   const searchParams = useSearchParams();
   const data = searchParams.get('code');
 
+
+  useEffect(() => {
+    document.title = `${t("首页")}`;
+    const init = async () => {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+      await connectMetaMask();
+    };
+    init();
+    if (data) {
+      setCode(data.split(''))
+    }
+  }, []);
   //接口授权
   const getGoodsNineTrans = async ({ WalletAddress }: { WalletAddress: Number }) => {
     fetchLogin({ WalletAddress: WalletAddress })
@@ -111,9 +116,10 @@ export default function Home () {
         method: 'eth_requestAccounts',
       });
       localStorage.setItem('accounts', accounts[0]);
-
+      setaccredit(true)
       await getGoodsNineTrans({ WalletAddress: accounts[0] })
     } catch (error: any) {
+      setaccredit(false)
       setLoading(false)
       if (error.code === 4001) {
         setMessage('User rejected the request.')
@@ -128,7 +134,7 @@ export default function Home () {
       AccountId: AccountId ? AccountId : localStorage.getItem('AccountId')
     }).then(({ data }) => {
       setSource(data);
-      setLoading(false)
+      // setLoading(false)
     })
       .catch((e) => {
         console.log(e);
@@ -382,6 +388,18 @@ export default function Home () {
                     <CustomAlert visible={visible1} message={message} setVisible={setVisble1} />
                   </div>
                   <div onClick={handleSubmit} className={styles.check}>确认</div>
+                </div>
+              }
+              closeOnAction
+              onClose={() => setShow(false)}
+            />
+            <Modal
+              className="modal"
+              visible={!accredit}
+              title={t('连接钱包')}
+              content={
+                <div className={styles.modals1}>
+                  <div onClick={async () => await connectMetaMask()} className={styles.check}>{t('确认')}</div>
                 </div>
               }
               closeOnAction
