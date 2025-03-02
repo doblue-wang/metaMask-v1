@@ -179,7 +179,13 @@ export default function MyPool () {
                                     {
                                         source?.QualifiedMiningPoolList.map((item: any, index: number) => <div key={index} className={styles.listitem}>
                                             <div className={styles.name}>{item?.MiningPoolName || '--'}</div>
-                                            <div className={styles.time}>{item?.CompletionTime || '--'}</div>
+                                            {
+                                                (() => {
+                                                    const { date, time } = convertUTCToLocal(item.RegistrationTime);
+                                                    return <div className={styles.time}>{date}{time}</div>
+                                                })()
+                                            }
+
                                         </div>)
                                     }
                                 </> : <Empty />

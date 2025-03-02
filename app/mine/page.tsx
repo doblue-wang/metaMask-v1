@@ -128,7 +128,7 @@ export default function Mine () {
               <img className='arrow' src="/mine/arrow.png" alt="" />
             </div>
             <div className="num">
-              <CountUp start={0} end={source?.PendingRewardsDTV || 0} duration={3} decimals={2} />
+              <CountUp start={0} end={source?.PendingRewardsDTVC || 0} duration={3} decimals={2} />
             </div>
           </div>
         </div>
