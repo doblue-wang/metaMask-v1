@@ -96,8 +96,6 @@ export default function Mine () {
                   }
                 </>
               }
-
-
             </div>
             <div className="share">{t('上级分享人')}:{getObfuscatedAccount(source?.SuperiorSharer)}</div>
           </div>
@@ -105,7 +103,6 @@ export default function Mine () {
         {
           !show1 ? null : <div className="arrow"></div>
         }
-
       </div>
       {/* 资产  */}
       <div className="assets">

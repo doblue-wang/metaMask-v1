@@ -8,7 +8,7 @@ import { ethers } from "ethers";
 import { StakingABI } from "@/StakingABI";
 import CustomAlert from "@/components/Toast";
 import { t } from "i18next";
-import { ClaimIncome, fetchGetMiningPool } from "@/api/home";
+import { ClaimIncome, GeneratePledgeIncome, fetchGetMiningPool } from "@/api/home";
 import NewLoading from "@/components/Loading";
 import { useTranslation } from "react-i18next";
 export default function Receive () {
@@ -35,6 +35,24 @@ export default function Receive () {
                 console.log(e);
             });
     }
+
+    const changeGeneratePledgeIncome = async () => {
+        const AccountId = localStorage.getItem('AccountId')
+        GeneratePledgeIncome({
+            AccountId
+        }).then(({ code, data }) => {
+            if (code === 200) {
+                withdrawComing(localStorage.getItem('accounts'))
+            }
+        })
+            .catch((e) => {
+                console.log(e);
+            });
+    }
+
+
+
+
     const withdrawComing = async (_address: any) => {
         if (source?.CanReceiveDTV === 0) {
             setVisble(true)
@@ -158,7 +176,7 @@ export default function Receive () {
                     </div>
                     <div className={styles.price}>{source?.CanReceiveDTV || 0} DTV</div>
                     <div className={styles.txt}>{t('Income_Collection.Available_for_Collection')}</div>
-                    <div onClick={() => withdrawComing(localStorage.getItem('accounts'))} className={styles.btn}>{t('Earnings.Collect')}</div>
+                    <div onClick={async () => await changeGeneratePledgeIncome()} className={styles.btn}>{t('Earnings.Collect')}</div>
                     <div className={styles.prompt}>{t('burning')}</div>
 
                 </div>

@@ -155,3 +155,10 @@ export async function UpdateNftOnSaleQuantity (body: object) {
     body,
   });
 }
+//生成质押收益
+export async function GeneratePledgeIncome (body: object) {
+  return request("/api/DeclarationForm/DxMiningPool/GeneratePledgeIncome", {
+    method: "POST",
+    body,
+  });
+}
