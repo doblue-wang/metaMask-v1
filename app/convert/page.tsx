@@ -36,7 +36,7 @@ export default function Convert () {
     // 如果输入的是有效数字，则转换为 DTV
     const usdtAmount = parseFloat(val);
     if (!isNaN(usdtAmount)) {
-      setDTVValue((usdtAmount * scale).toString());
+      setDTVValue((usdtAmount / scale).toString());
     } else {
       setDTVValue('');
     }
@@ -47,7 +47,7 @@ export default function Convert () {
     // 如果输入的是有效数字，则转换为 USDT
     const dtvAmount = parseFloat(val);
     if (!isNaN(dtvAmount)) {
-      setUSDTValue((dtvAmount / scale).toString());
+      setUSDTValue((dtvAmount * scale).toString());
     } else {
       setUSDTValue('');
     }
@@ -225,7 +225,7 @@ export default function Convert () {
           <Image width={px2rem(30)} height={px2rem(30)} fit="cover" className={styles.arrowImg} src="/convert/exchangeArrow.png" />
         </div>
       </div>
-      <div className={styles.subscription}>{scale}DTV - 1USDT</div>
+      <div className={styles.subscription}>{scale}USDT - 1DTV</div>
       <div className={styles.button}>
         <div onClick={() => exchangeTokens()} className={styles.buttonText}>{
           t('Earnings.Exchange')

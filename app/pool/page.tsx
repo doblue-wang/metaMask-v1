@@ -513,7 +513,7 @@ export default function Pool () {
               <div className={styles.num}><CountUp start={0} end={source?.YesterdaysEarningsDTVC || 0} duration={3} /></div>
             </div>
             <div className={styles.subitem}>
-              <div className={styles.label1}>{t('Earnings.Pending_Collection_Reward')} (DTVC)</div>
+              <div className={styles.label1}>{t('Earnings.Pending_Exchanged')} (DTVC)</div>
               <div className={styles.num}><CountUp start={0} end={source?.PendingRewardsDTVC || 0} duration={3} /></div>
             </div>
             <div className={`${styles.subitem} ${styles.subitem1}`}>

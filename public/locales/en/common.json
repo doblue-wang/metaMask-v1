@@ -26,6 +26,7 @@
     "Earnings": {
         "Yesterday_Earnings": "Yesterday's earnings",
         "Pending_Collection": "Pending collection",
+        "Pending_Exchanged": "Pending exchanged",
         "Total_earnings": "Total earnings",
         "Collect": "Collect",
         "Yesterday_Rewards": "Yesterday's rewards (DTVC)",
