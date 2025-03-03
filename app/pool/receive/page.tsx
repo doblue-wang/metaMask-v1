@@ -35,24 +35,24 @@ export default function Receive () {
                 console.log(e);
             });
     }
-
     const changeGeneratePledgeIncome = async () => {
         const AccountId = localStorage.getItem('AccountId')
         GeneratePledgeIncome({
             AccountId
-        }).then(({ code, data }) => {
+        }).then(({ code, data, msg }) => {
             if (code === 200) {
-                withdrawComing(localStorage.getItem('accounts'))
+                setTimeout(() => {
+                    withdrawComing(localStorage.getItem('accounts'))
+                }, 500);
+            } else {
+                setVisble(true)
+                setMessage(msg)
             }
         })
             .catch((e) => {
                 console.log(e);
             });
     }
-
-
-
-
     const withdrawComing = async (_address: any) => {
         if (source?.CanReceiveDTV === 0) {
             setVisble(true)
@@ -100,6 +100,7 @@ export default function Receive () {
                 await getComingList(_address)
                 exchange()
             } catch (e) {
+                setShow(false)
                 console.log("提取收益失败", e);
             }
         }
@@ -112,14 +113,12 @@ export default function Receive () {
         })
             .then(({ data }) => {
                 console.log(data);
+                getSource()
             })
             .catch((e) => {
                 console.log(e);
             });
     }
-
-
-
     const getComingList = async (_address: any) => {
         if (typeof window !== 'undefined' && window.ethereum) {
             try {
@@ -141,7 +140,6 @@ export default function Receive () {
     const parseRecords = (records: any) => {
         return records.map((record: any) => parseRecord(record));
     };
-
     // 解析单个记录的函数
     const parseRecord = (record: any) => {
         // 获取时间戳（秒）
@@ -162,10 +160,6 @@ export default function Receive () {
             inout,
         };
     };
-
-
-
-
     return (
         <div className={styles.page}>
             <NavBar title={`${t('IncomeCollection')}`} />
