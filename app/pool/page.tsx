@@ -30,10 +30,10 @@ export default function Pool () {
   const [visible1, setVisble1] = useState(false)
   const [message, setMessage] = useState('')
   const [isstaking, setIsstaking] = useState(false)
-  const NFT_CONTRACT_ADDRESS = '0x63367C35b647C0275188cEcC06F9cCD68d1C6fe6';//nft测试合约地址
-  const Contract_address = '0xc182E6C5145CbFccC18f822Bc03953484947fFcD';//测试合约地址
-  const STAKING_CONTRACT_ADDRESS = '0x04A4ece9543d01C48bdA2384211dC0DDA4F090B2'// dtv 合约
-  const USDT_address = '0x55d398326f99059fF775485246999027B3197955';//usdt 合约
+  const NFT_CONTRACT_ADDRESS = '0x4Df31fBA8EEB438604c4c489dE14AA8cdaaEe0e9';//nft测试合约地址
+  const Contract_address = '0xB7be6749F3D248e68D24bf87c771FCa7daAFc8Ff';//测试合约地址
+  const STAKING_CONTRACT_ADDRESS = '0xe8f59c86808F5DD44d7E92beD2f8405a6988BEeB'// dtv 合约
+  const USDT_address = '0xa2d272B92Cd921C572698Db1b999c1fC4c8374CA';//usdt 合约
   const [canStaking, setCanStaking] = useState(true)
 
   const tabs = [

@@ -67,8 +67,8 @@ export default function Convert () {
     money()
   }, [])
   //授权
-  const USDT_address = '0x55d398326f99059fF775485246999027B3197955';//usdt 合约
-  const Contract_address = '0xc182E6C5145CbFccC18f822Bc03953484947fFcD';//测试合约地址
+  const USDT_address = '0xa2d272B92Cd921C572698Db1b999c1fC4c8374CA';//usdt 合约
+  const Contract_address = '0xB7be6749F3D248e68D24bf87c771FCa7daAFc8Ff';//测试合约地址
   const money = async () => {
     const provider = new ethers.BrowserProvider(window.ethereum)
     const signer = await provider.getSigner(); // 获取签名者（即用户钱包）

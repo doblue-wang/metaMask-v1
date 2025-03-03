@@ -115,7 +115,7 @@ export default function Home () {
       setaccredit(true)
       const { chainId } = await provider.getNetwork()
       const BSC = ethers.formatUnits(chainId, 0)
-      if (Number(BSC) !== 56) {
+      if (Number(BSC) !== 97) {
         setshownetwork(true)
         return
       }

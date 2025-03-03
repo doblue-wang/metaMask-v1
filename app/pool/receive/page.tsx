@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 export default function Receive () {
     const [visible, setVisble] = useState(false)
     const [message, setMessage] = useState('')
-    const Contract_address = '0xc182E6C5145CbFccC18f822Bc03953484947fFcD';//测试合约地址
+    const Contract_address = '0xB7be6749F3D248e68D24bf87c771FCa7daAFc8Ff';//测试合约地址
     const [list, setList] = useState<any>([])
     const [show, setShow] = useState(false)
     const [source, setSource] = useState({} as any)

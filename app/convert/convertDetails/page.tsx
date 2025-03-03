@@ -14,7 +14,7 @@ export default function ConvertDetails () {
   }, [])
 
   const { copyToClipboard } = useClipboard();
-  const Contract_address = '0xc182E6C5145CbFccC18f822Bc03953484947fFcD';//测试合约地址
+  const Contract_address = '0xB7be6749F3D248e68D24bf87c771FCa7daAFc8Ff';//测试合约地址
   const handleCopy = (text: any) => {
     const ms = t('复制成功')
     setMessage(ms)
