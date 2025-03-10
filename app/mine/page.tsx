@@ -33,15 +33,21 @@ export default function Mine () {
   const { t } = useTranslation();
   const [type, setType] = useState(i18n.language)
   const list = [
-    {
-      key: "English",
-      value: 'en'
-    },
-    {
-      key: "中文",
-      value: 'zh'
-    }
-  ]
+    { key: "English", value: "en" },
+    { key: "中文", value: "zh" },
+    { key: "ไทย", value: "th" }, // 泰语
+    { key: "日本語", value: "ja" }, // 日语
+    { key: "한국어", value: "ko" }, // 韩语
+    { key: "Deutsch", value: "de" }, // 德语
+    { key: "Español", value: "es" }, // 西班牙语
+    { key: "Français", value: "fr" }, // 法语
+    { key: "Bahasa Indonesia", value: "id" }, // **印度尼西亚语**
+    { key: "Bahasa Melayu", value: "ms" }, // 马来语
+    { key: "Tiếng Việt", value: "vi" }, // 越南语
+    { key: "ភាសាខ្មែរ", value: "km" }, // 柬埔寨语（高棉语）
+    { key: "မြန်မာဘာသာ", value: "my" } // 缅甸语
+  ];
+
   const changeLanguage = (val: any) => {
     fetchLanguage(val.value)
     i18n.changeLanguage(val.value);
