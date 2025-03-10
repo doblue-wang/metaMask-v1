@@ -16,7 +16,6 @@ import { useAtom } from "jotai";
 import { nameAtom } from "../atoms"; // 导入原子
 import Image from 'next/image';
 export default function Home () {
-
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [source, setSource] = useState({} as any);
