@@ -181,8 +181,8 @@ export default function MyPool () {
                                             <div className={styles.name}>{item?.MiningPoolName || '--'}</div>
                                             {
                                                 (() => {
-                                                    const { date, time } = convertUTCToLocal(item.RegistrationTime);
-                                                    return <div className={styles.time}>{date}{time}</div>
+                                                    const { date, time } = convertUTCToLocal(item.CompletionTime);
+                                                    return <div className={styles.time}>{date} {time}</div>
                                                 })()
                                             }
 

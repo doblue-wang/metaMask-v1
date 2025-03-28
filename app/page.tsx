@@ -257,7 +257,7 @@ export default function Home () {
                 {
                   progress?.TotalReleaseQty > 0 ?
                     <div className={styles.progress_bubble} style={{ left: `${(progress?.TotalReleaseQty / progress?.TotalQty) * 86}%`, marginLeft: `-${12 / 2}px` }}>
-                      <div className={styles.bubble_content} > {formatProgressQty(progress?.TotalReleaseQty || 0)}1</div>
+                      <div className={styles.bubble_content} > {formatProgressQty(progress?.TotalReleaseQty || 0)}</div>
                     </div> : null
                 }
 

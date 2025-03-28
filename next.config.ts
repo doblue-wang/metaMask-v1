@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://api.demedia.tv:185/api/:path*',
+        destination: 'http://154.19.85.158:85/api/:path*',
       },
     ]
   },
