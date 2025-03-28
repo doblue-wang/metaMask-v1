@@ -52,7 +52,8 @@
             padding-bottom: 6px;
 
             .tab {
-                width: 76px;
+                // width: 76px;
+                margin-right: 15px;
                 font-family:
                     PingFang SC,
                     PingFang SC;
@@ -256,11 +257,12 @@
         .sortbox {
             display: flex;
             align-items: center;
+            margin-top: 20px;
 
             .sortitem {
                 display: flex;
                 align-items: center;
-                margin-right: 32px;
+                margin-right: 12px;
 
                 .sorttxt {
                     font-family:

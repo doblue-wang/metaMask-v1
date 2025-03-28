@@ -21,7 +21,7 @@
             padding-bottom: 4px;
 
             .tab {
-                width: 48px;
+                margin-right: 10px;
                 font-family:
                     PingFang SC,
                     PingFang SC;
@@ -33,6 +33,7 @@
             }
 
             .colorBar {
+                width: 5%;
                 position: absolute;
                 bottom: 0;
                 height: 3px;
@@ -340,9 +341,10 @@
             display: flex;
             align-items: center;
             justify-content: space-around;
+            gap: 10px;
 
             .btn {
-                width: 139px;
+                flex: 1;
                 padding: 9px 0;
                 border-radius: 6px 6px 6px 6px;
                 background-color: #242426;
@@ -391,19 +393,20 @@
 
             .sublist {
                 display: flex;
-                align-items: center;
+                align-items: stretch;
                 justify-content: space-between;
                 flex-wrap: wrap;
+                gap: 4px;
 
                 .subitem {
+                    flex: 1;
                     margin-bottom: 5px;
-                    width: 159px;
                     padding: 12px 8px;
                     background-color: #343438;
                     border-radius: 8px;
 
                     &.subitem1 {
-                        width: 100%;
+                        flex-basis: 100%;
                     }
 
                     .num {

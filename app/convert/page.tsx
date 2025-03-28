@@ -225,7 +225,7 @@ export default function Convert () {
           <Image width={px2rem(30)} height={px2rem(30)} fit="cover" className={styles.arrowImg} src="/convert/exchangeArrow.png" />
         </div>
       </div>
-      <div className={styles.subscription}>{scale}USDT - 1DTV</div>
+      <div className={styles.subscription}> 1DTV  -  {scale}USDT</div>
       <div className={styles.button}>
         <div onClick={() => exchangeTokens()} className={styles.buttonText}>{
           t('Earnings.Exchange')

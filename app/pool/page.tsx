@@ -345,7 +345,6 @@ export default function Pool () {
             </div>
           ))}
           <div className={styles.colorBar} style={{
-            width: '36px',
             left: `${colorBarPosition + 3}px`,
           }}></div>
 
@@ -376,8 +375,8 @@ export default function Pool () {
                 <div className={styles.top}>
                   <div className={styles.label}>{t('Current_Selection')}</div>
                   <div className={styles.nummin}>   {
-                    itemSource?.MappingValue === 6 ? defults.Price :
-                      itemSource?.Staking || 0} DTV</div>
+                    itemSource?.MappingValue === 6 ? <CountUp start={0} end={defults.Price || 0} duration={.5} /> : <CountUp start={0} end={itemSource?.Staking || 0} duration={.5} />
+                  } DTV</div>
                 </div>
                 <div className={styles.bottom}>
                   <div className={styles.label}>{itemSource?.Name}</div>
@@ -402,7 +401,7 @@ export default function Pool () {
               </div>
               <div className={styles.itemTitle}>{source?.HavingMiningMachineInformation?.Name}</div>
             </div>
-            <div className={styles.nummin}>{source?.HavingMiningMachineInformation?.Staking || 0}DTV</div>
+            <div className={styles.nummin}><CountUp start={0} end={source?.HavingMiningMachineInformation?.Staking || 0} duration={.5} />DTV</div>
             <div className={styles.pos}>POS：{source?.HavingMiningMachineInformation?.Hashrate || 0}</div>
           </div>
           //NFT页面
@@ -418,7 +417,7 @@ export default function Pool () {
                 <div className={styles.imagebox}>
                   <Image width={px2rem(80)} height={px2rem(87)} lazy className={styles.img} src='/pool/poolNFT.png' />
                 </div>
-                <div className={styles.price}>{source?.NFTType.Price || 0}U</div>
+                <div className={styles.price}><CountUp start={0} end={source?.NFTType.Price || 0} duration={.5} />U</div>
                 <div className={styles.row}>
                   <div className={styles.pos}>{t('POS_Bonus')}{source?.NFTType.IncreasePos || 0}%</div>
                   <div className={styles.pop}>{t('POP_Bonus')}{source?.NFTType.IncreasePop || 0}%</div>

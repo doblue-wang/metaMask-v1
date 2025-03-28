@@ -10,6 +10,7 @@ import { MyInformationUploadImage, fetchGetMine } from '@/api/home';
 import CustomAlert from '@/components/Toast';
 import { getObfuscatedAccount, px2rem } from '@/utils/pxToRem';
 import { convertUTCToLocal } from '@/utils/utils';
+import { log } from 'console';
 export default function Mine () {
   const [show1, setShow1] = useState(false);
   useEffect(() => {
@@ -33,15 +34,21 @@ export default function Mine () {
   const { t } = useTranslation();
   const [type, setType] = useState(i18n.language)
   const list = [
-    {
-      key: "English",
-      value: 'en'
-    },
-    {
-      key: "中文",
-      value: 'zh'
-    }
-  ]
+    { key: "English", value: "en" },
+    { key: "中文", value: "zh" },
+    { key: "ไทย", value: "th" }, // 泰语
+    { key: "日本語", value: "ja" }, // 日语
+    { key: "한국어", value: "ko" }, // 韩语
+    { key: "Deutsch", value: "de" }, // 德语
+    { key: "Español", value: "es" }, // 西班牙语
+    { key: "Français", value: "fr" }, // 法语
+    { key: "Bahasa Melayu", value: "ms" }, // 马来语
+    { key: "Bahasa Indonesia", value: "id" }, // **印度尼西亚语**
+    { key: "Tiếng Việt", value: "vi" }, // 越南语
+    { key: "ភាសាខ្មែរ", value: "km" }, // 柬埔寨语（高棉语）
+    { key: "မြန်မာဘာသာ", value: "my" } // 缅甸语
+  ];
+
   const changeLanguage = (val: any) => {
     fetchLanguage(val.value)
     i18n.changeLanguage(val.value);
@@ -64,6 +71,8 @@ export default function Mine () {
   };
   //语言
   const fetchLanguage = async (val: any) => {
+    console.log(val, "-----");
+
     localStorage.setItem('languages', val)
     const AccountId = localStorage.getItem('AccountId')
     MyInformationUploadImage({ AccountId, Languages: val })
@@ -86,7 +95,7 @@ export default function Mine () {
           <Image fit="cover" className='avatr' alt='' src={source?.AccountImg} />
           <div className="nameRow">
             <div className="top">
-              <div className="name">{source?.AccountName || '--'}</div>
+              <div className="name">{getObfuscatedAccount(source?.AccountName) || '--'}</div>
               {
                 !show1 ? null : <>
                   {
